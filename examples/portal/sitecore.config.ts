@@ -11,7 +11,12 @@ import { defineConfig } from '@sitecore-content-sdk/nextjs/config';
 export default defineConfig({
   api: {
     edge: {
-      contextId: process.env.SITECORE_EDGE_CONTEXT_ID ?? '',
+      // CLI `sitecore-tools project build` uses `contextId` for Edge GraphQL (e.g. generateSites).
+      // Fall back to the public context id when the server-only var is unset (common local setup).
+      contextId:
+        process.env.SITECORE_EDGE_CONTEXT_ID ||
+        process.env.NEXT_PUBLIC_SITECORE_EDGE_CONTEXT_ID ||
+        '',
       clientContextId: process.env.NEXT_PUBLIC_SITECORE_EDGE_CONTEXT_ID,
       edgeUrl:
         process.env.NEXT_PUBLIC_SITECORE_EDGE_PLATFORM_HOSTNAME ??
@@ -22,7 +27,11 @@ export default defineConfig({
       apiHost: process.env.SITECORE_API_HOST ?? '',
     },
   },
-  defaultSite: process.env.NEXT_PUBLIC_DEFAULT_SITE_NAME ?? 'default',
+  // Blank env must not become the literal "default" (often not a real XM Cloud site → IV-007).
+  defaultSite: (() => {
+    const t = process.env.NEXT_PUBLIC_DEFAULT_SITE_NAME?.trim();
+    return t && t.length > 0 ? t : '';
+  })(),
   defaultLanguage: process.env.NEXT_PUBLIC_DEFAULT_LANGUAGE ?? 'en',
   editingSecret: process.env.SITECORE_EDITING_SECRET,
 });

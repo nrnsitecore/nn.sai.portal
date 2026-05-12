@@ -69,12 +69,23 @@ export const generateStaticParams = async () => {
   if (process.env.NODE_ENV !== 'development' && scConfig.generateStaticPaths) {
     // Filter sites to only include the sites this starter is designed to serve.
     // This prevents cross-site build errors when multiple starters share the same XM Cloud instance.
-    const defaultSite = scConfig.defaultSite;
-    const allowedSites = defaultSite
-      ? sites
-          .filter((site: SiteInfo) => site.name === defaultSite)
-          .map((site: SiteInfo) => site.name)
-      : sites.map((site: SiteInfo) => site.name);
+    const defaultSite = scConfig.defaultSite?.trim() || '';
+    const siteNames = (sites as SiteInfo[])
+      .map((site) => site.name)
+      .filter((name): name is string => typeof name === 'string' && name.trim().length > 0);
+
+    let allowedSites = defaultSite
+      ? siteNames.filter((name) => name === defaultSite)
+      : siteNames;
+
+    // If env defaultSite does not match any Edge site (typo, stale sites.json), fall back to all known sites.
+    if (allowedSites.length === 0 && siteNames.length > 0) {
+      allowedSites = siteNames;
+    }
+
+    if (allowedSites.length === 0) {
+      return [];
+    }
 
     return await client.getAppRouterStaticParams(allowedSites, routing.locales.slice());
   }
