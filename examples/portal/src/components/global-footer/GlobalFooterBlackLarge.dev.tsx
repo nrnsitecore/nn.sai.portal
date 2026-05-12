@@ -76,7 +76,7 @@ export const GlobalFooterBlackLarge: React.FC<GlobalFooterProps> = (props) => {
                 >
                   <div className="@md:justify-end flex h-full w-full items-end justify-center leading-none">
                     <div className="bg-dark-gradient text-fill-transparent text-50-clamp @md:-mb-[130px] -mb-[85px] bg-clip-text text-center font-bold leading-none text-transparent">
-                      Alaris
+                      DFS
                     </div>
                   </div>
                 </div>

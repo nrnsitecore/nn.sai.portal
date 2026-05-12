@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import {
   Select,
@@ -9,21 +9,23 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { getDemoPersonaOptions } from '@/lib/demo-personas';
 import { DEMO_TAXONOMY_CHANGE_EVENT, DEMO_TAXONOMY_STORAGE_KEY } from '@/lib/demo-taxonomy';
-
-const DEMO_USERS = [
-  { label: 'User 1 - Maintenance Engineer', taxonomy: 'Maintenance Engineer' },
-  { label: 'User 2 - Engineering Consultant', taxonomy: 'Engineering Consultant' },
-  { label: 'User 3 - Plant Technician', taxonomy: 'Plant Technician' },
-] as const;
 
 export function DemoUserSwitcher() {
   const [taxonomy, setTaxonomy] = useState('');
+  const demoUsers = useMemo(() => getDemoPersonaOptions(), []);
 
   useEffect(() => {
     const storedTaxonomy = window.localStorage.getItem(DEMO_TAXONOMY_STORAGE_KEY) ?? '';
+    const valid = demoUsers.some((u) => u.taxonomy === storedTaxonomy);
+    if (storedTaxonomy && !valid) {
+      window.localStorage.removeItem(DEMO_TAXONOMY_STORAGE_KEY);
+      setTaxonomy('');
+      return;
+    }
     setTaxonomy(storedTaxonomy);
-  }, []);
+  }, [demoUsers]);
 
   const handleValueChange = (value: string) => {
     setTaxonomy(value);
@@ -37,7 +39,7 @@ export function DemoUserSwitcher() {
         <SelectValue placeholder="Login" />
       </SelectTrigger>
       <SelectContent align="end">
-        {DEMO_USERS.map((user) => (
+        {demoUsers.map((user) => (
           <SelectItem key={user.taxonomy} value={user.taxonomy}>
             {user.label}
           </SelectItem>

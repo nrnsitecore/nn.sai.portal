@@ -1,13 +1,14 @@
 import './globals.css';
 
-import { Inter } from 'next/font/google';
+import { Montserrat } from 'next/font/google';
 import { resolveAppTheme } from '@/lib/app-theme';
 
-const inter = Inter({
+const montserrat = Montserrat({
   subsets: ['latin', 'latin-ext'],
-  variable: '--font-inter',
+  variable: '--font-montserrat',
   display: 'swap',
   preload: true,
+  weight: ['400', '500', '600', '700'],
 });
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -16,7 +17,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html
       lang="en"
-      className={inter.variable}
+      className={montserrat.variable}
       data-theme={appTheme}
       suppressHydrationWarning
     >

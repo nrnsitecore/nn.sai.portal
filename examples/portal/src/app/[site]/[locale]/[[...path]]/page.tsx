@@ -105,7 +105,7 @@ export const generateMetadata = async ({ params }: PageProps) => {
   const metadataDescription =
     routeFields?.metadataDescription?.value?.toString() ||
     routeFields?.pageSummary?.value?.toString() ||
-    'SYNC - Premium audio gear for professionals';
+    'Diversified Foodservice Supply — foodservice MRO distribution, facilities maintenance, and operator support.';
 
   const ogTitle = routeFields?.ogTitle?.value?.toString() || metadataTitle;
 
@@ -143,7 +143,7 @@ export const generateMetadata = async ({ params }: PageProps) => {
       description: ogDescription,
       url: pageUrl,
       type: 'website',
-      siteName: site || 'SYNC',
+      siteName: site || 'Diversified Foodservice Supply',
       locale: locale || 'en',
       images: ogImageUrl
         ? [

@@ -21,11 +21,11 @@ export const GlobalFooterDefault: React.FC<GlobalFooterProps> = (props) => {
   if (fields) {
     return (
       <footer
-        className="@container bg-primary text-primary-foreground border-foreground relative w-full overflow-hidden border-b-2"
+        className="@container border-border text-primary-foreground relative w-full overflow-hidden border-t border-b bg-primary"
         ref={footerRef}
       >
         {/* Main footer content */}
-        <section className="border-foreground border-b-2 px-4 py-16" aria-label="Footer main content">
+        <section className="border-border border-b px-4 py-16" aria-label="Footer main content">
           <div className="@xl:px-8 relative z-10 mx-auto max-w-screen-2xl">
             <div className="@lg:grid-cols-[2fr,1fr] grid grid-cols-1 items-end justify-end gap-8">
               {/* Left section with heading */}
@@ -33,7 +33,7 @@ export const GlobalFooterDefault: React.FC<GlobalFooterProps> = (props) => {
                 <Text
                   tag="h2"
                   field={tagline?.jsonValue}
-                  className="font-heading mb-8 text-pretty text-5xl font-light antialiased"
+                  className="font-heading mb-8 text-pretty text-3xl font-bold uppercase tracking-wide text-primary-foreground antialiased md:text-4xl"
                 />
                 {/* Navigation links */}
                 <nav aria-label="Footer navigation">
@@ -78,8 +78,8 @@ export const GlobalFooterDefault: React.FC<GlobalFooterProps> = (props) => {
         {/* Background logo - semi-transparent */}
         <div className="-z-1 pointer-events-none absolute inset-0 opacity-90" aria-hidden="true">
           <div className="flex h-full w-full items-end justify-center leading-none">
-            <div className="bg-primary-gradient text-fill-transparent text-50-clamp -mb-14 bg-clip-text font-bold leading-none text-transparent">
-              Alaris
+            <div className="text-fill-transparent text-50-clamp -mb-14 bg-gradient-to-r from-primary-foreground/20 via-accent/40 to-primary-foreground/15 bg-clip-text font-bold uppercase leading-none text-transparent">
+              DFS
             </div>
           </div>
         </div>

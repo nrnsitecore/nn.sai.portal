@@ -15,14 +15,14 @@
 
 @layer base {
   html {
-    --font-body: var(--font-inter), 'Inter', ui-sans-serif, system-ui, sans-serif;
-    --font-heading: var(--font-inter), 'Inter', ui-sans-serif, system-ui, sans-serif;
-    --font-accent: var(--font-inter), 'Inter', ui-sans-serif, system-ui, sans-serif;
+    --font-body: var(--font-montserrat), 'Montserrat', ui-sans-serif, system-ui, sans-serif;
+    --font-heading: var(--font-montserrat), 'Montserrat', ui-sans-serif, system-ui, sans-serif;
+    --font-accent: var(--font-montserrat), 'Montserrat', ui-sans-serif, system-ui, sans-serif;
     font-family: var(--font-body);
     font-size: 1rem;
-    line-height: 1.5;
+    line-height: 1.6;
     font-weight: 400;
-    color: var(--color-brand-black);
+    color: var(--color-brand-black, var(--color-foreground));
   }
 
   * {
@@ -52,27 +52,32 @@
 
   h1,
   .h1 {
-    @apply text-6xl md:text-8xl;
+    @apply text-4xl font-bold uppercase tracking-wide md:text-5xl lg:text-6xl;
   }
 
   h2,
   .h2 {
-    @apply text-5xl md:text-7xl;
+    @apply text-3xl font-bold uppercase tracking-wide md:text-4xl lg:text-5xl;
   }
 
   h3,
   .h3 {
-    @apply text-4xl md:text-5xl;
+    @apply text-2xl font-semibold uppercase tracking-wide md:text-3xl;
   }
 
   h4,
   .h4 {
-    @apply text-2xl md:text-3xl;
+    @apply text-xl font-semibold uppercase tracking-wide md:text-2xl;
   }
 
   h5,
   .h5 {
-    @apply text-xl md:text-2xl;
+    @apply text-lg font-semibold uppercase tracking-wider md:text-xl;
+  }
+
+  h6,
+  .h6 {
+    @apply text-base font-semibold uppercase tracking-wider md:text-lg;
   }
 
   body {
@@ -87,7 +92,7 @@
     @apply inline-block text-sm font-medium transition-colors;
 
     &.btn-primary {
-      @apply py-3 px-5 rounded-full bg-primary text-primary-foreground;
+      @apply rounded-sm bg-primary px-6 py-3 font-semibold uppercase tracking-wider text-primary-foreground;
 
       &:hover {
         @apply bg-primary-hover text-primary-foreground;
@@ -95,7 +100,7 @@
     }
 
     &.btn-secondary {
-      @apply py-3 px-5 rounded-full bg-light text-secondary-foreground;
+      @apply rounded-sm bg-secondary px-6 py-3 font-semibold uppercase tracking-wider text-secondary-foreground;
 
       &:hover {
         @apply bg-light-hover;
@@ -115,7 +120,7 @@
     }
 
     &.btn-outline {
-      @apply py-3 px-5 rounded-full bg-primary text-primary-foreground outline;
+      @apply rounded-sm border-2 border-primary bg-transparent px-6 py-3 font-semibold uppercase tracking-wider text-primary outline-none;
     }
 
     &:hover {
@@ -127,7 +132,7 @@
 /* BUTTONS END */
 
 main {
-  @apply text-xl;
+  @apply text-base text-foreground antialiased;
 }
 
 .xa-variable {
@@ -234,15 +239,4 @@ main {
   @apply static mb-0 overflow-hidden;
 }
 
-/* Brand palette overrides (BCBS-style blues; primary used for buttons and CTAs) */
-@theme {
-  --font-family-body: var(--font-inter), 'Inter', ui-sans-serif, system-ui, sans-serif;
-  --color-primary: #328ac9;
-  --color-primary-foreground: #ffffff;
-  --color-primary-hover: #2b78b3;
-  --color-secondary: #e3eef6;
-  --color-secondary-foreground: #133454;
-  --color-secondary-hover: #d2e4f2;
-  --color-accent: #328ac9;
-  --color-accent-foreground: #ffffff;
-}
+/* Site-level tokens: inherit from src/assets/styles/globals.css @theme + [data-theme] */

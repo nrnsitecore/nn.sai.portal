@@ -30,7 +30,7 @@ export const GlobalFooterBlueCentered: React.FC<GlobalFooterProps> = (props) => 
         <div className="pointer-events-none absolute inset-0 z-0 opacity-90" aria-hidden="true">
           <div className="flex h-full w-full items-center justify-center leading-none">
             <div className="bg-primary-gradient text-fill-transparent text-50-clamp bg-clip-text font-bold leading-none text-transparent">
-              Alaris
+              DFS
             </div>
           </div>
         </div>

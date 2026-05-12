@@ -18,6 +18,7 @@ import {
 } from 'lucide-react';
 
 import type { ComponentProps } from '@/lib/component-props';
+import { resolveAppTheme } from '@/lib/app-theme';
 import { DEMO_TAXONOMY_CHANGE_EVENT, DEMO_TAXONOMY_STORAGE_KEY } from '@/lib/demo-taxonomy';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -56,7 +57,7 @@ export type SearchResultsProps = {
 
 type SortMode = 'relevance' | 'az';
 
-/** Official Dwyer Omega product imagery — used for every `contentType: product` card */
+/** Official Dwyer Omega product imagery — used for every `contentType: product` card (non-DFS themes) */
 const DWYER_OMEGA_PRODUCT_IMAGES: readonly string[] = [
   'https://assets.dwyeromega.com/do-product-images/Series-DA-DS_L.jpg?imwidth=150',
   'https://assets.dwyeromega.com/do-product-images/Series-A6_L.jpg?imwidth=150',
@@ -70,12 +71,27 @@ const DWYER_OMEGA_PRODUCT_IMAGES: readonly string[] = [
   'https://assets.dwyeromega.com/do-product-images/PSW-100_l.jpg?imwidth=150',
 ];
 
+/** Unsplash foodservice / equipment placeholders — DFS theme product cards */
+const DFS_DEMO_PRODUCT_IMAGES: readonly string[] = [
+  'https://images.unsplash.com/photo-1556910103-1c02745aae4d?auto=format&fit=crop&w=300&q=80',
+  'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=300&q=80',
+  'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=300&q=80',
+  'https://images.unsplash.com/photo-1466978913421-dad2ebd01d17?auto=format&fit=crop&w=300&q=80',
+  'https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=300&q=80',
+  'https://images.unsplash.com/photo-1498654896293-37aacf113fd9?auto=format&fit=crop&w=300&q=80',
+  'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&w=300&q=80',
+  'https://images.unsplash.com/photo-1515003197210-e0cd2880b087?auto=format&fit=crop&w=300&q=80',
+  'https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?auto=format&fit=crop&w=300&q=80',
+  'https://images.unsplash.com/photo-1476224203421-9ac39bcb3327?auto=format&fit=crop&w=300&q=80',
+];
+
 function productImageForResultId(id: string): string {
   let h = 0;
   for (let i = 0; i < id.length; i++) {
     h = (h * 31 + id.charCodeAt(i)) >>> 0;
   }
-  return DWYER_OMEGA_PRODUCT_IMAGES[h % DWYER_OMEGA_PRODUCT_IMAGES.length]!;
+  const pool = resolveAppTheme() === 'dfs' ? DFS_DEMO_PRODUCT_IMAGES : DWYER_OMEGA_PRODUCT_IMAGES;
+  return pool[h % pool.length]!;
 }
 
 function resolveResultCardImage(item: SearchResultItem): string {

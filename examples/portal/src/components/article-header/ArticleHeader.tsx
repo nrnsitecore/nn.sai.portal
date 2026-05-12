@@ -207,7 +207,7 @@ export const Default: React.FC<ArticleHeaderProps> = ({ fields, externalFields, 
               }
             : undefined,
           publisher: {
-            name: 'SYNC',
+            name: 'Diversified Foodservice Supply',
           },
           url: typeof window !== 'undefined' ? window.location.href : undefined,
         })

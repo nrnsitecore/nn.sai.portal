@@ -112,19 +112,27 @@ export const HeroImageBackground: React.FC<HeroProps> = (props) => {
           {/* Image */}
           <ImageWrapper
             image={image}
-            wrapperClass="absolute w-full inset-0 scrim-background/50 scrim-l-full group-[.position-right]:scrim-r-full group-[.position-right]:scrim-l-0 group-[.position-center]:scrim-l-0 group-[.position-center]:scrim-b-full"
-            className="h-full w-full object-cover opacity-80"
+            wrapperClass="absolute inset-0 w-full"
+            className="h-full min-h-[28rem] w-full scale-105 object-cover object-center blur-sm md:min-h-[36rem]"
             priority={true}
             loading="eager"
             fetchPriority="high"
           />
 
+          <div
+            className="absolute inset-0 bg-gradient-to-b from-background/90 via-background/70 to-background/95"
+            aria-hidden="true"
+          />
+
           {/* Blur effect for mobile */}
-          <div className="fade-to-transparent fade-to-transparent-bottom @md/herowrapper:hidden absolute inset-0 w-full backdrop-blur-sm"></div>
+          <div
+            className="fade-to-transparent fade-to-transparent-bottom absolute inset-0 w-full md:hidden"
+            aria-hidden="true"
+          />
 
           {/* Content */}
-          <div className="@container/herocontent @sm/herowrapper:px-5 @sm/herowrapper:pb-5 @md/herowrapper:px-10 @md/herowrapper:pb-10 @md/herowrapper:pt-10 @lg/herowrapper:px-10 @lg/herowrapper:pb-10 @lg/herowrapper:pt-10 relative z-10 mx-auto flex max-w-[1240px] flex-col pt-4 group-[.position-right]:items-end group-[.position-center]:items-center">
-            <div className="w-6/16 p-10 bg-tertiary text-background">
+          <div className="@container/herocontent relative z-10 mx-auto flex min-h-[28rem] w-full max-w-5xl flex-col items-center justify-center px-4 py-16 text-center md:min-h-[36rem] md:px-10 md:py-24">
+            <div className="w-full max-w-3xl rounded-sm bg-background/85 px-6 py-10 shadow-sm ring-1 ring-border/50 backdrop-blur-sm md:px-10 md:py-12">
               {isLoading && (
                 <div className="absolute top-0 right-0 p-2 text-xs">
                   Loading personalized content...
@@ -141,13 +149,13 @@ export const HeroImageBackground: React.FC<HeroProps> = (props) => {
                 <Text
                   tag="h1"
                   field={title}
-                  className="font-heading text-3xl text-box-trim-both-baseline @lg/herowrapper:p-0 text-shadow text-shadow-blur-xl @sm/herowrapper:text-shadow-blur-3xl @sm/herowrapper:px-0 relative -ml-[2px] max-w-[13ch] text-balance px-5 font-light leading-tight drop-shadow-[0_35px_35px_rgba(0,0,0,0.4)]"
+                  className="font-heading text-balance px-2 text-3xl font-bold uppercase leading-tight tracking-wide text-primary md:text-4xl lg:text-5xl"
                 />
               </AnimatedSection>
 
-              {/* Line */}
-              <div className="py-3">
-                <div className="bg-foreground absolute left-1/2 h-[2px] w-[200vw] -translate-x-1/2"></div>
+              {/* Accent line */}
+              <div className="py-6">
+                <div className="mx-auto h-0.5 w-16 rounded-full bg-accent" />
               </div>
 
               {/* Description */}
@@ -160,7 +168,7 @@ export const HeroImageBackground: React.FC<HeroProps> = (props) => {
                 {description && (
                   <Text
                     tag="p"
-                    className="@xs/herocontent:text-sm @sm/herowrapper:px-0 text-shadow text-shadow-blur-xl max-w-[32ch] text-pretty px-5"
+                    className="text-foreground/90 mx-auto max-w-2xl text-pretty text-base leading-relaxed md:text-lg"
                     field={description}
                   />
                 )}
@@ -168,7 +176,7 @@ export const HeroImageBackground: React.FC<HeroProps> = (props) => {
 
               {/* Banner overlay */}
               {needsBanner && (
-                <div className="@container/herobanner bg-overlay text-primary-foreground z-10 w-full max-w-[50rem]">
+                <div className="@container/herobanner bg-primary text-primary-foreground z-10 mt-8 w-full max-w-2xl rounded-sm px-4 py-4 md:px-6">
                   <div className="@[35rem]/herobanner:flex-row @[35rem]/herobanner:items-center @[35rem]/herobanner:justify-between @[35rem]/herobanner:flex @[35rem]/herobanner:gap-10 @[35rem]/herobanner:text-left">
                     {bannerText && (
                       <AnimatedSection

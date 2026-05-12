@@ -57,7 +57,7 @@ export const HeroDefault: React.FC<HeroProps> = (props) => {
             <Text
               tag="h1"
               field={title}
-              className="font-heading @md/herowrapper:text-[clamp(4.5rem,9cqi,8rem)] text-box-trim-top @lg/herowrapper:p-0 text-shadow @lg/herowrapper:text-shadow-blur-3xl @lg/herowrapper:drop-shadow-[0_35px_35px_rgba(0,0,0,0.4)] relative -ml-[2px] text-balance px-4 pt-8 text-5xl font-light leading-tight"
+              className="font-heading @md/herowrapper:text-[clamp(2.5rem,8cqi,4.5rem)] text-box-trim-top @lg/herowrapper:p-0 relative -ml-[2px] text-balance px-4 pt-8 text-4xl font-bold uppercase leading-tight tracking-wide text-primary md:pt-10 lg:text-5xl"
             />
           </AnimatedSection>
 
@@ -77,7 +77,7 @@ export const HeroDefault: React.FC<HeroProps> = (props) => {
               {description && (
                 <Text
                   tag="div"
-                  className="@sm/herowrapper:text-xl @lg/herowrapper:p-0 mt-0 text-pretty leading-tight"
+                  className="@sm/herowrapper:text-lg @lg/herowrapper:p-0 mt-0 max-w-xl text-pretty leading-relaxed text-foreground/90"
                   field={description}
                 />
               )}
@@ -115,7 +115,7 @@ export const HeroDefault: React.FC<HeroProps> = (props) => {
 
           {/* Banner */}
           {needsBanner && (
-            <div className="bg-primary text-primary-foreground @lg/herowrapper:col-start-3 @lg/herowrapper:col-end-5 @lg/herowrapper:row-start-5 @lg/herowrapper:row-end-6 @md/herowrapper:flex @md/herowrapper:gap-10 @md/herowrapper:items-center @md/herowrapper:justify-between @md/herowrapper:p-5 p-4">
+            <div className="bg-accent text-accent-foreground @lg/herowrapper:col-start-3 @lg/herowrapper:col-end-5 @lg/herowrapper:row-start-5 @lg/herowrapper:row-end-6 @md/herowrapper:flex @md/herowrapper:gap-10 @md/herowrapper:items-center @md/herowrapper:justify-between @md/herowrapper:p-5 p-4">
               {bannerText && (
                 <AnimatedSection
                   direction="up"

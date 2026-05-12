@@ -63,10 +63,10 @@ export const GlobalHeaderCentered: React.FC<GlobalHeaderProps> = (props) => {
         animate={{ opacity: visible ? 1 : 0 }}
         transition={{ duration: isReducedMotion ? 0 : 0.2 }}
         className={cn(
-          'bg-background/80 @container sticky top-0 z-50 flex h-[96px] w-full items-center justify-center border-b backdrop-blur-md'
+          'border-border/60 @container sticky top-0 z-50 flex min-h-[72px] w-full items-center justify-center border-b bg-background'
         )}
       >
-        <div className="@xl:px-8 relative mx-auto flex h-16 w-full max-w-screen-2xl items-center justify-between px-4">
+        <div className="@xl:px-10 relative mx-auto flex min-h-[72px] w-full max-w-screen-2xl items-center justify-between px-4 py-3">
           {/* Desktop Navigation */}
           <div className="@lg:flex z-10 hidden" ref={navRef}>
             <NavigationMenu className="w-full">
@@ -74,7 +74,7 @@ export const GlobalHeaderCentered: React.FC<GlobalHeaderProps> = (props) => {
                 <AnimatedHoverNav
                   mobileBreakpoint="md"
                   parentRef={navRef}
-                  indicatorClassName="bg-primary rounded-default absolute inset-0 -z-10 block"
+                  indicatorClassName="bg-accent/15 absolute inset-0 -z-10 block rounded-sm"
                 >
                   <NavigationMenuList className="flex w-full justify-between">
                     {primaryNavigationLinks?.targetItems &&
@@ -85,7 +85,7 @@ export const GlobalHeaderCentered: React.FC<GlobalHeaderProps> = (props) => {
                             <Button
                               variant="ghost"
                               asChild
-                              className="font-body bg-transparent text-base font-medium hover:bg-transparent"
+                              className="font-heading bg-transparent text-xs font-bold uppercase tracking-widest text-primary hover:bg-transparent hover:text-accent"
                             >
                               <ContentSdkLink field={item.link?.jsonValue} />
                             </Button>
@@ -94,7 +94,7 @@ export const GlobalHeaderCentered: React.FC<GlobalHeaderProps> = (props) => {
                               <Button
                                 variant="ghost"
                                 asChild
-                                className="font-body bg-transparent text-base font-medium hover:bg-transparent"
+                                className="font-heading bg-transparent text-xs font-bold uppercase tracking-widest text-primary hover:bg-transparent hover:text-accent"
                               >
                                 <Link href={item.link.jsonValue.value.href}>
                                   {item.link.jsonValue.value.text}
@@ -132,12 +132,12 @@ export const GlobalHeaderCentered: React.FC<GlobalHeaderProps> = (props) => {
           {headerContact?.jsonValue?.value && (
             <div className="@lg:flex @lg:items-center @lg:justify-end z-10 hidden">
               {isPageEditing ? (
-                <Button asChild className="font-heading text-base font-medium">
+                <Button asChild className="font-heading text-xs font-bold uppercase tracking-widest">
                   <ContentSdkLink field={headerContact.jsonValue} />
                 </Button>
               ) : (
                 headerContact.jsonValue.value.href && (
-                  <Button asChild className="font-heading text-base font-medium">
+                  <Button asChild className="font-heading text-xs font-bold uppercase tracking-widest">
                     <Link href={headerContact.jsonValue.value.href}>
                       {headerContact.jsonValue.value.text}
                     </Link>
