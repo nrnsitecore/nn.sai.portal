@@ -1,6 +1,6 @@
 'use client';
 
-import type { Dispatch, FC, SetStateAction } from 'react';
+import type { Dispatch, FC, ReactNode, SetStateAction } from 'react';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import Image from 'next/image';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
@@ -17,8 +17,9 @@ import {
   X,
 } from 'lucide-react';
 
-import type { ComponentProps } from '@/lib/component-props';
+import { useDemoPersonaContext } from '@/contexts/DemoPersonaContext';
 import { resolveAppTheme } from '@/lib/app-theme';
+import { parsePersonaOptionsFromDatasource, parseSearchExperienceCopy } from '@/lib/parse-persona-datasource';
 import { DEMO_TAXONOMY_CHANGE_EVENT, DEMO_TAXONOMY_STORAGE_KEY } from '@/lib/demo-taxonomy';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -48,11 +49,14 @@ import {
   type SearchContentType,
   type SearchResultItem,
 } from './data';
+import type { SearchResultsComponentProps } from './search-results.props';
 
 export type SearchResultsProps = {
   className?: string;
   disableUrlSync?: boolean;
   initialQuery?: string;
+  /** Sitecore datasource fields for personas + search copy (optional) */
+  fields?: unknown;
 };
 
 type SortMode = 'relevance' | 'az';
@@ -325,7 +329,9 @@ export const SearchResults: FC<SearchResultsProps> = ({
   className,
   disableUrlSync = false,
   initialQuery = '',
+  fields,
 }) => {
+  const { setPersonas, personas } = useDemoPersonaContext();
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -344,6 +350,20 @@ export const SearchResults: FC<SearchResultsProps> = ({
   const [resultsPage, setResultsPage] = useState(1);
   const [demoTaxonomyRaw, setDemoTaxonomyRaw] = useState('');
 
+  const personaKey = useMemo(() => {
+    const parsed = parsePersonaOptionsFromDatasource(fields);
+    return parsed ? `${parsed[0]!.taxonomy}|${parsed[1]!.taxonomy}` : '';
+  }, [fields]);
+
+  useEffect(() => {
+    if (!personaKey) return;
+    const parsed = parsePersonaOptionsFromDatasource(fields);
+    if (parsed) setPersonas(parsed);
+  }, [fields, personaKey, setPersonas]);
+
+  const experienceCopy = useMemo(() => parseSearchExperienceCopy(fields), [fields]);
+  const popularChipsToShow = experienceCopy.popularChips ?? popularSearches;
+
   useEffect(() => {
     const readTaxonomy = () => {
       setDemoTaxonomyRaw(typeof window !== 'undefined' ? (window.localStorage.getItem(DEMO_TAXONOMY_STORAGE_KEY) ?? '') : '');
@@ -356,6 +376,12 @@ export const SearchResults: FC<SearchResultsProps> = ({
   }, []);
 
   const activeDemoUserTaxonomy = useMemo(() => parseDemoUserTaxonomy(demoTaxonomyRaw), [demoTaxonomyRaw]);
+
+  const personaDisplayLabel = useMemo(() => {
+    if (!activeDemoUserTaxonomy) return 'All personas';
+    const match = personas.find((p) => p.taxonomy === activeDemoUserTaxonomy);
+    return match?.label ?? activeDemoUserTaxonomy;
+  }, [activeDemoUserTaxonomy, personas]);
 
   const activeCatalog = useMemo(() => {
     const merged = activeDemoUserTaxonomy
@@ -525,7 +551,8 @@ export const SearchResults: FC<SearchResultsProps> = ({
   };
 
   const displayHeading = draft.trim() || qFromUrl.trim();
-  const personaLabel = activeDemoUserTaxonomy ?? 'All personas';
+  const isDfsTheme = resolveAppTheme() === 'dfs';
+  const noResultsHints = popularChipsToShow.slice(0, 3);
 
   return (
     <section
@@ -553,7 +580,7 @@ export const SearchResults: FC<SearchResultsProps> = ({
                     runSearch();
                   }
                 }}
-                placeholder="Search products, articles, manuals, and technical resources…"
+                placeholder={experienceCopy.searchPlaceholder}
                 className="h-12 w-full rounded-xl border border-border/80 bg-background pl-11 pr-10 text-sm text-foreground shadow-inner outline-none ring-primary/20 placeholder:text-muted-foreground focus:border-primary focus:ring-2 focus:ring-primary/20"
                 autoComplete="off"
               />
@@ -574,7 +601,7 @@ export const SearchResults: FC<SearchResultsProps> = ({
           </div>
           <div className="mt-4 flex flex-wrap items-center gap-2 border-t border-border/50 pt-4">
             <span className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">Popular</span>
-            {popularSearches.map((term) => (
+            {popularChipsToShow.map((term) => (
               <button
                 key={term}
                 type="button"
@@ -590,23 +617,40 @@ export const SearchResults: FC<SearchResultsProps> = ({
         <header className="mt-10">
           <div className="flex flex-wrap items-end justify-between gap-4">
             <div>
-              <p className="text-xs font-medium uppercase tracking-widest text-primary/90">Dwyer Omega</p>
+              <p className="text-xs font-medium uppercase tracking-widest text-primary/90">
+                {experienceCopy.experienceLabel}
+              </p>
               <h1 className="mt-1 text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
                 {normalizeQuery(query) ? (
                   <>
                     Results for <span className="text-primary">&ldquo;{displayHeading}&rdquo;</span>
                   </>
+                ) : isDfsTheme ? (
+                  'Foodservice MRO search'
                 ) : (
                   'Instrument search'
                 )}
               </h1>
-              <p className="mt-2 max-w-3xl text-sm leading-relaxed text-muted-foreground">
-                Faceted navigation mirrors a modern commerce experience: filter by content type, product family, and
-                brand. Switch the demo user to see different personalized rows and AI guidance.
+              <p className="mt-2 max-w-3xl whitespace-pre-line text-sm leading-relaxed text-muted-foreground">
+                {experienceCopy.intro}
+                {isDfsTheme ? (
+                  <>
+                    {' '}
+                    <a
+                      href="https://dfsupply.com/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="font-medium text-primary underline-offset-2 hover:underline"
+                    >
+                      dfsupply.com
+                    </a>
+                    .
+                  </>
+                ) : null}
               </p>
             </div>
             <div className="rounded-xl border border-dashed border-primary/25 bg-primary/5 px-3 py-2 text-xs text-muted-foreground">
-              <span className="font-semibold text-foreground">Demo persona:</span> {personaLabel}
+              <span className="font-semibold text-foreground">Demo persona:</span> {personaDisplayLabel}
             </div>
           </div>
         </header>
@@ -798,8 +842,17 @@ export const SearchResults: FC<SearchResultsProps> = ({
               <div className="mt-10 rounded-2xl border border-dashed border-border bg-muted/25 px-6 py-12 text-center">
                 <p className="text-sm font-medium text-secondary-foreground">No matches for that combination.</p>
                 <p className="mt-1 text-sm text-muted-foreground">
-                  Try clearing filters or a phrase like &ldquo;Pressure regulators&rdquo;, &ldquo;Data loggers&rdquo;, or
-                  &ldquo;IIoT&rdquo;.
+                  Try clearing filters or a phrase like{' '}
+                  {noResultsHints.reduce<ReactNode[]>((acc, term, i) => {
+                    if (i > 0) acc.push(i === noResultsHints.length - 1 ? ' or ' : ', ');
+                    acc.push(
+                      <span key={term} className="whitespace-nowrap">
+                        &ldquo;{term}&rdquo;
+                      </span>
+                    );
+                    return acc;
+                  }, [])}
+                  .
                 </p>
                 <Button type="button" variant="secondary" className="mt-5 rounded-lg" onClick={clearFilters}>
                   Clear filters
@@ -813,6 +866,9 @@ export const SearchResults: FC<SearchResultsProps> = ({
   );
 };
 
-export const Default = (props: ComponentProps) => (
-  <SearchResults className={typeof props.params?.styles === 'string' ? props.params.styles : undefined} />
+export const Default = (props: SearchResultsComponentProps) => (
+  <SearchResults
+    className={typeof props.params?.styles === 'string' ? props.params.styles : undefined}
+    fields={props.fields}
+  />
 );

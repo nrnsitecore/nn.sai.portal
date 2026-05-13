@@ -1,0 +1,239 @@
+<!--
+  Static HTML for Sitecore HtmlSnippet population — NOT part of the Next.js app.
+  Manufacturing / MRO field-service scenario: a service technician sourcing restaurant equipment
+  repair parts through Diversified Foodservice Supply (DFS) programs (equipment repair parts,
+  OEM/OCM cross-reference, operator vs. technician paths). Reference brand story: https://dfsupply.com/
+  No JavaScript. Tailwind utility classes + inline fallbacks where useful for raw CM paste.
+-->
+<section
+  class="mx-auto w-full max-w-5xl rounded-2xl border border-border/70 bg-card p-6 shadow-sm ring-1 ring-black/[0.03] dark:ring-white/[0.06]"
+  style="max-width: 64rem; margin-left: auto; margin-right: auto; box-sizing: border-box;"
+  aria-label="Technician parts workbench — DFS foodservice MRO"
+>
+  <header class="flex flex-col gap-4 border-b border-border/60 pb-6 sm:flex-row sm:items-start sm:justify-between">
+    <div class="min-w-0 flex-1">
+      <p class="text-xs font-semibold uppercase tracking-widest text-primary">Field service · Restaurant equipment</p>
+      <h1 class="mt-1 text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
+        Parts workbench — DFS supply programs
+      </h1>
+      <p class="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground">
+        Cross-reference OEM and OCM foodservice parts, confirm fit for the asset on site, and stage a
+        technician pickup or direct-ship line aligned with equipment repair and restaurant operations
+        programs from
+        <a
+          href="https://dfsupply.com/"
+          class="font-medium text-primary underline-offset-2 hover:underline"
+          target="_blank"
+          rel="noopener noreferrer"
+        >Diversified Foodservice Supply</a>.
+      </p>
+    </div>
+    <div
+      class="flex shrink-0 items-center gap-3 rounded-2xl border border-border/60 bg-muted/30 p-3 shadow-inner"
+      style="display: flex; align-items: center; gap: 0.75rem;"
+    >
+      <img
+        src="https://images.unsplash.com/photo-1581094794329-c8112a89af12?auto=format&fit=crop&w=120&q=80"
+        alt=""
+        width="56"
+        height="56"
+        class="rounded-xl object-cover ring-1 ring-border/60"
+        style="width: 56px; height: 56px; object-fit: cover; border-radius: 0.75rem; flex-shrink: 0;"
+        loading="lazy"
+      />
+      <div class="text-left">
+        <p class="text-xs font-medium text-muted-foreground">Logged in as</p>
+        <p class="text-sm font-semibold text-foreground">M. Ortiz — Service tech</p>
+        <p class="text-xs text-muted-foreground">Agency · In-house MRO</p>
+      </div>
+    </div>
+  </header>
+
+  <div class="mt-6 grid gap-6 lg:grid-cols-[1fr_minmax(0,18rem)]">
+    <div class="min-w-0 space-y-6">
+      <!-- Active job context -->
+      <div class="rounded-2xl border border-border/70 bg-background/80 p-5 shadow-sm">
+        <div class="flex flex-wrap items-start justify-between gap-3">
+          <div>
+            <h2 class="text-sm font-semibold text-foreground">Active work order</h2>
+            <p class="mt-1 text-xs text-muted-foreground">WO-28491 · Combi oven — walk-in chain account</p>
+          </div>
+          <span class="rounded-full border border-amber-500/30 bg-amber-500/10 px-3 py-1 text-xs font-semibold text-amber-900 dark:text-amber-200">
+            Parts hold — awaiting cross-ref
+          </span>
+        </div>
+        <dl class="mt-4 grid gap-3 text-sm sm:grid-cols-2">
+          <div class="rounded-xl border border-border/50 bg-card/60 px-3 py-2.5">
+            <dt class="text-xs font-medium uppercase tracking-wide text-muted-foreground">Operator site</dt>
+            <dd class="mt-0.5 font-medium text-foreground">Harborline Bistro — Kitchen 2</dd>
+          </div>
+          <div class="rounded-xl border border-border/50 bg-card/60 px-3 py-2.5">
+            <dt class="text-xs font-medium uppercase tracking-wide text-muted-foreground">Asset tag</dt>
+            <dd class="mt-0.5 font-mono text-sm text-foreground">EQ-RNG-4482 · Mfg 2019</dd>
+          </div>
+          <div class="rounded-xl border border-border/50 bg-card/60 px-3 py-2.5 sm:col-span-2">
+            <dt class="text-xs font-medium uppercase tracking-wide text-muted-foreground">Failure mode</dt>
+            <dd class="mt-0.5 text-foreground">Steam manifold gasket weep; door seal wear beyond spec.</dd>
+          </div>
+        </dl>
+      </div>
+
+      <!-- Parts cross-reference table -->
+      <div class="overflow-hidden rounded-2xl border border-border/70 bg-background shadow-sm">
+        <div class="flex flex-wrap items-center justify-between gap-2 border-b border-border/60 bg-muted/25 px-4 py-3">
+          <h2 class="text-sm font-semibold text-foreground">DFS catalog matches</h2>
+          <p class="text-xs text-muted-foreground">Maintenance &amp; repair · OEM / OCM lines</p>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full min-w-[36rem] text-left text-sm">
+            <thead class="border-b border-border/60 bg-muted/20 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+              <tr>
+                <th class="px-4 py-3">Part description</th>
+                <th class="px-4 py-3">Cross-ref</th>
+                <th class="px-4 py-3">Program</th>
+                <th class="px-4 py-3 text-right">ETA</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-border/60">
+              <tr class="bg-card/40">
+                <td class="px-4 py-3">
+                  <div class="flex items-start gap-3">
+                    <img
+                      src="https://images.unsplash.com/photo-1556910103-1c02745aae4d?auto=format&fit=crop&w=96&q=80"
+                      alt=""
+                      width="40"
+                      height="40"
+                      class="mt-0.5 rounded-lg object-cover ring-1 ring-border/50"
+                      style="width: 40px; height: 40px; flex-shrink: 0;"
+                      loading="lazy"
+                    />
+                    <div>
+                      <p class="font-medium text-foreground">Steam manifold gasket kit</p>
+                      <p class="text-xs text-muted-foreground">High-temp silicone · combi stack</p>
+                    </div>
+                  </div>
+                </td>
+                <td class="px-4 py-3 font-mono text-xs text-foreground">SMG-KIT-4482-A</td>
+                <td class="px-4 py-3 text-xs text-muted-foreground">Equipment repair parts</td>
+                <td class="px-4 py-3 text-right text-xs font-medium text-primary">Next DC wave</td>
+              </tr>
+              <tr>
+                <td class="px-4 py-3">
+                  <div class="flex items-start gap-3">
+                    <img
+                      src="https://images.unsplash.com/photo-1498654896293-37aacf113fd9?auto=format&fit=crop&w=96&q=80"
+                      alt=""
+                      width="40"
+                      height="40"
+                      class="mt-0.5 rounded-lg object-cover ring-1 ring-border/50"
+                      style="width: 40px; height: 40px; flex-shrink: 0;"
+                      loading="lazy"
+                    />
+                    <div>
+                      <p class="font-medium text-foreground">Oven door seal assembly</p>
+                      <p class="text-xs text-muted-foreground">Magnetic closure · NSF listed</p>
+                    </div>
+                  </div>
+                </td>
+                <td class="px-4 py-3 font-mono text-xs text-foreground">ODS-SEAL-77C</td>
+                <td class="px-4 py-3 text-xs text-muted-foreground">Restaurant operations</td>
+                <td class="px-4 py-3 text-right text-xs text-muted-foreground">2–3 business days</td>
+              </tr>
+              <tr class="bg-card/40">
+                <td class="px-4 py-3">
+                  <div class="flex items-start gap-3">
+                    <img
+                      src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=96&q=80"
+                      alt=""
+                      width="40"
+                      height="40"
+                      class="mt-0.5 rounded-lg object-cover ring-1 ring-border/50"
+                      style="width: 40px; height: 40px; flex-shrink: 0;"
+                      loading="lazy"
+                    />
+                    <div>
+                      <p class="font-medium text-foreground">Disposable grease-capture liners (case)</p>
+                      <p class="text-xs text-muted-foreground">Hood line · operator consumable</p>
+                    </div>
+                  </div>
+                </td>
+                <td class="px-4 py-3 font-mono text-xs text-foreground">HDL-LNR-24CS</td>
+                <td class="px-4 py-3 text-xs text-muted-foreground">Facilities maintenance</td>
+                <td class="px-4 py-3 text-right text-xs text-muted-foreground">In stock</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="border-t border-border/60 bg-muted/15 px-4 py-3">
+          <p class="text-xs leading-relaxed text-muted-foreground">
+            Technician path: validate supersession notes against the OEM bill of materials before close-out.
+            Operator path: consumables and smallwares can release without red-tag hold when policy allows.
+          </p>
+        </div>
+      </div>
+
+      <!-- Technician note card -->
+      <div class="rounded-2xl border border-primary/20 bg-primary/5 p-5">
+        <h2 class="text-sm font-semibold text-foreground">Site note (next visit)</h2>
+        <p class="mt-2 text-sm leading-relaxed text-muted-foreground">
+          Confirm walk-in evaporator drain pitch per operator HACCP binder. If gasket kit is superseded,
+          attach photo of dataplate to the WO before ordering — aligns with DFS focus on
+          <span class="font-medium text-foreground">scale, sourcing expertise, and repair-ready assortments</span>
+          for foodservice brands.
+        </p>
+      </div>
+    </div>
+
+    <!-- Sidebar -->
+    <aside class="space-y-4">
+      <div class="rounded-2xl border border-border/70 bg-muted/20 p-4 shadow-sm">
+        <h2 class="text-xs font-bold uppercase tracking-wider text-muted-foreground">Distribution snapshot</h2>
+        <p class="mt-2 text-sm text-foreground">Continental US DC network</p>
+        <p class="mt-1 text-xs leading-relaxed text-muted-foreground">
+          Example regions: Lumberton NJ, Houston TX, Vernon Hills IL — fast paths for parts and pickup where configured.
+        </p>
+        <a
+          href="https://dfsupply.com/"
+          class="mt-3 inline-flex w-full items-center justify-center rounded-xl border border-primary/30 bg-primary/10 px-3 py-2 text-center text-sm font-semibold text-primary no-underline hover:bg-primary/15"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Open DFS supply overview
+        </a>
+      </div>
+      <div class="rounded-2xl border border-border/70 bg-background p-4 shadow-sm">
+        <h2 class="text-xs font-bold uppercase tracking-wider text-muted-foreground">Split focus (demo)</h2>
+        <ul class="mt-3 space-y-2 text-sm text-muted-foreground">
+          <li class="flex gap-2">
+            <span class="font-semibold text-foreground">60%</span>
+            <span>Maintenance &amp; repair spend (parts-heavy)</span>
+          </li>
+          <li class="flex gap-2">
+            <span class="font-semibold text-foreground">40%</span>
+            <span>Operating supplies (operator table stakes)</span>
+          </li>
+        </ul>
+        <p class="mt-3 border-t border-border/60 pt-3 text-xs text-muted-foreground">
+          Illustrative mix only — edit in Sitecore for your narrative.
+        </p>
+      </div>
+      <div class="overflow-hidden rounded-2xl border border-border/70 shadow-sm">
+        <img
+          src="https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=400&q=80"
+          alt=""
+          width="400"
+          height="220"
+          class="h-44 w-full object-cover"
+          style="width: 100%; height: 11rem; object-fit: cover; display: block;"
+          loading="lazy"
+        />
+        <div class="border-t border-border/60 bg-card p-4">
+          <p class="text-xs font-semibold uppercase tracking-wide text-primary">Technician on site</p>
+          <p class="mt-1 text-sm text-muted-foreground">
+            Staging van inventory against restaurant critical equipment list reduces second trips.
+          </p>
+        </div>
+      </div>
+    </aside>
+  </div>
+</section>

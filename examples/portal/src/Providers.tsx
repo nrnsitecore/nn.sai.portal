@@ -10,6 +10,7 @@ import { SessionProvider } from 'next-auth/react';
 import scConfig from 'sitecore.config';
 import components from '.sitecore/component-map.client';
 import { ThemeProvider } from '@/components/theme-provider/theme-provider.dev';
+import { DemoPersonaProvider } from './contexts/DemoPersonaContext';
 import { VideoProvider } from './contexts/VideoContext';
 
 export default function Providers({
@@ -38,7 +39,7 @@ export default function Providers({
               enableSystem={false}
               disableTransitionOnChange
             >
-              {children}
+              <DemoPersonaProvider>{children}</DemoPersonaProvider>
             </ThemeProvider>
           </VideoProvider>
         </SessionProvider>

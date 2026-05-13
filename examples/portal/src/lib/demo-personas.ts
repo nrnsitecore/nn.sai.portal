@@ -6,8 +6,8 @@ export type DemoPersonaOption = { label: string; taxonomy: string };
 export function getDemoPersonaOptions(): readonly DemoPersonaOption[] {
   if (resolveAppTheme() === 'dfs') {
     return [
-      { label: 'Restaurant Operator', taxonomy: 'Restaurant Operator' },
-      { label: 'Technician', taxonomy: 'Technician' },
+      { label: 'User 1 - Restaurant Operator', taxonomy: 'Restaurant Operator' },
+      { label: 'User 2 - Technician', taxonomy: 'Technician' },
     ] as const;
   }
   return [

@@ -69,6 +69,7 @@ import * as sitemetadataprops from 'src/components/site-metadata/site-metadata.p
 import * as SiteMetadata from 'src/components/site-metadata/SiteMetadata';
 import * as secondarynavigationprops from 'src/components/secondary-navigation/secondary-navigation.props';
 import * as SecondaryNavigation from 'src/components/secondary-navigation/SecondaryNavigation';
+import * as searchresultsprops from 'src/components/search-results/search-results.props';
 import * as data from 'src/components/search-results/data';
 import * as SearchResults from 'src/components/search-results/SearchResults';
 import * as SearchResultscopy from 'src/components/search-results/SearchResults copy';
@@ -362,6 +363,7 @@ export const componentMap = new Map<string, NextjsContentSdkComponent>([
   ['SiteMetadata', { ...SiteMetadata }],
   ['secondary-navigation', { ...secondarynavigationprops }],
   ['SecondaryNavigation', { ...SecondaryNavigation, componentType: 'client' }],
+  ['search-results', { ...searchresultsprops }],
   ['data', { ...data }],
   ['SearchResults', { ...SearchResults, componentType: 'client' }],
   ['SearchResults copy', { ...SearchResultscopy, componentType: 'client' }],

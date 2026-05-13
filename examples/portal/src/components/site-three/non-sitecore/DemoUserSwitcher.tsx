@@ -9,12 +9,25 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { getDemoPersonaOptions } from '@/lib/demo-personas';
+import { useDemoPersonaContext } from '@/contexts/DemoPersonaContext';
+import type { DemoPersonaOption } from '@/lib/demo-personas';
 import { DEMO_TAXONOMY_CHANGE_EVENT, DEMO_TAXONOMY_STORAGE_KEY } from '@/lib/demo-taxonomy';
 
-export function DemoUserSwitcher() {
+type DemoUserSwitcherProps = {
+  /** When the header datasource defines User1/User2 fields, those personas override context defaults */
+  headerPersonas?: readonly DemoPersonaOption[] | null;
+};
+
+export function DemoUserSwitcher({ headerPersonas }: DemoUserSwitcherProps) {
   const [taxonomy, setTaxonomy] = useState('');
-  const demoUsers = useMemo(() => getDemoPersonaOptions(), []);
+  const { personas: contextPersonas } = useDemoPersonaContext();
+
+  const demoUsers = useMemo(() => {
+    if (headerPersonas && headerPersonas.length >= 2) return headerPersonas;
+    return contextPersonas;
+  }, [contextPersonas, headerPersonas]);
+
+  const personaKey = useMemo(() => demoUsers.map((u) => u.taxonomy).join('|'), [demoUsers]);
 
   useEffect(() => {
     const storedTaxonomy = window.localStorage.getItem(DEMO_TAXONOMY_STORAGE_KEY) ?? '';
@@ -22,10 +35,11 @@ export function DemoUserSwitcher() {
     if (storedTaxonomy && !valid) {
       window.localStorage.removeItem(DEMO_TAXONOMY_STORAGE_KEY);
       setTaxonomy('');
+      window.dispatchEvent(new CustomEvent(DEMO_TAXONOMY_CHANGE_EVENT, { detail: { taxonomy: '' } }));
       return;
     }
     setTaxonomy(storedTaxonomy);
-  }, [demoUsers]);
+  }, [demoUsers, personaKey]);
 
   const handleValueChange = (value: string) => {
     setTaxonomy(value);
@@ -35,7 +49,7 @@ export function DemoUserSwitcher() {
 
   return (
     <Select value={taxonomy || undefined} onValueChange={handleValueChange}>
-      <SelectTrigger className="h-10 w-[15rem]">
+      <SelectTrigger className="h-10 min-w-[12rem] max-w-[18rem]">
         <SelectValue placeholder="Login" />
       </SelectTrigger>
       <SelectContent align="end">

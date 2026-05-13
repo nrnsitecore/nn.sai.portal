@@ -11,12 +11,21 @@ import Link from 'next/link';
 import { MiniCart } from './non-sitecore/MiniCart';
 import { SearchBox } from './non-sitecore/SearchBox';
 import { DemoUserSwitcher } from './non-sitecore/DemoUserSwitcher';
+import type { SearchResultsDatasourceFields } from '@/components/search-results/search-results.props';
 import { ComponentProps } from 'lib/component-props';
+import { parsePersonaOptionsFromDatasource } from '@/lib/parse-persona-datasource';
 import componentMap from '.sitecore/component-map';
 import { MobileMenuWrapper } from './MobileMenuWrapper';
 import { cn } from '@/lib/utils';
 
-interface Fields {
+type HeaderPersonaFields = Partial<
+  Pick<
+    SearchResultsDatasourceFields,
+    'User1Label' | 'User1Taxonomy' | 'User2Label' | 'User2Taxonomy'
+  >
+>;
+
+interface Fields extends HeaderPersonaFields {
   Logo: ImageField;
   SupportLink: LinkField;
   SearchLink: LinkField;
@@ -40,6 +49,7 @@ function isReverseThemeParam(value: string | undefined): boolean {
 export const Default = (props: HeaderSTProps) => {
   const { fields, params } = props;
   const isReverseTheme = isReverseThemeParam(params?.ReverseTheme);
+  const headerPersonas = parsePersonaOptionsFromDatasource(fields as unknown) ?? null;
 
   return (
     <section
@@ -70,7 +80,7 @@ export const Default = (props: HeaderSTProps) => {
 
           <ul className="flex min-h-[3.5rem] list-none flex-row items-center justify-end gap-0 p-0 lg:min-h-[4.5rem]">
             <li className="hidden items-center px-2 lg:flex">
-              <DemoUserSwitcher />
+              <DemoUserSwitcher headerPersonas={headerPersonas} />
             </li>
             <li className="hidden lg:block">
               <ContentSdkLink field={fields?.SupportLink} prefetch={false} className={navLinkClass} />
