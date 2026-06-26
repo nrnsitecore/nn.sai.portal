@@ -78,13 +78,8 @@ import * as modetoggledev from 'src/components/mode-toggle/mode-toggle.dev';
 import * as MediaSectiondev from 'src/components/media-section/MediaSection.dev';
 import * as meteors from 'src/components/magicui/meteors';
 import * as LogoTabs from 'src/components/logo-tabs/LogoTabs';
-import * as LocationSearchTitleZipCentereddev from 'src/components/location-search/LocationSearchTitleZipCentered.dev';
-import * as LocationSearchMapTopAllCentereddev from 'src/components/location-search/LocationSearchMapTopAllCentered.dev';
-import * as LocationSearchMapRightTitleZipCentereddev from 'src/components/location-search/LocationSearchMapRightTitleZipCentered.dev';
-import * as LocationSearchMapRightdev from 'src/components/location-search/LocationSearchMapRight.dev';
-import * as LocationSearchDefaultdev from 'src/components/location-search/LocationSearchDefault.dev';
-import * as LocationSearch from 'src/components/location-search/LocationSearch';
-import * as GoogleMapdev from 'src/components/location-search/GoogleMap.dev';
+import * as LocationUsMap from 'src/components/location-search/LocationUsMap';
+import * as LocationSearchView from 'src/components/location-search/LocationSearchView';
 import * as ImageGalleryNoSpacingdev from 'src/components/image-gallery/ImageGalleryNoSpacing.dev';
 import * as ImageGalleryGriddev from 'src/components/image-gallery/ImageGalleryGrid.dev';
 import * as ImageGalleryFiftyFiftydev from 'src/components/image-gallery/ImageGalleryFiftyFifty.dev';
@@ -117,6 +112,7 @@ import * as SubmitInfoFormdev from 'src/components/forms/submitinfo/SubmitInfoFo
 import * as EmailSignupFormdev from 'src/components/forms/email/EmailSignupForm.dev';
 import * as floatingdockdev from 'src/components/floating-dock/floating-dock.dev';
 import * as DownloadList from 'src/components/download-list/DownloadList';
+import * as TeamSection from 'src/components/component-library/TeamSection';
 import * as ProductsSection from 'src/components/component-library/ProductsSection';
 import * as Header from 'src/components/component-library/Header';
 import * as FeaturesSection from 'src/components/component-library/FeaturesSection';
@@ -210,13 +206,8 @@ export const componentMap = new Map<string, NextjsContentSdkComponent>([
   ['MediaSection', { ...MediaSectiondev }],
   ['meteors', { ...meteors }],
   ['LogoTabs', { ...LogoTabs }],
-  ['LocationSearchTitleZipCentered', { ...LocationSearchTitleZipCentereddev }],
-  ['LocationSearchMapTopAllCentered', { ...LocationSearchMapTopAllCentereddev }],
-  ['LocationSearchMapRightTitleZipCentered', { ...LocationSearchMapRightTitleZipCentereddev }],
-  ['LocationSearchMapRight', { ...LocationSearchMapRightdev }],
-  ['LocationSearchDefault', { ...LocationSearchDefaultdev }],
-  ['LocationSearch', { ...LocationSearch }],
-  ['GoogleMap', { ...GoogleMapdev }],
+  ['LocationUsMap', { ...LocationUsMap }],
+  ['LocationSearchView', { ...LocationSearchView }],
   ['ImageGalleryNoSpacing', { ...ImageGalleryNoSpacingdev }],
   ['ImageGalleryGrid', { ...ImageGalleryGriddev }],
   ['ImageGalleryFiftyFifty', { ...ImageGalleryFiftyFiftydev }],
@@ -247,6 +238,7 @@ export const componentMap = new Map<string, NextjsContentSdkComponent>([
   ['EmailSignupForm', { ...EmailSignupFormdev }],
   ['floating-dock', { ...floatingdockdev }],
   ['DownloadList', { ...DownloadList }],
+  ['TeamSection', { ...TeamSection }],
   ['ProductsSection', { ...ProductsSection }],
   ['Header', { ...Header }],
   ['FeaturesSection', { ...FeaturesSection }],

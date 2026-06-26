@@ -99,6 +99,7 @@
     "react-hook-form": "^7.59.0",
     "react-icons": "^5.5.0",
     "react-resizable-panels": "^2.1.9",
+    "react-simple-maps": "^3.0.0",
     "react-youtube": "^10.1.0",
     "recharts": "^2.15.4",
     "rsc-env": "0.0.2",
@@ -141,6 +142,10 @@
     "typescript": "~5.8.3"
   },
   "overrides": {
+    "react-simple-maps": {
+      "react": "$react",
+      "react-dom": "$react-dom"
+    },
     "picomatch": "4.0.4",
     "anymatch": {
       "picomatch": "2.3.2"
@@ -168,7 +173,11 @@
     "build": "cross-env NODE_ENV=production npm-run-all --serial sitecore-tools:generate-map sitecore-tools:build next:build",
     "lint": "eslint \"src/**/*.{ts,tsx}\"",
     "next:build": "next build",
-    "next:dev": "cross-env NODE_OPTIONS='--inspect' next dev",
+    "next:dev": "next dev",
+    "next:dev:webpack": "next dev --webpack",
+    "clean:next": "node -e \"try { require('fs').rmSync('.next', { recursive: true, force: true }); } catch (e) { if (e && e.code !== 'ENOENT') throw e; }\"",
+    "dev:clean": "npm run clean:next && npm run dev",
+    "next:dev:inspect": "cross-env NODE_OPTIONS='--inspect' next dev",
     "next:start": "next start",
     "sitecore-tools:build": "sitecore-tools project build",
     "sitecore-tools:generate-map": "sitecore-tools project component generate-map",

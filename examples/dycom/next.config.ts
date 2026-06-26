@@ -1,7 +1,15 @@
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import type { NextConfig } from 'next';
 import createNextIntlPlugin from 'next-intl/plugin';
 
+/** App directory (examples/dycom). Pins Turbopack when ancestor folders also have package-lock.json. */
+const turbopackRoot = path.dirname(fileURLToPath(import.meta.url));
+
 const nextConfig: NextConfig = {
+  turbopack: {
+    root: turbopackRoot,
+  },
   // Allow specifying a distinct distDir when concurrently running app in a container
   distDir: process.env.NEXTJS_DIST_DIR || '.next',
 
@@ -54,6 +62,18 @@ const nextConfig: NextConfig = {
         hostname: 'assets.dwyeromega.com',
         port: '',
         pathname: '/do-product-images/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'assetshare.basspro.com',
+        port: '',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'assets.basspro.com',
+        port: '',
+        pathname: '/**',
       },
     ],
     // Optimize image sizes for responsive loading

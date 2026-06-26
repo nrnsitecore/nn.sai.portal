@@ -1,37 +1,57 @@
-'use client';
+import { cache } from 'react';
+import type { JSX } from 'react';
+import { LocationSearchView } from './LocationSearchView';
+import { fetchAllLocationItems } from './location-search.fetch';
+import {
+  hasDatasourceAssigned,
+  resolveDatasource,
+  resolveLocationItems,
+  type LocationItemFields,
+  type LocationSearchProps,
+} from './location-search.types';
 
-import React from 'react';
-import { LocationSearchProps } from './location-search.props';
-import { LocationSearchDefault } from './LocationSearchDefault.dev';
-import { LocationSearchMapRight } from './LocationSearchMapRight.dev';
-import { LocationSearchMapTopAllCentered } from './LocationSearchMapTopAllCentered.dev';
-import { LocationSearchMapRightTitleZipCentered } from './LocationSearchMapRightTitleZipCentered.dev';
-import { LocationSearchTitleZipCentered } from './LocationSearchTitleZipCentered.dev';
+const loadLocationItems = cache(
+  async (datasourcePath: string, language: string): Promise<LocationItemFields[]> => {
+    return fetchAllLocationItems(datasourcePath, language);
+  }
+);
 
-// Default display of the component
+async function resolveItems(
+  fields: LocationSearchProps['fields'],
+  dataSource: string | undefined,
+  language: string
+): Promise<LocationItemFields[]> {
+  const layoutItems = resolveLocationItems(resolveDatasource(fields));
+  if (layoutItems.length > 0) return layoutItems;
 
-export const Default: React.FC<LocationSearchProps> = (props) => {
-  const { page } = props;
-  const isPageEditing = page.mode.isEditing;
-  return <LocationSearchDefault {...props} isPageEditing={isPageEditing} />;
-};
-export const MapRight: React.FC<LocationSearchProps> = (props) => {
-  const { page } = props;
-  const isPageEditing = page.mode.isEditing;
-  return <LocationSearchMapRight {...props} isPageEditing={isPageEditing} />;
-};
-export const MapTopAllCentered: React.FC<LocationSearchProps> = (props) => {
-  const { page } = props;
-  const isPageEditing = page.mode.isEditing;
-  return <LocationSearchMapTopAllCentered {...props} isPageEditing={isPageEditing} />;
-};
-export const MapRightTitleZipCentered: React.FC<LocationSearchProps> = (props) => {
-  const { page } = props;
-  const isPageEditing = page.mode.isEditing;
-  return <LocationSearchMapRightTitleZipCentered {...props} isPageEditing={isPageEditing} />;
-};
-export const MapLeftTitleZipCentered: React.FC<LocationSearchProps> = (props) => {
-  const { page } = props;
-  const isPageEditing = page.mode.isEditing;
-  return <LocationSearchTitleZipCentered {...props} isPageEditing={isPageEditing} />;
+  const path = dataSource?.trim();
+  if (!path) return [];
+
+  try {
+    return await loadLocationItems(path, language);
+  } catch (error) {
+    console.error('[LocationSearch] Failed to load location children:', error);
+    return [];
+  }
+}
+
+/**
+ * Server component: layout children from ComponentQuery, with one Edge fetch per request
+ * when layout children are empty. Avoids client effects/server actions that retrigger Pages preview.
+ */
+export const Default = async (props: LocationSearchProps): Promise<JSX.Element> => {
+  const dataSource = props.rendering?.dataSource
+    ? String(props.rendering.dataSource)
+    : undefined;
+  const language = props.page?.locale || 'en';
+  const items = await resolveItems(props.fields, dataSource, language);
+
+  return (
+    <LocationSearchView
+      items={items}
+      isPageEditing={props.page?.mode?.isEditing ?? false}
+      datasourceAssigned={hasDatasourceAssigned(props)}
+      dataSource={dataSource}
+    />
+  );
 };
