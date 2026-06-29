@@ -333,9 +333,12 @@ function ResultCard({ item, isDemoUserSelected }: { item: SearchResultItem; isDe
               <Icon className="size-3.5 shrink-0 text-white/95" aria-hidden />
               {searchFacetLabels.contentType[item.contentType]}
             </span>
-            <span className={cn('max-w-[min(100%,11rem)] text-right font-semibold leading-tight', DWYER_CARD_PILL)}>
-              {isDemoUserSelected ? formatSearchListPrice(item.id) : 'Login for pricing'}
-            </span>
+            {/* Pricing/currency only applies to products; technical content omits it. */}
+            {item.contentType === 'product' ? (
+              <span className={cn('max-w-[min(100%,11rem)] text-right font-semibold leading-tight', DWYER_CARD_PILL)}>
+                {isDemoUserSelected ? formatSearchListPrice(item.id) : 'Login for pricing'}
+              </span>
+            ) : null}
           </div>
         </div>
         <div className="flex flex-1 flex-col px-4 pb-4 pt-3.5">

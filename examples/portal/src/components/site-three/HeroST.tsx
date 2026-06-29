@@ -11,6 +11,7 @@ import {
 } from '@sitecore-content-sdk/nextjs';
 import {
   ArrowUpRight,
+  ChevronDown,
   ClipboardList,
   FileSpreadsheet,
   FileWarning,
@@ -23,6 +24,7 @@ import {
   ShieldAlert,
   TrainFront,
   Wrench,
+  X,
   type LucideIcon,
 } from 'lucide-react';
 
@@ -305,7 +307,6 @@ export const Stacked = (props: PageHeaderSTProps) => {
  * header without any datasource wiring.
  */
 
-const PORTAL_CUSTOMER_NAME = 'Pat';
 const PORTAL_CUSTOMER_ACCOUNT = 'Dow Chemical';
 const PORTAL_GATX_HOME = 'https://www.gatx.com/';
 
@@ -321,6 +322,61 @@ type PortalStatId = (typeof PORTAL_STAT_CARDS)[number]['id'];
 const PORTAL_STAT_CARD_BY_ID = Object.fromEntries(
   PORTAL_STAT_CARDS.map((card) => [card.id, card]),
 ) as Record<PortalStatId, (typeof PORTAL_STAT_CARDS)[number]>;
+
+/**
+ * Drill-down content for a stat card. Rendered as a short list when the first
+ * dashboard box is expanded. Generic columns/rows keep it reusable across metrics.
+ */
+type PortalStatDetail = {
+  summary: string;
+  columns: readonly string[];
+  rows: readonly (readonly string[])[];
+};
+
+const PORTAL_STAT_DETAILS: Record<PortalStatId, PortalStatDetail> = {
+  orders: {
+    summary: '12 open orders across new leases, requalification shopping, and movement requests.',
+    columns: ['Order', 'Description', 'Cars', 'Status', 'ETA'],
+    rows: [
+      ['SO-48213', 'New lease — DOT-117J tank cars', '6', 'In fulfillment', 'Jul 18'],
+      ['SO-48190', 'Requalification shopping — DOT-111', '9', 'Scheduled', 'Jul 24'],
+      ['SO-48155', 'Covered hopper lease renewal', '4', 'Awaiting signature', 'Jul 9'],
+      ['SO-48101', 'Gondola repair return', '5', 'In transit', 'Jul 12'],
+      ['WO-7741', 'One-Time Movement Approval (OTMA)', '2', 'Pending approval', 'Jul 6'],
+    ],
+  },
+  invoices: {
+    summary: '3 invoices need attention — one disputed, one past due, one missing a PO.',
+    columns: ['Invoice', 'Amount', 'Type', 'Status', 'Due'],
+    rows: [
+      ['INV-90233', '$48,210', 'Lease — June', 'Disputed', 'Jul 5'],
+      ['INV-90187', '$12,650', 'Repair billing', 'Past due', 'Jun 20'],
+      ['INV-90155', '$7,940', 'Mileage equalization', 'Needs PO', 'Jul 1'],
+    ],
+  },
+  maintenance: {
+    summary: '28 cars in maintenance across the shop network — next promised dates below.',
+    columns: ['Car', 'Type', 'Shop', 'Service', 'Promised'],
+    rows: [
+      ['GATX 215430', 'DOT-117J', 'Hearne, TX', 'Tank qualification', 'Jul 17'],
+      ['GATX 311902', 'DOT-111', 'Red Wing, MN', 'Valve rebuild', 'Jul 24'],
+      ['GATX 045128', 'Covered hopper', 'Waycross, GA', 'Outlet gate repair', 'Jul 11'],
+      ['GATX 198320', 'DOT-117J', 'Hearne, TX', 'Lining renewal', 'Jul 19'],
+      ['GATX 220845', 'Gondola', 'Colton, CA', 'Structural inspection', 'Aug 2'],
+    ],
+  },
+  compliance: {
+    summary: '5 qualifications are past due — schedule shopping now to limit out-of-service time.',
+    columns: ['Car', 'Type', 'Qualification', 'Due', 'Days Past'],
+    rows: [
+      ['GATX 207781', 'DOT-117J', 'Tank qualification', 'May 30', '30'],
+      ['GATX 142908', 'DOT-111', 'Pressure relief device test', 'Jun 8', '21'],
+      ['GATX 305512', 'DOT-117J', 'Thickness test', 'Jun 15', '14'],
+      ['GATX 118744', 'DOT-111', 'Tank qualification', 'Jun 20', '9'],
+      ['GATX 260133', 'DOT-117J', 'Service trial', 'Jun 25', '4'],
+    ],
+  },
+};
 
 const PORTAL_NEWS_ITEMS = [
   {
@@ -401,8 +457,16 @@ const portalInitials = (name: string) =>
     .slice(0, 2)
     .toUpperCase();
 
-const PortalPanel = ({ className, children }: { className?: string; children: React.ReactNode }) => (
-  <div className={cn('border-border bg-background rounded border p-5 shadow-sm', className)}>
+const PortalPanel = ({
+  className,
+  children,
+  id,
+}: {
+  className?: string;
+  children: React.ReactNode;
+  id?: string;
+}) => (
+  <div id={id} className={cn('border-border bg-background rounded border p-5 shadow-sm', className)}>
     {children}
   </div>
 );
@@ -724,6 +788,95 @@ const PortalFooter = () => (
   </footer>
 );
 
+/** Inline drill-down shown when the first stat box is expanded. */
+const PortalStatDetailPanel = ({
+  card,
+  detail,
+  id,
+  onClose,
+}: {
+  card: (typeof PORTAL_STAT_CARDS)[number];
+  detail: PortalStatDetail;
+  id: string;
+  onClose: () => void;
+}) => (
+  <PortalPanel className="mb-6 border-t-4" id={id}>
+    <div className="mb-4 flex items-start justify-between gap-3">
+      <div className="flex items-center gap-3">
+        <span
+          className="flex h-9 w-9 items-center justify-center rounded"
+          style={{ backgroundColor: `${card.accent}1a`, color: card.accent }}
+        >
+          <card.icon className="h-5 w-5" aria-hidden />
+        </span>
+        <div>
+          <h3 className="text-foreground text-lg font-semibold tracking-tight">
+            {card.label}
+            <span className="text-muted-foreground ml-2 text-sm font-normal tabular-nums">
+              {card.value}
+            </span>
+          </h3>
+          <p className="text-muted-foreground text-sm">{detail.summary}</p>
+        </div>
+      </div>
+      <button
+        type="button"
+        onClick={onClose}
+        className="text-muted-foreground hover:text-foreground inline-flex items-center gap-1 text-xs"
+        aria-label={`Hide ${card.label} details`}
+      >
+        Hide
+        <X className="h-3.5 w-3.5" aria-hidden />
+      </button>
+    </div>
+    <div className="overflow-x-auto">
+      <table className="w-full text-sm">
+        <thead>
+          <tr className="text-muted-foreground border-border border-b text-left">
+            {detail.columns.map((column, i) => (
+              <th
+                key={column}
+                className={cn('py-2 pr-2 font-medium', i === detail.columns.length - 1 && 'pr-0')}
+              >
+                {column}
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody className="divide-border divide-y">
+          {detail.rows.map((row) => (
+            <tr key={row[0]} className="text-foreground">
+              {row.map((cell, i) => (
+                <td
+                  key={i}
+                  className={cn(
+                    'py-2 pr-2',
+                    i === 0 ? 'font-medium tabular-nums' : 'text-muted-foreground',
+                    i === row.length - 1 && 'pr-0',
+                  )}
+                >
+                  {cell}
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+    <div className="border-border mt-4 border-t pt-3">
+      <a
+        href={PORTAL_GATX_HOME}
+        target="_blank"
+        rel="noreferrer"
+        className="text-accent inline-flex items-center gap-1.5 text-sm hover:underline"
+      >
+        View all {card.label.toLowerCase()}
+        <ArrowUpRight className="h-4 w-4" aria-hidden />
+      </a>
+    </div>
+  </PortalPanel>
+);
+
 /* -------------------------------------------------------------------------- */
 /* Persona adaptation — the dashboard reorders + reskins per demo persona     */
 /* -------------------------------------------------------------------------- */
@@ -768,6 +921,7 @@ type PortalPanelKey = 'news' | 'fleet' | 'maintenance' | 'compliance' | 'team' |
 type PortalNewsTag = (typeof PORTAL_NEWS_ITEMS)[number]['tag'];
 
 type PortalPersonaConfig = {
+  name: string;
   role: string;
   welcomeLead: string;
   primaryCta: { label: string; icon: LucideIcon };
@@ -779,6 +933,7 @@ type PortalPersonaConfig = {
 
 const PORTAL_PERSONA_CONFIG: Record<PortalPersona, PortalPersonaConfig> = {
   'Fleet Operations Manager': {
+    name: 'Dana',
     role: 'Fleet Operations Manager',
     welcomeLead: `Here's your ${PORTAL_CUSTOMER_ACCOUNT} fleet's availability, dwell, and utilization across leasing, maintenance, and compliance.`,
     primaryCta: { label: 'Export Fleet-Health QBR', icon: FileSpreadsheet },
@@ -793,6 +948,7 @@ const PORTAL_PERSONA_CONFIG: Record<PortalPersona, PortalPersonaConfig> = {
     newsOrder: ['Announcement', 'Service Update', 'Compliance', 'Resource'],
   },
   'Car Maintenance Technician': {
+    name: 'Luis',
     role: 'Car Maintenance Technician',
     welcomeLead: `Here's your shop queue, inbound cars, and the qualifications driving today's work on the ${PORTAL_CUSTOMER_ACCOUNT} fleet.`,
     primaryCta: { label: 'Open Shop Torque Card', icon: Wrench },
@@ -807,6 +963,7 @@ const PORTAL_PERSONA_CONFIG: Record<PortalPersona, PortalPersonaConfig> = {
     newsOrder: ['Service Update', 'Compliance', 'Resource', 'Announcement'],
   },
   'Leasing Account Representative': {
+    name: 'Priya',
     role: 'Leasing Account Representative',
     welcomeLead: `Here's the ${PORTAL_CUSTOMER_ACCOUNT} account's lease portfolio, open orders, and renewal timing.`,
     primaryCta: { label: 'Shop a Car', icon: TrainFront },
@@ -821,6 +978,7 @@ const PORTAL_PERSONA_CONFIG: Record<PortalPersona, PortalPersonaConfig> = {
     newsOrder: ['Resource', 'Announcement', 'Service Update', 'Compliance'],
   },
   'Regulatory Compliance Analyst': {
+    name: 'Evan',
     role: 'Regulatory Compliance Analyst',
     welcomeLead: `Here's the ${PORTAL_CUSTOMER_ACCOUNT} fleet's qualification posture and audit readiness.`,
     primaryCta: { label: 'Open Audit Documentation Pack', icon: ScrollText },
@@ -888,6 +1046,11 @@ const PortalDashboard = ({ persona }: { persona: PortalPersona }) => {
   const statCards = config.statOrder.map((id) => PORTAL_STAT_CARD_BY_ID[id]);
   const news = orderPortalNews(config.newsOrder);
 
+  const [detailOpen, setDetailOpen] = useState(false);
+  const featuredCard = statCards[0];
+  const featuredDetail = PORTAL_STAT_DETAILS[featuredCard.id];
+  const detailPanelId = 'portal-stat-detail';
+
   const panelNodes: Record<PortalPanelKey, React.ReactNode> = {
     news: <PortalNewsPanel items={news} />,
     fleet: <PortalFleetPanel />,
@@ -907,7 +1070,7 @@ const PortalDashboard = ({ persona }: { persona: PortalPersona }) => {
             {config.role}
           </span>
           <h1 className="text-foreground text-2xl font-semibold tracking-tight lg:text-3xl">
-            Welcome back, {PORTAL_CUSTOMER_NAME}
+            Welcome back, {config.name}
           </h1>
           <p className="text-muted-foreground mt-1 text-sm lg:text-base">{config.welcomeLead}</p>
         </div>
@@ -942,10 +1105,47 @@ const PortalDashboard = ({ persona }: { persona: PortalPersona }) => {
         </a>
       </div>
 
-      {/* Stat cards (persona-ordered) */}
+      {/* Stat cards (persona-ordered; the first box drills down) */}
       <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {statCards.map((card) => {
+        {statCards.map((card, index) => {
           const Icon = card.icon;
+          const isFeatured = index === 0;
+
+          if (isFeatured) {
+            return (
+              <button
+                key={card.id}
+                type="button"
+                onClick={() => setDetailOpen((open) => !open)}
+                aria-expanded={detailOpen}
+                aria-controls={detailPanelId}
+                className="border-border bg-background hover:border-accent focus-visible:ring-accent rounded border border-t-4 p-4 text-left shadow-sm transition-colors focus:outline-none focus-visible:ring-2"
+                style={{ borderTopColor: card.accent }}
+              >
+                <div className="mb-3 flex items-start justify-between">
+                  <span
+                    className="flex h-9 w-9 items-center justify-center rounded"
+                    style={{ backgroundColor: `${card.accent}1a`, color: card.accent }}
+                  >
+                    <Icon className="h-5 w-5" aria-hidden />
+                  </span>
+                  <ChevronDown
+                    className={cn(
+                      'text-muted-foreground h-4 w-4 transition-transform',
+                      detailOpen && 'rotate-180',
+                    )}
+                    aria-hidden
+                  />
+                </div>
+                <div className="text-foreground text-3xl font-semibold tabular-nums">{card.value}</div>
+                <div className="text-muted-foreground mt-1 flex items-center gap-1 text-sm">
+                  {card.label}
+                  <span className="text-accent text-xs">{detailOpen ? 'Hide' : 'View'}</span>
+                </div>
+              </button>
+            );
+          }
+
           return (
             <div
               key={card.id}
@@ -967,6 +1167,16 @@ const PortalDashboard = ({ persona }: { persona: PortalPersona }) => {
           );
         })}
       </div>
+
+      {/* First-box drill-down */}
+      {detailOpen && (
+        <PortalStatDetailPanel
+          card={featuredCard}
+          detail={featuredDetail}
+          id={detailPanelId}
+          onClose={() => setDetailOpen(false)}
+        />
+      )}
 
       {/* Panels (persona-ordered) */}
       <div className="mb-6 grid grid-cols-1 gap-6 lg:grid-cols-2">
@@ -991,7 +1201,7 @@ export const Portal = (props: PageHeaderSTProps) => {
       data-variant="Portal"
     >
       <div className="mx-auto w-full max-w-7xl px-4 py-8 lg:px-8">
-        {persona ? <PortalDashboard persona={persona} /> : <PortalLoginGate />}
+        {persona ? <PortalDashboard key={persona} persona={persona} /> : <PortalLoginGate />}
       </div>
     </section>
   );

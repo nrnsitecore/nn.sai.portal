@@ -151,9 +151,18 @@ export const relevanceScore = dfs.relevanceScore as (
   activeDemoUserTaxonomy: DemoUserTaxonomy | null
 ) => number;
 
+/** Technical (non-product) content carries no SKU or price/currency. */
+function stripCommercialFieldsForTechnical(item: SearchResultItem): SearchResultItem {
+  if (item.contentType === 'product') return item;
+  const next = { ...item };
+  delete next.sku;
+  delete next.priceLabel;
+  return next;
+}
+
 /** Small builder: defaults href to GATX and keeps rows terse. */
 function g(item: Omit<SearchResultItem, 'href'> & { href?: string }): SearchResultItem {
-  return { href: GATX_BASE, ...item };
+  return stripCommercialFieldsForTechnical({ href: GATX_BASE, ...item });
 }
 
 export function supplementalResultsForDemoUserTaxonomy(plan: DemoUserTaxonomy): SearchResultItem[] {
@@ -281,11 +290,13 @@ export function supplementalResultsForDemoUserTaxonomy(plan: DemoUserTaxonomy): 
   };
 
   const code = plan.replace(/\s+/g, '-').toLowerCase();
-  return packs[plan].map((row, i) => ({
-    ...row,
-    id: `gatx-sup-${code}-${i + 1}`,
-    demoUserTaxonomy: plan,
-  }));
+  return packs[plan].map((row, i) =>
+    stripCommercialFieldsForTechnical({
+      ...row,
+      id: `gatx-sup-${code}-${i + 1}`,
+      demoUserTaxonomy: plan,
+    }),
+  );
 }
 
 /**
