@@ -75,6 +75,21 @@ const DWYER_OMEGA_PRODUCT_IMAGES: readonly string[] = [
   'https://assets.dwyeromega.com/do-product-images/PSW-100_l.jpg?imwidth=150',
 ];
 
+/**
+ * Railcar imagery — GATX rail portal theme cards.
+ * Free Unsplash photos (verified content + 200 OK): tank cars, rail yards, hopper loading.
+ */
+const GATX_RAIL_PRODUCT_IMAGES: readonly string[] = [
+  // train with a tanker car on the tracks
+  'https://images.unsplash.com/photo-1715654530026-354295b7a1de?auto=format&fit=crop&w=300&q=80',
+  // large white tank car with barrels alongside the train
+  'https://images.unsplash.com/photo-1772057592294-0d5e05bda29c?auto=format&fit=crop&w=300&q=80',
+  // rows of freight train cars at a railyard
+  'https://images.unsplash.com/photo-1769837488866-c980d9f976eb?auto=format&fit=crop&w=300&q=80',
+  // industrial crane loading a hopper/train car
+  'https://images.unsplash.com/photo-1768974522057-b276f4818aeb?auto=format&fit=crop&w=300&q=80',
+];
+
 /** Unsplash foodservice / equipment placeholders — DFS theme product cards */
 const DFS_DEMO_PRODUCT_IMAGES: readonly string[] = [
   'https://images.unsplash.com/photo-1556910103-1c02745aae4d?auto=format&fit=crop&w=300&q=80',
@@ -89,16 +104,35 @@ const DFS_DEMO_PRODUCT_IMAGES: readonly string[] = [
   'https://images.unsplash.com/photo-1476224203421-9ac39bcb3327?auto=format&fit=crop&w=300&q=80',
 ];
 
-function productImageForResultId(id: string): string {
+function hashId(id: string): number {
   let h = 0;
   for (let i = 0; i < id.length; i++) {
     h = (h * 31 + id.charCodeAt(i)) >>> 0;
   }
+  return h;
+}
+
+function pickFromPool(id: string, pool: readonly string[]): string {
+  return pool[hashId(id) % pool.length]!;
+}
+
+function productImageForResultId(id: string): string {
+  if (resolveAppTheme() === 'gatx') {
+    return pickFromPool(id, GATX_RAIL_PRODUCT_IMAGES);
+  }
   const pool = isRailPortalTheme() ? DFS_DEMO_PRODUCT_IMAGES : DWYER_OMEGA_PRODUCT_IMAGES;
-  return pool[h % pool.length]!;
+  return pickFromPool(id, pool);
 }
 
 function resolveResultCardImage(item: SearchResultItem): string {
+  // GATX rail portal: keep every card visually on-brand with railcar imagery,
+  // while still honoring any explicitly authored image on non-product cards.
+  if (resolveAppTheme() === 'gatx') {
+    if (item.contentType === 'product') {
+      return pickFromPool(item.id, GATX_RAIL_PRODUCT_IMAGES);
+    }
+    return item.imageSrc ?? pickFromPool(item.id, GATX_RAIL_PRODUCT_IMAGES);
+  }
   if (item.contentType === 'product') {
     return productImageForResultId(item.id);
   }
