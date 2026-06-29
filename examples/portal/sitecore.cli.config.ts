@@ -34,6 +34,7 @@ export default defineCliConfig({
       'src/components/image/ImageWrapper.dev.old.tsx',
       'src/components/search-results/instrument-search-data.ts',
       'src/components/search-results/dfs-search-data.ts',
+      'src/components/search-results/gatx-search-data.ts',
     ],
   },
 });

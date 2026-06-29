@@ -18,7 +18,7 @@ import {
 } from 'lucide-react';
 
 import { useDemoPersonaContext } from '@/contexts/DemoPersonaContext';
-import { resolveAppTheme } from '@/lib/app-theme';
+import { resolveAppTheme, isRailPortalTheme } from '@/lib/app-theme';
 import { parsePersonaOptionsFromDatasource, parseSearchExperienceCopy } from '@/lib/parse-persona-datasource';
 import { DEMO_TAXONOMY_CHANGE_EVENT, DEMO_TAXONOMY_STORAGE_KEY } from '@/lib/demo-taxonomy';
 import { Badge } from '@/components/ui/badge';
@@ -94,7 +94,7 @@ function productImageForResultId(id: string): string {
   for (let i = 0; i < id.length; i++) {
     h = (h * 31 + id.charCodeAt(i)) >>> 0;
   }
-  const pool = resolveAppTheme() === 'dfs' ? DFS_DEMO_PRODUCT_IMAGES : DWYER_OMEGA_PRODUCT_IMAGES;
+  const pool = isRailPortalTheme() ? DFS_DEMO_PRODUCT_IMAGES : DWYER_OMEGA_PRODUCT_IMAGES;
   return pool[h % pool.length]!;
 }
 
@@ -551,7 +551,8 @@ export const SearchResults: FC<SearchResultsProps> = ({
   };
 
   const displayHeading = draft.trim() || qFromUrl.trim();
-  const isDfsTheme = resolveAppTheme() === 'dfs';
+  const isRailTheme = isRailPortalTheme();
+  const isGatxTheme = resolveAppTheme() === 'gatx';
   const noResultsHints = popularChipsToShow.slice(0, 3);
 
   return (
@@ -625,15 +626,28 @@ export const SearchResults: FC<SearchResultsProps> = ({
                   <>
                     Results for <span className="text-primary">&ldquo;{displayHeading}&rdquo;</span>
                   </>
-                ) : isDfsTheme ? (
-                  'Foodservice MRO search'
+                ) : isRailTheme ? (
+                  isGatxTheme ? 'Railcar fleet search' : 'Foodservice MRO search'
                 ) : (
                   'Instrument search'
                 )}
               </h1>
               <p className="mt-2 max-w-3xl whitespace-pre-line text-sm leading-relaxed text-muted-foreground">
                 {experienceCopy.intro}
-                {isDfsTheme ? (
+                {isGatxTheme ? (
+                  <>
+                    {' '}
+                    <a
+                      href="https://www.gatx.com/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="font-medium text-primary underline-offset-2 hover:underline"
+                    >
+                      gatx.com
+                    </a>
+                    .
+                  </>
+                ) : isRailTheme ? (
                   <>
                     {' '}
                     <a

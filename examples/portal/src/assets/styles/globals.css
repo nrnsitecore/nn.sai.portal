@@ -295,7 +295,7 @@
 }
 
 /*
- * Brand palettes — <html data-theme="bcbst | dwyeromega | dfs"> (NEXT_PUBLIC_APP_THEME).
+ * Brand palettes — <html data-theme="bcbst | dwyeromega | dfs | gatx"> (NEXT_PUBLIC_APP_THEME).
  * Default tokens above: DFS-inspired (navy #1b3d5d, gold #d99e32).
  * bcbst: lime / high-contrast demo (legacy starter).
  */
@@ -404,4 +404,56 @@
 
 [data-theme='dfs'] .bg-primary {
   color: var(--color-primary-foreground);
+}
+
+/*
+ * GATX railcar operations portal (https://www.gatx.com/).
+ * Corporate deep navy (#0c2340, Pantone 282-ish) primary with bright GATX blue
+ * (#0085ca, Pantone 3005-ish) accent/CTA, on white + cool-gray sections.
+ */
+[data-theme='gatx'] {
+  --background-image-gradient: linear-gradient(180deg, #0c2340 0%, #061528 100%);
+  --background-image-gradient-secondary: linear-gradient(90deg, #0c2340 0%, #14457a 55%, #0085ca 100%);
+  --color-background: #ffffff;
+  --color-foreground: #0c2340;
+  --color-card: #ffffff;
+  --color-card-foreground: #0c2340;
+  --color-popover: #ffffff;
+  --color-popover-foreground: #0c2340;
+  --color-primary: #0c2340;
+  --color-primary-foreground: #ffffff;
+  --color-primary-hover: #081a30;
+  --color-secondary: #eef2f7;
+  --color-secondary-foreground: #1f3354;
+  --color-secondary-hover: #dde5ee;
+  --color-muted: #f4f7fa;
+  --color-muted-foreground: #5b6b82;
+  --color-accent: #0085ca;
+  --color-accent-foreground: #ffffff;
+  --color-accent-hover: #006aa3;
+  --color-destructive: #dc2626;
+  --color-destructive-hover: #991b1b;
+  --color-destructive-foreground: #ffffff;
+  --color-border: #dbe3ec;
+  --color-input: #c2cedd;
+  --color-ring: #0085ca;
+  --color-tertiary-foreground: #1f3354;
+  --color-tertiary-hover: #dde5ee;
+  --color-tertiary: #eef2f7;
+  --color-dark-foreground: #cdd7e3;
+  --color-dark-hover: #14457a;
+  --color-dark: #0c2340;
+  --color-light: #f4f7fa;
+  --color-light-hover: #eef2f7;
+  --color-light-foreground: #0c2340;
+  --color-overlay: rgb(12 35 64 / 0.55);
+}
+
+[data-theme='gatx'] .bg-primary {
+  color: var(--color-primary-foreground);
+}
+
+/* GATX accent (bright blue) surfaces keep white text for AA contrast. */
+[data-theme='gatx'] .bg-accent {
+  color: var(--color-accent-foreground);
 }

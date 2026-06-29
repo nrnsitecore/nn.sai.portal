@@ -51,6 +51,14 @@ export type SearchExperienceCopy = {
   popularChips: string[] | null;
 };
 
+const GATX_DEFAULT_COPY: SearchExperienceCopy = {
+  experienceLabel: 'GATX Fleet Portal',
+  intro:
+    'Railcar fleet search for lease status, shop repair, qualification, and compliance resources across North America and specialty assets. Use the header login to choose a demo role — Fleet Operations, Maintenance, Leasing, or Regulatory Compliance — to personalize results and AI tips.',
+  searchPlaceholder: 'Search fleet assets, manuals, qualifications, and operator resources…',
+  popularChips: null,
+};
+
 const DFS_DEFAULT_COPY: SearchExperienceCopy = {
   experienceLabel: 'DFS Supply',
   intro:
@@ -68,7 +76,10 @@ const INSTRUMENT_DEFAULT_COPY: SearchExperienceCopy = {
 };
 
 function themeDefaultCopy(): SearchExperienceCopy {
-  return resolveAppTheme() === 'dfs' ? DFS_DEFAULT_COPY : INSTRUMENT_DEFAULT_COPY;
+  const theme = resolveAppTheme();
+  if (theme === 'gatx') return GATX_DEFAULT_COPY;
+  if (theme === 'dfs') return DFS_DEFAULT_COPY;
+  return INSTRUMENT_DEFAULT_COPY;
 }
 
 export function parseSearchExperienceCopy(fields: unknown): SearchExperienceCopy {

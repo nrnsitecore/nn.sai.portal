@@ -6,11 +6,11 @@ import type { ComponentProps } from '@/lib/component-props';
  * Datasource fields for Search Results (Sitecore template).
  * Authors: assign a datasource item with these Single-Line / Multi-Line Text fields.
  *
- * Personas (required for two-user demo):
- * - User1Label — e.g. "User 1 - Restaurant Operator"
- * - User1Taxonomy — must match search mock parser, e.g. "Restaurant Operator"
- * - User2Label — e.g. "User 2 - Technician"
- * - User2Taxonomy — e.g. "Technician"
+ * Personas (required for multi-user demo; up to four for GATX portal):
+ * - User1Label — e.g. "Fleet Operations Manager"
+ * - User1Taxonomy — must match search mock parser, e.g. "Fleet Operations Manager"
+ * - User2Label — e.g. "Car Maintenance Technician"
+ * - User2Taxonomy — e.g. "Car Maintenance Technician"
  *
  * Optional copy:
  * - ExperienceLabel — e.g. "DFS Supply" (shown above results title)

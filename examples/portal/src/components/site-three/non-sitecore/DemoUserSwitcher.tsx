@@ -48,8 +48,8 @@ export function DemoUserSwitcher({ headerPersonas }: DemoUserSwitcherProps) {
   };
 
   return (
-    <Select value={taxonomy || undefined} onValueChange={handleValueChange}>
-      <SelectTrigger className="h-10 min-w-[12rem] max-w-[18rem]">
+    <Select value={taxonomy} onValueChange={handleValueChange}>
+      <SelectTrigger className="h-10 min-w-[14rem] max-w-[22rem]">
         <SelectValue placeholder="Login" />
       </SelectTrigger>
       <SelectContent align="end">

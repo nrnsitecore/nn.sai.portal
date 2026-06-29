@@ -1,16 +1,19 @@
 /**
- * Search demo data facade: DFS foodservice mock when `NEXT_PUBLIC_APP_THEME=dfs`, else Dwyer instrumentation mock.
+ * Search demo data facade: GATX rail portal, DFS foodservice, or Dwyer instrumentation mock.
  */
 import { resolveAppTheme } from '@/lib/app-theme';
 import * as dfsSearchData from './dfs-search-data';
+import * as gatxSearchData from './gatx-search-data';
 import * as instrumentSearchData from './instrument-search-data';
 
-const isDfs = resolveAppTheme() === 'dfs';
-const active = isDfs ? dfsSearchData : instrumentSearchData;
+const theme = resolveAppTheme();
+const active =
+  theme === 'gatx' ? gatxSearchData : theme === 'dfs' ? dfsSearchData : instrumentSearchData;
 
 export type DemoUserTaxonomy =
   | import('./instrument-search-data').DemoUserTaxonomy
-  | import('./dfs-search-data').DemoUserTaxonomy;
+  | import('./dfs-search-data').DemoUserTaxonomy
+  | import('./gatx-search-data').DemoUserTaxonomy;
 
 export type SearchContentType = import('./instrument-search-data').SearchContentType;
 export type SearchCategory = import('./instrument-search-data').SearchCategory;
@@ -26,7 +29,12 @@ export type SearchResultItem = Omit<
   visibleForDemoUsers?: DemoUserTaxonomy[];
 };
 
-export const DWYER_OMEGA_BASE = isDfs ? dfsSearchData.DFS_SUPPLY_BASE : instrumentSearchData.DWYER_OMEGA_BASE;
+export const DWYER_OMEGA_BASE =
+  theme === 'gatx'
+    ? gatxSearchData.GATX_BASE
+    : theme === 'dfs'
+      ? dfsSearchData.DFS_SUPPLY_BASE
+      : instrumentSearchData.DWYER_OMEGA_BASE;
 
 export const RESULTS_PAGE_SIZE = active.RESULTS_PAGE_SIZE;
 export const searchFacetLabels = active.searchFacetLabels;
