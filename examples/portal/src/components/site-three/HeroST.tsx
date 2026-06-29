@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   Text as ContentSdkText,
   NextImage as ContentSdkImage,
@@ -12,17 +12,22 @@ import {
 import {
   ArrowUpRight,
   ClipboardList,
+  FileSpreadsheet,
   FileWarning,
+  Lock,
   Mail,
   Pencil,
   Phone,
+  ScrollText,
   Search,
   ShieldAlert,
   TrainFront,
   Wrench,
+  type LucideIcon,
 } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
+import { DEMO_TAXONOMY_CHANGE_EVENT, DEMO_TAXONOMY_STORAGE_KEY } from '@/lib/demo-taxonomy';
 
 interface Fields {
   Eyebrow: Field<string>;
@@ -305,11 +310,17 @@ const PORTAL_CUSTOMER_ACCOUNT = 'Dow Chemical';
 const PORTAL_GATX_HOME = 'https://www.gatx.com/';
 
 const PORTAL_STAT_CARDS = [
-  { label: 'Open Orders', value: '12', accent: '#0085ca', icon: ClipboardList },
-  { label: 'Invoices Needing Attention', value: '3', accent: '#c92a2a', icon: FileWarning },
-  { label: 'Cars In Maintenance', value: '28', accent: '#c8922e', icon: Wrench },
-  { label: 'Compliance Past Due', value: '5', accent: '#c92a2a', icon: ShieldAlert },
+  { id: 'orders', label: 'Open Orders', value: '12', accent: '#0085ca', icon: ClipboardList },
+  { id: 'invoices', label: 'Invoices Needing Attention', value: '3', accent: '#c92a2a', icon: FileWarning },
+  { id: 'maintenance', label: 'Cars In Maintenance', value: '28', accent: '#c8922e', icon: Wrench },
+  { id: 'compliance', label: 'Compliance Past Due', value: '5', accent: '#c92a2a', icon: ShieldAlert },
 ] as const;
+
+type PortalStatId = (typeof PORTAL_STAT_CARDS)[number]['id'];
+
+const PORTAL_STAT_CARD_BY_ID = Object.fromEntries(
+  PORTAL_STAT_CARDS.map((card) => [card.id, card]),
+) as Record<PortalStatId, (typeof PORTAL_STAT_CARDS)[number]>;
 
 const PORTAL_NEWS_ITEMS = [
   {
@@ -577,7 +588,401 @@ const PortalQuickCarLookup = () => {
   );
 };
 
+/* ---- Reusable dashboard panels (shared across personas) ---- */
+
+const PortalNewsPanel = ({
+  items,
+}: {
+  items: readonly (typeof PORTAL_NEWS_ITEMS)[number][];
+}) => (
+  <PortalPanel>
+    <PortalPanelHeading
+      title="News, Alerts & Resources"
+      action={<Pencil className="text-muted-foreground h-4 w-4" aria-hidden />}
+    />
+    <ul className="divide-border divide-y">
+      {items.map((item) => (
+        <li key={item.title} className="py-3 first:pt-0 last:pb-0">
+          <div className="mb-1 flex items-center gap-2">
+            <span className="bg-muted text-muted-foreground rounded px-2 py-0.5 text-xs font-medium">
+              {item.tag}
+            </span>
+            <span className="text-muted-foreground text-xs">{item.date}</span>
+          </div>
+          <p className="text-foreground font-medium">{item.title}</p>
+          <p className="text-muted-foreground text-sm">{item.body}</p>
+        </li>
+      ))}
+    </ul>
+  </PortalPanel>
+);
+
+const PortalFleetPanel = () => (
+  <PortalPanel>
+    <PortalPanelHeading title="Leased Fleet Summary" subtitle="Active cars on lease by type" />
+    <PortalFleetDonut />
+  </PortalPanel>
+);
+
+const PortalMaintenancePanel = () => (
+  <PortalPanel>
+    <PortalPanelHeading
+      title="Maintenance Summary"
+      subtitle="Scheduled shop events and promised delivery"
+    />
+    <div className="overflow-x-auto">
+      <table className="w-full text-sm">
+        <thead>
+          <tr className="text-muted-foreground border-border border-b text-left">
+            <th className="py-2 pr-2 font-medium">Car Type</th>
+            <th className="py-2 pr-2 text-right font-medium">Scheduled</th>
+            <th className="py-2 pr-2 font-medium">Inbound</th>
+            <th className="py-2 pr-2 font-medium">Promised</th>
+            <th className="py-2 text-right font-medium">Total</th>
+          </tr>
+        </thead>
+        <tbody className="divide-border divide-y">
+          {PORTAL_MAINTENANCE_ROWS.map((row) => (
+            <tr key={row.carType} className="text-foreground">
+              <td className="py-2 pr-2">{row.carType}</td>
+              <td className="py-2 pr-2 text-right tabular-nums">{row.scheduled}</td>
+              <td className="text-muted-foreground py-2 pr-2">{row.inbound}</td>
+              <td className="text-muted-foreground py-2 pr-2">{row.promised}</td>
+              <td className="py-2 text-right tabular-nums">{row.total}</td>
+            </tr>
+          ))}
+          <tr className="text-foreground font-semibold">
+            <td className="py-2 pr-2">Totals</td>
+            <td className="py-2 pr-2 text-right tabular-nums">{PORTAL_MAINTENANCE_TOTALS.scheduled}</td>
+            <td className="py-2 pr-2" />
+            <td className="py-2 pr-2" />
+            <td className="py-2 text-right tabular-nums">{PORTAL_MAINTENANCE_TOTALS.total}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </PortalPanel>
+);
+
+const PortalCompliancePanel = () => (
+  <PortalPanel>
+    <PortalPanelHeading title="Compliance Summary" subtitle="Qualifications by car type and timing" />
+    <PortalComplianceBars />
+  </PortalPanel>
+);
+
+const PortalTeamPanel = () => (
+  <PortalPanel>
+    <PortalPanelHeading title="Your GATX Service Team" subtitle="Direct contacts for your account" />
+    <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+      {PORTAL_SERVICE_TEAM.map((c) => (
+        <div key={c.email} className="space-y-2">
+          <div className="flex items-center gap-2">
+            <span className="bg-primary text-primary-foreground flex h-9 w-9 items-center justify-center rounded-full text-xs font-semibold">
+              {portalInitials(c.name)}
+            </span>
+            <div className="leading-tight">
+              <div className="text-foreground text-sm font-medium">{c.name}</div>
+              <div className="text-muted-foreground text-xs">{c.role}</div>
+            </div>
+          </div>
+          <a
+            href={`mailto:${c.email}`}
+            className="text-accent flex items-center gap-1.5 text-xs hover:underline"
+          >
+            <Mail className="h-3.5 w-3.5" aria-hidden />
+            {c.email}
+          </a>
+          <p className="text-muted-foreground flex items-center gap-1.5 text-xs">
+            <Phone className="h-3.5 w-3.5" aria-hidden />
+            {c.phone}
+          </p>
+        </div>
+      ))}
+    </div>
+  </PortalPanel>
+);
+
+const PortalFooter = () => (
+  <footer className="border-border text-muted-foreground flex flex-wrap items-center justify-between gap-2 border-t pt-4 text-xs">
+    <span>&copy; 2026 GATX Corporation. All rights reserved.</span>
+    <span className="flex flex-wrap items-center gap-4">
+      <a href={PORTAL_GATX_HOME} target="_blank" rel="noreferrer" className="hover:text-foreground">
+        Contact Us
+      </a>
+      <a href={PORTAL_GATX_HOME} target="_blank" rel="noreferrer" className="hover:text-foreground">
+        Privacy
+      </a>
+      <a href={PORTAL_GATX_HOME} target="_blank" rel="noreferrer" className="hover:text-foreground">
+        Terms
+      </a>
+      <span>1-800-555-GATX</span>
+      <a href="mailto:support@gatx.com" className="hover:text-foreground">
+        support@gatx.com
+      </a>
+    </span>
+  </footer>
+);
+
+/* -------------------------------------------------------------------------- */
+/* Persona adaptation — the dashboard reorders + reskins per demo persona     */
+/* -------------------------------------------------------------------------- */
+
+const PORTAL_PERSONAS = [
+  'Fleet Operations Manager',
+  'Car Maintenance Technician',
+  'Leasing Account Representative',
+  'Regulatory Compliance Analyst',
+] as const;
+
+type PortalPersona = (typeof PORTAL_PERSONAS)[number];
+
+function isPortalPersona(value: string): value is PortalPersona {
+  return (PORTAL_PERSONAS as readonly string[]).includes(value);
+}
+
+/**
+ * Subscribe to the demo persona selected in the header switcher. Mirrors the
+ * DownloadList/SearchResults pattern: starts null (server + first client paint),
+ * then reads localStorage in an effect and re-reads on the change event, so the
+ * hero swaps personas live with no reload and without a hydration mismatch.
+ */
+function useActivePortalPersona(): PortalPersona | null {
+  const [persona, setPersona] = useState<PortalPersona | null>(null);
+
+  useEffect(() => {
+    const read = () => {
+      const stored = window.localStorage.getItem(DEMO_TAXONOMY_STORAGE_KEY) ?? '';
+      setPersona(isPortalPersona(stored) ? stored : null);
+    };
+
+    read();
+    window.addEventListener(DEMO_TAXONOMY_CHANGE_EVENT, read);
+    return () => window.removeEventListener(DEMO_TAXONOMY_CHANGE_EVENT, read);
+  }, []);
+
+  return persona;
+}
+
+type PortalPanelKey = 'news' | 'fleet' | 'maintenance' | 'compliance' | 'team' | 'lookup';
+type PortalNewsTag = (typeof PORTAL_NEWS_ITEMS)[number]['tag'];
+
+type PortalPersonaConfig = {
+  role: string;
+  welcomeLead: string;
+  primaryCta: { label: string; icon: LucideIcon };
+  spotlight: { eyebrow: string; title: string; body: string; ctaLabel: string };
+  statOrder: readonly PortalStatId[];
+  panelOrder: readonly PortalPanelKey[];
+  newsOrder: readonly PortalNewsTag[];
+};
+
+const PORTAL_PERSONA_CONFIG: Record<PortalPersona, PortalPersonaConfig> = {
+  'Fleet Operations Manager': {
+    role: 'Fleet Operations Manager',
+    welcomeLead: `Here's your ${PORTAL_CUSTOMER_ACCOUNT} fleet's availability, dwell, and utilization across leasing, maintenance, and compliance.`,
+    primaryCta: { label: 'Export Fleet-Health QBR', icon: FileSpreadsheet },
+    spotlight: {
+      eyebrow: 'Fleet focus',
+      title: 'Keep qualified cars in revenue service',
+      body: 'Cars sitting in shop or nearing qualification cut into revenue miles. Prioritize dwell reduction and re-positioning to keep utilization high.',
+      ctaLabel: 'View utilization & dwell',
+    },
+    statOrder: ['orders', 'maintenance', 'compliance', 'invoices'],
+    panelOrder: ['fleet', 'maintenance', 'compliance', 'news', 'team', 'lookup'],
+    newsOrder: ['Announcement', 'Service Update', 'Compliance', 'Resource'],
+  },
+  'Car Maintenance Technician': {
+    role: 'Car Maintenance Technician',
+    welcomeLead: `Here's your shop queue, inbound cars, and the qualifications driving today's work on the ${PORTAL_CUSTOMER_ACCOUNT} fleet.`,
+    primaryCta: { label: 'Open Shop Torque Card', icon: Wrench },
+    spotlight: {
+      eyebrow: 'Shop focus',
+      title: 'Prove the fault before car release',
+      body: 'Confirm the torque sequence and leak-test results on gasketed bottom-outlet valves before releasing a car back to service.',
+      ctaLabel: 'Open shop manuals',
+    },
+    statOrder: ['maintenance', 'compliance', 'orders', 'invoices'],
+    panelOrder: ['maintenance', 'compliance', 'fleet', 'news', 'lookup', 'team'],
+    newsOrder: ['Service Update', 'Compliance', 'Resource', 'Announcement'],
+  },
+  'Leasing Account Representative': {
+    role: 'Leasing Account Representative',
+    welcomeLead: `Here's the ${PORTAL_CUSTOMER_ACCOUNT} account's lease portfolio, open orders, and renewal timing.`,
+    primaryCta: { label: 'Shop a Car', icon: TrainFront },
+    spotlight: {
+      eyebrow: 'Account focus',
+      title: 'Match car type to shipper qualification',
+      body: 'Review remaining lease term and qualified replacement options so renewals line up with each shipper\u2019s commodity and qualification needs.',
+      ctaLabel: 'View lease portfolio',
+    },
+    statOrder: ['orders', 'invoices', 'maintenance', 'compliance'],
+    panelOrder: ['fleet', 'news', 'team', 'lookup', 'maintenance', 'compliance'],
+    newsOrder: ['Resource', 'Announcement', 'Service Update', 'Compliance'],
+  },
+  'Regulatory Compliance Analyst': {
+    role: 'Regulatory Compliance Analyst',
+    welcomeLead: `Here's the ${PORTAL_CUSTOMER_ACCOUNT} fleet's qualification posture and audit readiness.`,
+    primaryCta: { label: 'Open Audit Documentation Pack', icon: ScrollText },
+    spotlight: {
+      eyebrow: 'Compliance focus',
+      title: 'Close audit gaps before qualification expiry',
+      body: 'Bundle test results, certificates, and component traceability for cars with qualifications due this year to stay audit-ready.',
+      ctaLabel: 'Download audit pack',
+    },
+    statOrder: ['compliance', 'maintenance', 'orders', 'invoices'],
+    panelOrder: ['compliance', 'maintenance', 'fleet', 'news', 'lookup', 'team'],
+    newsOrder: ['Compliance', 'Service Update', 'Resource', 'Announcement'],
+  },
+};
+
+/** Reorder the shared news items by a persona's tag priority (unlisted tags fall to the end). */
+function orderPortalNews(order: readonly PortalNewsTag[]) {
+  const rank = (tag: PortalNewsTag) => {
+    const index = order.indexOf(tag);
+    return index < 0 ? order.length : index;
+  };
+  return [...PORTAL_NEWS_ITEMS].sort((a, b) => rank(a.tag) - rank(b.tag));
+}
+
+/** No persona selected: prompt the visitor to "log in" by picking a profile in the header. */
+const PortalLoginGate = () => (
+  <div className="mx-auto flex max-w-xl flex-col items-center px-4 py-12 text-center">
+    <span className="bg-primary text-primary-foreground mb-5 flex h-14 w-14 items-center justify-center rounded-full">
+      <Lock className="h-6 w-6" aria-hidden />
+    </span>
+    <h1 className="text-foreground text-2xl font-semibold tracking-tight lg:text-3xl">
+      Sign in to the GATX Customer Portal
+    </h1>
+    <p className="text-muted-foreground mt-3 text-sm lg:text-base">
+      Choose a profile from the <span className="text-foreground font-medium">Login</span> menu in the
+      header to open your personalized fleet, maintenance, and compliance dashboard.
+    </p>
+    <ul className="mt-6 grid w-full grid-cols-1 gap-2 text-sm sm:grid-cols-2">
+      {PORTAL_PERSONAS.map((persona) => (
+        <li
+          key={persona}
+          className="border-border bg-background flex items-center gap-2 rounded border px-3 py-2 text-left"
+        >
+          <TrainFront className="text-accent h-4 w-4 shrink-0" aria-hidden />
+          <span className="text-foreground">{persona}</span>
+        </li>
+      ))}
+    </ul>
+    <a
+      href={PORTAL_GATX_HOME}
+      target="_blank"
+      rel="noreferrer"
+      className="btn btn-secondary mt-6 inline-flex items-center gap-2"
+    >
+      Visit gatx.com
+      <ArrowUpRight className="h-4 w-4" aria-hidden />
+    </a>
+  </div>
+);
+
+/** Persona-adapted dashboard: copy, stat order, spotlight, panel order, and news all vary. */
+const PortalDashboard = ({ persona }: { persona: PortalPersona }) => {
+  const config = PORTAL_PERSONA_CONFIG[persona];
+  const PrimaryIcon = config.primaryCta.icon;
+  const statCards = config.statOrder.map((id) => PORTAL_STAT_CARD_BY_ID[id]);
+  const news = orderPortalNews(config.newsOrder);
+
+  const panelNodes: Record<PortalPanelKey, React.ReactNode> = {
+    news: <PortalNewsPanel items={news} />,
+    fleet: <PortalFleetPanel />,
+    maintenance: <PortalMaintenancePanel />,
+    compliance: <PortalCompliancePanel />,
+    team: <PortalTeamPanel />,
+    lookup: <PortalQuickCarLookup />,
+  };
+
+  return (
+    <>
+      {/* Welcome header */}
+      <header className="border-border mb-6 flex flex-wrap items-start justify-between gap-4 border-b pb-6">
+        <div>
+          <span className="bg-accent/10 text-accent mb-2 inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium">
+            <span className="bg-accent h-1.5 w-1.5 rounded-full" aria-hidden />
+            {config.role}
+          </span>
+          <h1 className="text-foreground text-2xl font-semibold tracking-tight lg:text-3xl">
+            Welcome back, {PORTAL_CUSTOMER_NAME}
+          </h1>
+          <p className="text-muted-foreground mt-1 text-sm lg:text-base">{config.welcomeLead}</p>
+        </div>
+        <a
+          href={PORTAL_GATX_HOME}
+          target="_blank"
+          rel="noreferrer"
+          className="btn btn-primary flex items-center gap-2"
+        >
+          <PrimaryIcon className="h-4 w-4" aria-hidden />
+          {config.primaryCta.label}
+        </a>
+      </header>
+
+      {/* Persona spotlight */}
+      <div className="bg-primary text-primary-foreground mb-6 flex flex-col gap-4 rounded p-5 sm:flex-row sm:items-center sm:justify-between">
+        <div className="max-w-3xl">
+          <div className="text-primary-foreground/70 text-xs font-semibold uppercase tracking-wide">
+            {config.spotlight.eyebrow}
+          </div>
+          <h2 className="mt-1 text-lg font-semibold tracking-tight">{config.spotlight.title}</h2>
+          <p className="text-primary-foreground/80 mt-1 text-sm">{config.spotlight.body}</p>
+        </div>
+        <a
+          href={PORTAL_GATX_HOME}
+          target="_blank"
+          rel="noreferrer"
+          className="btn btn-secondary flex shrink-0 items-center gap-2"
+        >
+          {config.spotlight.ctaLabel}
+          <ArrowUpRight className="h-4 w-4" aria-hidden />
+        </a>
+      </div>
+
+      {/* Stat cards (persona-ordered) */}
+      <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {statCards.map((card) => {
+          const Icon = card.icon;
+          return (
+            <div
+              key={card.id}
+              className="border-border bg-background rounded border border-t-4 p-4 shadow-sm"
+              style={{ borderTopColor: card.accent }}
+            >
+              <div className="mb-3 flex items-start justify-between">
+                <span
+                  className="flex h-9 w-9 items-center justify-center rounded"
+                  style={{ backgroundColor: `${card.accent}1a`, color: card.accent }}
+                >
+                  <Icon className="h-5 w-5" aria-hidden />
+                </span>
+                <ArrowUpRight className="text-muted-foreground h-4 w-4" aria-hidden />
+              </div>
+              <div className="text-foreground text-3xl font-semibold tabular-nums">{card.value}</div>
+              <div className="text-muted-foreground mt-1 text-sm">{card.label}</div>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Panels (persona-ordered) */}
+      <div className="mb-6 grid grid-cols-1 gap-6 lg:grid-cols-2">
+        {config.panelOrder.map((key) => (
+          <div key={key}>{panelNodes[key]}</div>
+        ))}
+      </div>
+
+      <PortalFooter />
+    </>
+  );
+};
+
 export const Portal = (props: PageHeaderSTProps) => {
+  const persona = useActivePortalPersona();
+
   return (
     <section
       className={cn('bg-muted/40 text-foreground w-full', props?.params?.styles)}
@@ -586,180 +991,7 @@ export const Portal = (props: PageHeaderSTProps) => {
       data-variant="Portal"
     >
       <div className="mx-auto w-full max-w-7xl px-4 py-8 lg:px-8">
-        {/* Welcome header */}
-        <header className="border-border mb-6 flex flex-wrap items-start justify-between gap-4 border-b pb-6">
-          <div>
-            <h1 className="text-foreground text-2xl font-semibold tracking-tight lg:text-3xl">
-              Welcome back, {PORTAL_CUSTOMER_NAME}
-            </h1>
-            <p className="text-muted-foreground mt-1 text-sm lg:text-base">
-              Here&apos;s the health of your {PORTAL_CUSTOMER_ACCOUNT} fleet across leasing, maintenance,
-              and compliance.
-            </p>
-          </div>
-          <a
-            href={PORTAL_GATX_HOME}
-            target="_blank"
-            rel="noreferrer"
-            className="btn btn-primary flex items-center gap-2"
-          >
-            <TrainFront className="h-4 w-4" aria-hidden />
-            Shop a Car
-          </a>
-        </header>
-
-        {/* Stat cards */}
-        <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {PORTAL_STAT_CARDS.map((card) => {
-            const Icon = card.icon;
-            return (
-              <div
-                key={card.label}
-                className="border-border bg-background rounded border border-t-4 p-4 shadow-sm"
-                style={{ borderTopColor: card.accent }}
-              >
-                <div className="mb-3 flex items-start justify-between">
-                  <span
-                    className="flex h-9 w-9 items-center justify-center rounded"
-                    style={{ backgroundColor: `${card.accent}1a`, color: card.accent }}
-                  >
-                    <Icon className="h-5 w-5" aria-hidden />
-                  </span>
-                  <ArrowUpRight className="text-muted-foreground h-4 w-4" aria-hidden />
-                </div>
-                <div className="text-foreground text-3xl font-semibold tabular-nums">{card.value}</div>
-                <div className="text-muted-foreground mt-1 text-sm">{card.label}</div>
-              </div>
-            );
-          })}
-        </div>
-
-        {/* News + Leased fleet */}
-        <div className="mb-6 grid grid-cols-1 gap-6 lg:grid-cols-3">
-          <PortalPanel className="lg:col-span-2">
-            <PortalPanelHeading
-              title="News, Alerts & Resources"
-              action={<Pencil className="text-muted-foreground h-4 w-4" aria-hidden />}
-            />
-            <ul className="divide-border divide-y">
-              {PORTAL_NEWS_ITEMS.map((item) => (
-                <li key={item.title} className="py-3 first:pt-0 last:pb-0">
-                  <div className="mb-1 flex items-center gap-2">
-                    <span className="bg-muted text-muted-foreground rounded px-2 py-0.5 text-xs font-medium">
-                      {item.tag}
-                    </span>
-                    <span className="text-muted-foreground text-xs">{item.date}</span>
-                  </div>
-                  <p className="text-foreground font-medium">{item.title}</p>
-                  <p className="text-muted-foreground text-sm">{item.body}</p>
-                </li>
-              ))}
-            </ul>
-          </PortalPanel>
-          <PortalPanel>
-            <PortalPanelHeading title="Leased Fleet Summary" subtitle="Active cars on lease by type" />
-            <PortalFleetDonut />
-          </PortalPanel>
-        </div>
-
-        {/* Maintenance + Compliance */}
-        <div className="mb-6 grid grid-cols-1 gap-6 lg:grid-cols-2">
-          <PortalPanel>
-            <PortalPanelHeading
-              title="Maintenance Summary"
-              subtitle="Scheduled shop events and promised delivery"
-            />
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm">
-                <thead>
-                  <tr className="text-muted-foreground border-border border-b text-left">
-                    <th className="py-2 pr-2 font-medium">Car Type</th>
-                    <th className="py-2 pr-2 text-right font-medium">Scheduled</th>
-                    <th className="py-2 pr-2 font-medium">Inbound</th>
-                    <th className="py-2 pr-2 font-medium">Promised</th>
-                    <th className="py-2 text-right font-medium">Total</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-border divide-y">
-                  {PORTAL_MAINTENANCE_ROWS.map((row) => (
-                    <tr key={row.carType} className="text-foreground">
-                      <td className="py-2 pr-2">{row.carType}</td>
-                      <td className="py-2 pr-2 text-right tabular-nums">{row.scheduled}</td>
-                      <td className="text-muted-foreground py-2 pr-2">{row.inbound}</td>
-                      <td className="text-muted-foreground py-2 pr-2">{row.promised}</td>
-                      <td className="py-2 text-right tabular-nums">{row.total}</td>
-                    </tr>
-                  ))}
-                  <tr className="text-foreground font-semibold">
-                    <td className="py-2 pr-2">Totals</td>
-                    <td className="py-2 pr-2 text-right tabular-nums">{PORTAL_MAINTENANCE_TOTALS.scheduled}</td>
-                    <td className="py-2 pr-2" />
-                    <td className="py-2 pr-2" />
-                    <td className="py-2 text-right tabular-nums">{PORTAL_MAINTENANCE_TOTALS.total}</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </PortalPanel>
-          <PortalPanel>
-            <PortalPanelHeading title="Compliance Summary" subtitle="Qualifications by car type and timing" />
-            <PortalComplianceBars />
-          </PortalPanel>
-        </div>
-
-        {/* Service team + Lookup */}
-        <div className="mb-6 grid grid-cols-1 gap-6 lg:grid-cols-2">
-          <PortalPanel>
-            <PortalPanelHeading title="Your GATX Service Team" subtitle="Direct contacts for your account" />
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-              {PORTAL_SERVICE_TEAM.map((c) => (
-                <div key={c.email} className="space-y-2">
-                  <div className="flex items-center gap-2">
-                    <span className="bg-primary text-primary-foreground flex h-9 w-9 items-center justify-center rounded-full text-xs font-semibold">
-                      {portalInitials(c.name)}
-                    </span>
-                    <div className="leading-tight">
-                      <div className="text-foreground text-sm font-medium">{c.name}</div>
-                      <div className="text-muted-foreground text-xs">{c.role}</div>
-                    </div>
-                  </div>
-                  <a
-                    href={`mailto:${c.email}`}
-                    className="text-accent flex items-center gap-1.5 text-xs hover:underline"
-                  >
-                    <Mail className="h-3.5 w-3.5" aria-hidden />
-                    {c.email}
-                  </a>
-                  <p className="text-muted-foreground flex items-center gap-1.5 text-xs">
-                    <Phone className="h-3.5 w-3.5" aria-hidden />
-                    {c.phone}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </PortalPanel>
-          <PortalQuickCarLookup />
-        </div>
-
-        {/* Footer */}
-        <footer className="border-border text-muted-foreground flex flex-wrap items-center justify-between gap-2 border-t pt-4 text-xs">
-          <span>&copy; 2026 GATX Corporation. All rights reserved.</span>
-          <span className="flex flex-wrap items-center gap-4">
-            <a href={PORTAL_GATX_HOME} target="_blank" rel="noreferrer" className="hover:text-foreground">
-              Contact Us
-            </a>
-            <a href={PORTAL_GATX_HOME} target="_blank" rel="noreferrer" className="hover:text-foreground">
-              Privacy
-            </a>
-            <a href={PORTAL_GATX_HOME} target="_blank" rel="noreferrer" className="hover:text-foreground">
-              Terms
-            </a>
-            <span>1-800-555-GATX</span>
-            <a href="mailto:support@gatx.com" className="hover:text-foreground">
-              support@gatx.com
-            </a>
-          </span>
-        </footer>
+        {persona ? <PortalDashboard persona={persona} /> : <PortalLoginGate />}
       </div>
     </section>
   );
