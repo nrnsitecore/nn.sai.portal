@@ -11,24 +11,36 @@ import {
 } from '@sitecore-content-sdk/nextjs';
 import {
   ArrowUpRight,
+  BarChart3,
+  Bell,
+  Check,
   ChevronDown,
   ClipboardList,
   FileSpreadsheet,
+  FileText,
   FileWarning,
+  Home,
   Lock,
   Mail,
+  PanelLeft,
   Pencil,
   Phone,
   ScrollText,
   Search,
+  Settings,
   ShieldAlert,
+  ShieldCheck,
+  ShoppingCart,
+  Sparkles,
   TrainFront,
   Wrench,
   X,
   type LucideIcon,
 } from 'lucide-react';
+import { toast } from 'sonner';
 
 import { cn } from '@/lib/utils';
+import { Toaster as SonnerToaster } from '@/components/ui/sonner';
 import { DEMO_TAXONOMY_CHANGE_EVENT, DEMO_TAXONOMY_STORAGE_KEY } from '@/lib/demo-taxonomy';
 
 interface Fields {
@@ -449,6 +461,85 @@ const PORTAL_SERVICE_TEAM = [
 
 const PORTAL_LOOKUP_SAMPLES = ['GATX 215430', 'GATX 311902', 'GATX 045128'] as const;
 
+/** Faux "live" car states backing the smart Quick Car Lookup (demo data only). */
+const PORTAL_SHOP_STEPS = [
+  'Inbound',
+  'Cleaning',
+  'Inspection',
+  'Estimate',
+  'Repair',
+  'Outbound',
+] as const;
+
+type PortalCarState = 'In Shop' | 'Overdue' | 'On Lease';
+
+type PortalCar = {
+  number: string;
+  type: string;
+  state: PortalCarState;
+  detail: string;
+  /** Index into PORTAL_SHOP_STEPS for In Shop cars (current stage). */
+  shopStep?: number;
+};
+
+const PORTAL_CARS: readonly PortalCar[] = [
+  { number: 'GATX 215430', type: 'DOT-117J tank', state: 'In Shop', detail: 'Hearne, TX · Tank qualification', shopStep: 4 },
+  { number: 'GATX 198320', type: 'DOT-117J tank', state: 'In Shop', detail: 'Hearne, TX · Lining renewal', shopStep: 2 },
+  { number: 'GATX 311902', type: 'DOT-111 tank', state: 'Overdue', detail: 'Return overdue 12 days · Red Wing, MN' },
+  { number: 'GATX 045128', type: 'Covered hopper', state: 'On Lease', detail: 'Lessee: Dow Chemical · Through Mar 2027' },
+  { number: 'GATX 260133', type: 'DOT-117J tank', state: 'On Lease', detail: 'Lessee: Olin Corp · Through Sep 2026' },
+];
+
+const PORTAL_CAR_STATE_TONE: Record<PortalCarState, { bg: string; color: string }> = {
+  'In Shop': { bg: '#c8922e1a', color: '#8a6312' },
+  Overdue: { bg: '#c92a2a1a', color: '#a51111' },
+  'On Lease': { bg: '#2f9e441a', color: '#1f7a32' },
+};
+
+const PortalCarStateBadge = ({ state }: { state: PortalCarState }) => {
+  const tone = PORTAL_CAR_STATE_TONE[state];
+  return (
+    <span
+      className="inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-semibold"
+      style={{ backgroundColor: tone.bg, color: tone.color }}
+    >
+      {state}
+    </span>
+  );
+};
+
+/** Compact Inbound → … → Outbound stepper for an In Shop car. */
+const PortalShopTimeline = ({ step }: { step: number }) => (
+  <ol className="mt-3 flex items-center gap-1" aria-label="Shop progress">
+    {PORTAL_SHOP_STEPS.map((label, index) => {
+      const isDone = index < step;
+      const isCurrent = index === step;
+      return (
+        <li key={label} className="flex min-w-0 flex-1 flex-col items-center gap-1 text-center">
+          <span
+            className={cn(
+              'flex h-5 w-5 items-center justify-center rounded-full text-[10px] font-semibold',
+              isDone && 'bg-accent text-primary-foreground',
+              isCurrent && 'bg-accent/20 text-accent ring-accent ring-2',
+              !isDone && !isCurrent && 'bg-muted text-muted-foreground',
+            )}
+          >
+            {isDone ? <Check className="h-3 w-3" aria-hidden /> : index + 1}
+          </span>
+          <span
+            className={cn(
+              'truncate text-[9px] leading-tight',
+              isCurrent ? 'text-foreground font-medium' : 'text-muted-foreground',
+            )}
+          >
+            {label}
+          </span>
+        </li>
+      );
+    })}
+  </ol>
+);
+
 const portalInitials = (name: string) =>
   name
     .split(' ')
@@ -605,48 +696,126 @@ const PortalComplianceBars = () => (
 
 const PortalQuickCarLookup = () => {
   const [value, setValue] = useState('');
+  const [selected, setSelected] = useState<PortalCar | null>(null);
+  const [focused, setFocused] = useState(false);
+
+  const query = value.trim().toLowerCase();
+  const matches = query
+    ? PORTAL_CARS.filter(
+        (car) =>
+          car.number.toLowerCase().includes(query) || car.type.toLowerCase().includes(query),
+      )
+    : PORTAL_CARS;
+  const showResults = focused && !selected && matches.length > 0;
+
+  const select = (car: PortalCar) => {
+    setSelected(car);
+    setValue(car.number);
+    setFocused(false);
+  };
+
   return (
     <PortalPanel>
       <PortalPanelHeading
         title="Quick Car Lookup"
-        subtitle="View capacity, location, active lease, service events, compliance and drawings."
+        subtitle="Search a car to see live state, location, lease, and shop progress."
+        action={
+          <span className="bg-accent/10 text-accent inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide">
+            <Sparkles className="h-3 w-3" aria-hidden />
+            AI-assisted
+          </span>
+        }
       />
       <div className="space-y-3">
         <label className="sr-only" htmlFor="gatx-car-lookup">
           Car number
         </label>
-        <div className="border-border focus-within:border-accent flex items-center gap-2 rounded border px-3 py-2">
-          <Search className="text-muted-foreground h-4 w-4 shrink-0" aria-hidden />
-          <input
-            id="gatx-car-lookup"
-            type="text"
-            placeholder="e.g. GATX 215430"
-            value={value}
-            onChange={(e) => setValue(e.target.value)}
-            className="text-foreground placeholder:text-muted-foreground w-full bg-transparent text-sm outline-none"
-          />
+        <div className="relative">
+          <div className="border-border focus-within:border-accent flex items-center gap-2 rounded border px-3 py-2">
+            <Search className="text-muted-foreground h-4 w-4 shrink-0" aria-hidden />
+            <input
+              id="gatx-car-lookup"
+              type="text"
+              placeholder="e.g. GATX 215430"
+              value={value}
+              onFocus={() => setFocused(true)}
+              onBlur={() => window.setTimeout(() => setFocused(false), 150)}
+              onChange={(e) => {
+                setValue(e.target.value);
+                setSelected(null);
+                setFocused(true);
+              }}
+              className="text-foreground placeholder:text-muted-foreground w-full bg-transparent text-sm outline-none"
+            />
+            {value && (
+              <button
+                type="button"
+                onClick={() => {
+                  setValue('');
+                  setSelected(null);
+                }}
+                aria-label="Clear search"
+                className="text-muted-foreground hover:text-foreground"
+              >
+                <X className="h-4 w-4" aria-hidden />
+              </button>
+            )}
+          </div>
+
+          {showResults && (
+            <ul className="border-border bg-background absolute z-20 mt-1 max-h-64 w-full overflow-auto rounded border shadow-lg">
+              {matches.map((car) => (
+                <li key={car.number}>
+                  <button
+                    type="button"
+                    onMouseDown={(e) => e.preventDefault()}
+                    onClick={() => select(car)}
+                    className="hover:bg-muted flex w-full items-center justify-between gap-3 px-3 py-2 text-left transition-colors"
+                  >
+                    <span className="min-w-0">
+                      <span className="text-foreground block truncate text-sm font-medium">
+                        {car.number}
+                      </span>
+                      <span className="text-muted-foreground block truncate text-xs">{car.type}</span>
+                    </span>
+                    <PortalCarStateBadge state={car.state} />
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
-        <a
-          href={PORTAL_GATX_HOME}
-          target="_blank"
-          rel="noreferrer"
-          className="btn btn-primary flex w-full items-center justify-center gap-2"
-        >
-          Look up car
-          <ArrowUpRight className="h-4 w-4" aria-hidden />
-        </a>
-        <div className="flex flex-wrap gap-2 pt-1">
-          {PORTAL_LOOKUP_SAMPLES.map((sample) => (
-            <button
-              key={sample}
-              type="button"
-              onClick={() => setValue(sample)}
-              className="border-border text-muted-foreground hover:border-accent hover:text-foreground rounded border px-2.5 py-1 text-xs transition-colors"
-            >
-              {sample}
-            </button>
-          ))}
-        </div>
+
+        {selected ? (
+          <div className="border-border bg-muted/30 rounded border p-3">
+            <div className="flex items-start justify-between gap-2">
+              <div className="min-w-0">
+                <div className="text-foreground text-sm font-semibold">{selected.number}</div>
+                <div className="text-muted-foreground text-xs">{selected.detail}</div>
+              </div>
+              <PortalCarStateBadge state={selected.state} />
+            </div>
+            {selected.state === 'In Shop' && selected.shopStep !== undefined && (
+              <PortalShopTimeline step={selected.shopStep} />
+            )}
+          </div>
+        ) : (
+          <div className="flex flex-wrap gap-2 pt-1">
+            {PORTAL_LOOKUP_SAMPLES.map((sample) => (
+              <button
+                key={sample}
+                type="button"
+                onClick={() => {
+                  const car = PORTAL_CARS.find((c) => c.number === sample);
+                  if (car) select(car);
+                }}
+                className="border-border text-muted-foreground hover:border-accent hover:text-foreground rounded border px-2.5 py-1 text-xs transition-colors"
+              >
+                {sample}
+              </button>
+            ))}
+          </div>
+        )}
       </div>
     </PortalPanel>
   );
@@ -919,11 +1088,19 @@ function useActivePortalPersona(): PortalPersona | null {
 
 type PortalPanelKey = 'news' | 'fleet' | 'maintenance' | 'compliance' | 'team' | 'lookup';
 type PortalNewsTag = (typeof PORTAL_NEWS_ITEMS)[number]['tag'];
+type PortalAlertSeverity = 'critical' | 'warning' | 'info';
 
 type PortalPersonaConfig = {
   name: string;
   role: string;
   welcomeLead: string;
+  /** Privileged personas (e.g. compliance) see the Admin module in the preview rail. */
+  isAdmin?: boolean;
+  /** Header notification + task counts; purely cosmetic per-persona cues. */
+  notifications: number;
+  pendingTasks: number;
+  /** Persona-specific dismissible banner at the top of the dashboard. */
+  alert: { severity: PortalAlertSeverity; message: string };
   primaryCta: { label: string; icon: LucideIcon };
   spotlight: { eyebrow: string; title: string; body: string; ctaLabel: string };
   statOrder: readonly PortalStatId[];
@@ -936,6 +1113,12 @@ const PORTAL_PERSONA_CONFIG: Record<PortalPersona, PortalPersonaConfig> = {
     name: 'Dana',
     role: 'Fleet Operations Manager',
     welcomeLead: `Here's your ${PORTAL_CUSTOMER_ACCOUNT} fleet's availability, dwell, and utilization across leasing, maintenance, and compliance.`,
+    notifications: 6,
+    pendingTasks: 4,
+    alert: {
+      severity: 'warning',
+      message: '3 cars are overdue for return — review positioning to protect utilization.',
+    },
     primaryCta: { label: 'Export Fleet-Health QBR', icon: FileSpreadsheet },
     spotlight: {
       eyebrow: 'Fleet focus',
@@ -951,6 +1134,12 @@ const PORTAL_PERSONA_CONFIG: Record<PortalPersona, PortalPersonaConfig> = {
     name: 'Luis',
     role: 'Car Maintenance Technician',
     welcomeLead: `Here's your shop queue, inbound cars, and the qualifications driving today's work on the ${PORTAL_CUSTOMER_ACCOUNT} fleet.`,
+    notifications: 9,
+    pendingTasks: 7,
+    alert: {
+      severity: 'warning',
+      message: '4 cars are awaiting estimate approval before shop work can proceed.',
+    },
     primaryCta: { label: 'Open Shop Torque Card', icon: Wrench },
     spotlight: {
       eyebrow: 'Shop focus',
@@ -966,6 +1155,12 @@ const PORTAL_PERSONA_CONFIG: Record<PortalPersona, PortalPersonaConfig> = {
     name: 'Priya',
     role: 'Leasing Account Representative',
     welcomeLead: `Here's the ${PORTAL_CUSTOMER_ACCOUNT} account's lease portfolio, open orders, and renewal timing.`,
+    notifications: 4,
+    pendingTasks: 3,
+    alert: {
+      severity: 'info',
+      message: '2 leases renew in the next 30 days — confirm qualified replacement options.',
+    },
     primaryCta: { label: 'Shop a Car', icon: TrainFront },
     spotlight: {
       eyebrow: 'Account focus',
@@ -981,6 +1176,13 @@ const PORTAL_PERSONA_CONFIG: Record<PortalPersona, PortalPersonaConfig> = {
     name: 'Evan',
     role: 'Regulatory Compliance Analyst',
     welcomeLead: `Here's the ${PORTAL_CUSTOMER_ACCOUNT} fleet's qualification posture and audit readiness.`,
+    isAdmin: true,
+    notifications: 8,
+    pendingTasks: 5,
+    alert: {
+      severity: 'critical',
+      message: '5 cars are past due for qualification — schedule shopping to avoid out-of-service time.',
+    },
     primaryCta: { label: 'Open Audit Documentation Pack', icon: ScrollText },
     spotlight: {
       eyebrow: 'Compliance focus',
@@ -1002,6 +1204,97 @@ function orderPortalNews(order: readonly PortalNewsTag[]) {
   };
   return [...PORTAL_NEWS_ITEMS].sort((a, b) => rank(a.tag) - rank(b.tag));
 }
+
+/** Per-severity styling for the persona alert banner (inline tints; no design-token changes). */
+const PORTAL_ALERT_STYLES: Record<PortalAlertSeverity, { bg: string; border: string; color: string }> = {
+  critical: { bg: '#c92a2a14', border: '#c92a2a', color: '#a51111' },
+  warning: { bg: '#c8922e14', border: '#c8922e', color: '#8a6312' },
+  info: { bg: '#0085ca14', border: '#0085ca', color: '#0067a0' },
+};
+
+/**
+ * Preview module rail. Communicates the breadth of the full portal: only "Home" is
+ * active; the rest are non-navigating preview items (lock + "Soon") with a native
+ * tooltip. Demo-only — no real routing. Collapsible for polish.
+ */
+type PortalModule = { key: string; label: string; icon: LucideIcon; adminOnly?: boolean };
+
+const PORTAL_MODULES: readonly PortalModule[] = [
+  { key: 'home', label: 'Home', icon: Home },
+  { key: 'leasing', label: 'Leasing', icon: FileText },
+  { key: 'maintenance', label: 'Maintenance', icon: Wrench },
+  { key: 'compliance', label: 'Compliance', icon: ShieldCheck },
+  { key: 'car-facts', label: 'Car Facts', icon: TrainFront },
+  { key: 'reporting', label: 'Reporting', icon: BarChart3 },
+  { key: 'shop', label: 'Shop a Car', icon: ShoppingCart },
+  { key: 'admin', label: 'Admin', icon: Settings, adminOnly: true },
+];
+
+const PortalModuleRail = ({ isAdmin }: { isAdmin?: boolean }) => {
+  const [collapsed, setCollapsed] = useState(false);
+  const modules = PORTAL_MODULES.filter((m) => !m.adminOnly || isAdmin);
+
+  return (
+    <nav
+      aria-label="Portal modules"
+      className={cn(
+        'border-border bg-background hidden shrink-0 self-start rounded border p-2 lg:block',
+        collapsed ? 'w-16' : 'w-52',
+      )}
+    >
+      <button
+        type="button"
+        onClick={() => setCollapsed((c) => !c)}
+        aria-label={collapsed ? 'Expand navigation' : 'Collapse navigation'}
+        className="text-muted-foreground hover:text-foreground mb-2 flex w-full items-center justify-end rounded p-1.5 transition-colors"
+      >
+        <PanelLeft className={cn('h-4 w-4 transition-transform', collapsed && 'rotate-180')} aria-hidden />
+      </button>
+      <ul className="space-y-1">
+        {modules.map((module) => {
+          const Icon = module.icon;
+          const isActive = module.key === 'home';
+
+          if (isActive) {
+            return (
+              <li key={module.key}>
+                <span
+                  aria-current="page"
+                  className="bg-accent/10 text-accent flex items-center gap-2.5 rounded px-2.5 py-2 text-sm font-medium"
+                >
+                  <Icon className="h-4 w-4 shrink-0" aria-hidden />
+                  {!collapsed && <span className="truncate">{module.label}</span>}
+                </span>
+              </li>
+            );
+          }
+
+          return (
+            <li key={module.key}>
+              <button
+                type="button"
+                disabled
+                title="Available in the full portal"
+                className="text-muted-foreground/80 group flex w-full cursor-default items-center gap-2.5 rounded px-2.5 py-2 text-sm"
+              >
+                <Icon className="h-4 w-4 shrink-0" aria-hidden />
+                {!collapsed && (
+                  <>
+                    <span className="truncate">{module.label}</span>
+                    <span className="text-muted-foreground/60 ml-auto flex items-center gap-1 text-[10px] font-medium uppercase tracking-wide">
+                      <Lock className="h-3 w-3" aria-hidden />
+                      Soon
+                    </span>
+                  </>
+                )}
+              </button>
+            </li>
+          );
+        })}
+      </ul>
+    </nav>
+  );
+};
 
 /** No persona selected: prompt the visitor to "log in" by picking a profile in the header. */
 const PortalLoginGate = () => (
@@ -1047,9 +1340,19 @@ const PortalDashboard = ({ persona }: { persona: PortalPersona }) => {
   const news = orderPortalNews(config.newsOrder);
 
   const [detailOpen, setDetailOpen] = useState(false);
+  const [alertDismissed, setAlertDismissed] = useState(false);
   const featuredCard = statCards[0];
   const featuredDetail = PORTAL_STAT_DETAILS[featuredCard.id];
   const detailPanelId = 'portal-stat-detail';
+  const alertStyle = PORTAL_ALERT_STYLES[config.alert.severity];
+
+  // Dashboard remounts per persona (keyed in the Portal export), so this fires
+  // once on each persona switch — a "it reacted to me" cue for the live demo.
+  useEffect(() => {
+    toast.success(`Now viewing as ${config.role}`, {
+      description: 'Dashboard personalized for this role.',
+    });
+  }, [config.role]);
 
   const panelNodes: Record<PortalPanelKey, React.ReactNode> = {
     news: <PortalNewsPanel items={news} />,
@@ -1061,31 +1364,76 @@ const PortalDashboard = ({ persona }: { persona: PortalPersona }) => {
   };
 
   return (
-    <>
-      {/* Welcome header */}
-      <header className="border-border mb-6 flex flex-wrap items-start justify-between gap-4 border-b pb-6">
-        <div>
-          <span className="bg-accent/10 text-accent mb-2 inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium">
-            <span className="bg-accent h-1.5 w-1.5 rounded-full" aria-hidden />
-            {config.role}
-          </span>
-          <h1 className="text-foreground text-2xl font-semibold tracking-tight lg:text-3xl">
-            Welcome back, {config.name}
-          </h1>
-          <p className="text-muted-foreground mt-1 text-sm lg:text-base">{config.welcomeLead}</p>
-        </div>
-        <a
-          href={PORTAL_GATX_HOME}
-          target="_blank"
-          rel="noreferrer"
-          className="btn btn-primary flex items-center gap-2"
-        >
-          <PrimaryIcon className="h-4 w-4" aria-hidden />
-          {config.primaryCta.label}
-        </a>
-      </header>
+    <div className="flex gap-6">
+      <PortalModuleRail isAdmin={config.isAdmin} />
 
-      {/* Persona spotlight */}
+      <div className="min-w-0 flex-1">
+        {/* Persona alert banner (dismissible) */}
+        {!alertDismissed && (
+          <div
+            role="status"
+            className="animate-in fade-in slide-in-from-top-1 mb-4 flex items-start gap-3 rounded border-l-4 px-4 py-3 duration-500"
+            style={{ backgroundColor: alertStyle.bg, borderLeftColor: alertStyle.border }}
+          >
+            <ShieldAlert className="mt-0.5 h-4 w-4 shrink-0" style={{ color: alertStyle.color }} aria-hidden />
+            <p className="flex-1 text-sm" style={{ color: alertStyle.color }}>
+              {config.alert.message}
+            </p>
+            <button
+              type="button"
+              onClick={() => setAlertDismissed(true)}
+              aria-label="Dismiss alert"
+              className="shrink-0 opacity-70 transition-opacity hover:opacity-100"
+              style={{ color: alertStyle.color }}
+            >
+              <X className="h-4 w-4" aria-hidden />
+            </button>
+          </div>
+        )}
+
+        {/* Welcome header */}
+        <header className="border-border mb-6 flex flex-wrap items-start justify-between gap-4 border-b pb-6">
+          <div>
+            <span className="bg-accent/10 text-accent animate-in fade-in slide-in-from-top-1 mb-2 inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium duration-500">
+              <Sparkles className="h-3.5 w-3.5" aria-hidden />
+              Personalized for your role · {config.role}
+            </span>
+            <h1 className="text-foreground text-2xl font-semibold tracking-tight lg:text-3xl">
+              Welcome back, {config.name}
+            </h1>
+            <p className="text-muted-foreground mt-1 text-sm lg:text-base">{config.welcomeLead}</p>
+          </div>
+          <div className="flex items-center gap-2">
+            <span
+              className="border-border text-muted-foreground relative flex h-9 w-9 items-center justify-center rounded border"
+              title={`${config.notifications} unread notifications`}
+              aria-label={`${config.notifications} unread notifications`}
+            >
+              <Bell className="h-4 w-4" aria-hidden />
+              <span className="bg-destructive text-destructive-foreground absolute -right-1.5 -top-1.5 flex h-4 min-w-4 items-center justify-center rounded-full px-1 text-[10px] font-semibold leading-none">
+                {config.notifications}
+              </span>
+            </span>
+            <span
+              className="border-border text-muted-foreground hidden items-center gap-1.5 rounded border px-2.5 py-2 text-xs font-medium sm:flex"
+              title={`${config.pendingTasks} pending tasks`}
+            >
+              <ClipboardList className="h-4 w-4" aria-hidden />
+              {config.pendingTasks} pending
+            </span>
+            <a
+              href={PORTAL_GATX_HOME}
+              target="_blank"
+              rel="noreferrer"
+              className="btn btn-primary flex items-center gap-2"
+            >
+              <PrimaryIcon className="h-4 w-4" aria-hidden />
+              {config.primaryCta.label}
+            </a>
+          </div>
+        </header>
+
+        {/* Persona spotlight */}
       <div className="bg-primary text-primary-foreground mb-6 flex flex-col gap-4 rounded p-5 sm:flex-row sm:items-center sm:justify-between">
         <div className="max-w-3xl">
           <div className="text-primary-foreground/70 text-xs font-semibold uppercase tracking-wide">
@@ -1185,8 +1533,9 @@ const PortalDashboard = ({ persona }: { persona: PortalPersona }) => {
         ))}
       </div>
 
-      <PortalFooter />
-    </>
+        <PortalFooter />
+      </div>
+    </div>
   );
 };
 
@@ -1203,6 +1552,7 @@ export const Portal = (props: PageHeaderSTProps) => {
       <div className="mx-auto w-full max-w-7xl px-4 py-8 lg:px-8">
         {persona ? <PortalDashboard key={persona} persona={persona} /> : <PortalLoginGate />}
       </div>
+      <SonnerToaster position="bottom-right" />
     </section>
   );
 };
