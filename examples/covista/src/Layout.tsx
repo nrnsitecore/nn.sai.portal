@@ -6,36 +6,31 @@ import { Field, ImageField, Page, AppPlaceholder } from '@sitecore-content-sdk/n
 import Scripts from 'src/Scripts';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import Providers from 'src/Providers';
-import { IBM_Plex_Sans, IBM_Plex_Mono } from 'next/font/google';
-import localFont from 'next/font/local';
+import { Archivo, Zilla_Slab } from 'next/font/google';
 import { DesignLibraryApp } from '@sitecore-content-sdk/nextjs';
 import componentMap from '.sitecore/component-map';
 import { generateOrganizationSchema, generateWebSiteSchema } from 'src/lib/structured-data/schema';
 import { StructuredData } from 'src/components/structured-data/StructuredData';
 
-const heading = localFont({
-  src: [
-    {
-      path: './assets/fonts/Boldonse-Regular.ttf',
-      weight: '400',
-      style: 'normal',
-    },
-  ],
+// Covista brand system: slab-serif display (albiona substitute) + wide humanist sans (acumin-pro-wide substitute)
+const heading = Zilla_Slab({
+  weight: ['400', '500', '600', '700'],
   variable: '--font-heading',
+  subsets: ['latin'],
   display: 'swap',
   preload: true,
 });
 
-const body = IBM_Plex_Sans({
-  weight: ['400', '500', '600'],
+const body = Archivo({
+  weight: ['400', '500', '600', '700'],
   variable: '--font-body',
   subsets: ['latin', 'latin-ext'],
   display: 'swap',
   preload: true,
 });
 
-const accent = IBM_Plex_Mono({
-  weight: ['400', '500', '600'],
+const accent = Archivo({
+  weight: ['500', '600', '700'],
   variable: '--font-accent',
   subsets: ['latin', 'latin-ext'],
   display: 'swap',
@@ -88,12 +83,12 @@ const Layout = ({ page, baseUrl: baseUrlProp }: LayoutProps): JSX.Element => {
   // Generate JSON-LD structured data for Organization and WebSite (use request-derived baseUrl when provided)
   const baseUrl = baseUrlProp ?? process.env.NEXT_PUBLIC_SITE_URL ?? '';
   const organizationSchema = generateOrganizationSchema({
-    name: 'SYNC',
+    name: 'Covista',
     ...(baseUrl && { url: baseUrl }),
   });
 
   const websiteSchema = generateWebSiteSchema({
-    name: 'SYNC',
+    name: 'Covista',
     url: baseUrl,
   });
 

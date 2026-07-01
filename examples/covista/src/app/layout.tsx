@@ -1,31 +1,26 @@
 import './globals.css';
 
-import { IBM_Plex_Sans, IBM_Plex_Mono } from 'next/font/google';
-import localFont from 'next/font/local';
+import { Archivo, Zilla_Slab } from 'next/font/google';
 
-const heading = localFont({
-  src: [
-    {
-      path: '../assets/fonts/Boldonse-Regular.ttf',
-      weight: '400',
-      style: 'normal',
-    },
-  ],
+// Covista brand system: slab-serif display (albiona substitute) + wide humanist sans (acumin-pro-wide substitute)
+const heading = Zilla_Slab({
+  weight: ['400', '500', '600', '700'],
   variable: '--font-heading',
+  subsets: ['latin'],
   display: 'swap',
   preload: true,
 });
 
-const body = IBM_Plex_Sans({
-  weight: ['400', '500', '600'],
+const body = Archivo({
+  weight: ['400', '500', '600', '700'],
   variable: '--font-body',
   subsets: ['latin', 'latin-ext'],
   display: 'swap',
   preload: true,
 });
 
-const accent = IBM_Plex_Mono({
-  weight: ['400', '500', '600'],
+const accent = Archivo({
+  weight: ['500', '600', '700'],
   variable: '--font-accent',
   subsets: ['latin', 'latin-ext'],
   display: 'swap',

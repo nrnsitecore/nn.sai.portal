@@ -15,11 +15,12 @@
 
 @layer base {
   html {
-    font-family: 'Open Sans', 'Segoe UI', SegueUI, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-family: var(--font-body), 'Helvetica Neue', Helvetica, Arial, sans-serif;
     font-size: 1rem;
     line-height: 1.5;
     font-weight: 400;
-    color: var(--color-brand-black);
+    color: var(--color-foreground);
+    background-color: var(--color-background);
   }
 
   * {
@@ -80,10 +81,10 @@
   /* BUTTONS */
   .btn {
     font-family: var(--font-accent);
-    @apply inline-block text-sm font-medium transition-colors;
+    @apply inline-block text-sm font-semibold tracking-wide transition-colors;
 
     &.btn-primary {
-      @apply py-3 px-5 rounded-full bg-primary;
+      @apply py-3 px-6 rounded-md bg-primary text-primary-foreground;
 
       &:hover {
         @apply bg-primary-hover;
@@ -91,10 +92,19 @@
     }
 
     &.btn-secondary {
-      @apply py-3 px-5 rounded-full bg-light text-secondary-foreground;
+      @apply py-3 px-6 rounded-md bg-light text-light-foreground border border-border;
 
       &:hover {
         @apply bg-light-hover;
+      }
+    }
+
+    /* Terracotta call-to-action, Covista's primary conversion button */
+    &.btn-accent {
+      @apply py-3 px-6 rounded-md bg-accent text-accent-foreground;
+
+      &:hover {
+        @apply bg-accent-hover;
       }
     }
 
@@ -106,16 +116,12 @@
       @apply rounded-none;
     }
 
-    &.btn-ghost {
-      @apply py-2;
-    }
-
     &.btn-outline {
-      @apply py-3 px-5 rounded-full bg-primary outline;
-    }
+      @apply py-3 px-6 rounded-md border-2 border-current bg-transparent;
 
-    &:hover {
-      @apply bg-primary-hover;
+      &:hover {
+        @apply opacity-80;
+      }
     }
   }
 }
