@@ -1,4 +1,5 @@
 import { PromoImageProps } from './promo-image.props';
+import { PromoImageDefault } from './PromoImageDefault.dev';
 import { PromoImageLeft } from './PromoImageLeft.dev';
 import { PromoImageRight } from './PromoImageRight.dev';
 import { PromoImageMiddle } from './PromoImageMiddle.dev';
@@ -6,12 +7,11 @@ import { PromoTitlePartialOverlay } from './PromoImageTitlePartialOverlay.dev';
 
 // Data source checks are done in the child components
 
-// Default display of the component — uses the ImageLeft (framed image + blush
-// copy panel) treatment shown in the brand promo design.
+// Default display of the component
 export const Default: React.FC<PromoImageProps> = (props) => {
   const { page } = props;
   const isPageEditing = page.mode.isEditing;
-  return <PromoImageLeft {...props} isPageEditing={isPageEditing} />;
+  return <PromoImageDefault {...props} isPageEditing={isPageEditing} />;
 };
 
 // Variants
