@@ -17,6 +17,7 @@ import {
   ImageField,
   Field,
   LinkField,
+  useSitecore,
 } from '@sitecore-content-sdk/nextjs';
 
 interface Fields {
@@ -45,6 +46,21 @@ const HERO_STATS: readonly HeroStat[] = [
   { value: 24, suffix: 'K+', label: 'healthcare graduates a year', icon: GraduationCap },
   { value: 290, suffix: 'K+', label: 'healthcare alumni practicing worldwide', icon: Stethoscope },
 ];
+
+/** Looping hero backdrop — lives in public/ and is copied to the editing host on deploy. */
+const HERO_VIDEO_SRC = '/header_final.mp4';
+
+/**
+ * In Sitecore Pages (editing/preview), root-relative assets must be resolved against
+ * the editing-host origin — same pattern as nextImageSrc and MediaSection.
+ */
+const resolvePublicAssetUrl = (src: string, isNormal: boolean) => {
+  if (!src) return src;
+  if (!isNormal && src.startsWith('/') && typeof window !== 'undefined') {
+    return `${window.location.protocol}//${window.location.hostname}${src}`;
+  }
+  return src;
+};
 
 /** Stable reference so the observer effect does not re-run every render. */
 const HERO_STATS_OBSERVER_OPTIONS = { threshold: 0.3 } as const;
@@ -101,11 +117,26 @@ const HeroStatCard = ({ stat, active }: { stat: HeroStat; active: boolean }) => 
 };
 
 export const Default = (props: PageHeaderSTProps) => {
+  const { page } = useSitecore();
   const { ref: statsRef, isVisible } = useIntersectionObserver(HERO_STATS_OBSERVER_OPTIONS);
+  const videoRef = useRef<HTMLVideoElement>(null);
   const posterSrc = props?.fields?.Image1?.value?.src as string | undefined;
+  const resolvedPoster = posterSrc
+    ? resolvePublicAssetUrl(posterSrc, page.mode.isNormal)
+    : undefined;
+  const resolvedVideoSrc = resolvePublicAssetUrl(HERO_VIDEO_SRC, page.mode.isNormal);
   const hasEyebrow = !!props?.fields?.Eyebrow?.value;
   const hasLink2 = !!props?.fields?.Link2?.value?.href;
   const link1Text = props?.fields?.Link1?.value?.text || 'Our story';
+
+  // Programmatic play helps muted autoplay inside the Sitecore Pages editor iframe.
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+    video.play().catch(() => {
+      // Autoplay may be blocked; poster still provides a fallback frame.
+    });
+  }, [resolvedVideoSrc]);
 
   return (
     <>
@@ -115,19 +146,21 @@ export const Default = (props: PageHeaderSTProps) => {
       >
       {/* Autoplaying, muted, looping video backdrop (poster falls back to Image1) */}
       <video
+        ref={videoRef}
         autoPlay
         muted
         loop
         playsInline
         preload="metadata"
-        poster={posterSrc}
-        className="absolute inset-0 -z-10 h-full w-full object-cover"
+        poster={resolvedPoster}
+        className="absolute inset-0 z-0 h-full w-full object-cover"
+        aria-hidden
       >
-        <source src="/header_final.mp4" type="video/mp4" />
+        <source src={resolvedVideoSrc} type="video/mp4" />
       </video>
       {/* Legibility overlay */}
       <div
-        className="absolute inset-0 -z-10 bg-gradient-to-r from-black/60 via-black/30 to-transparent"
+        className="absolute inset-0 z-[1] bg-gradient-to-r from-black/60 via-black/30 to-transparent"
         aria-hidden
       />
 
