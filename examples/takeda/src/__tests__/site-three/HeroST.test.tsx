@@ -1,12 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import {
   Default as HeroSTDefault,
   Right as HeroSTRight,
   Centered as HeroSTCentered,
   SplitScreen as HeroSTSplitScreen,
   Stacked as HeroSTStacked,
+  JobSearch as HeroSTJobSearch,
 } from '@/components/site-three/HeroST';
 
 // Mock useContainerOffsets hook
@@ -250,6 +251,49 @@ describe('HeroST', () => {
       const { container } = render(<HeroSTStacked {...mockProps} />);
       const section = container.querySelector('section');
       expect(section).toHaveClass('test-styles');
+    });
+  });
+
+  describe('JobSearch variant', () => {
+    it('renders the job board heading and filter controls', () => {
+      render(<HeroSTJobSearch {...mockProps} />);
+      expect(screen.getByRole('heading', { level: 1, name: 'Search jobs' })).toBeInTheDocument();
+      expect(screen.getByLabelText('Keyword')).toBeInTheDocument();
+      expect(screen.getByLabelText('Location')).toBeInTheDocument();
+      expect(screen.getByLabelText('Radius')).toBeInTheDocument();
+      expect(screen.getByLabelText('Career area')).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: /search jobs/i })).toBeInTheDocument();
+    });
+
+    it('renders hardcoded job listings', () => {
+      render(<HeroSTJobSearch {...mockProps} />);
+      expect(screen.getByText('Senior Scientist, Immunology')).toBeInTheDocument();
+      expect(screen.getByText(/Showing 10 jobs/i)).toBeInTheDocument();
+    });
+
+    it('filters jobs by keyword on submit', () => {
+      render(<HeroSTJobSearch {...mockProps} />);
+      fireEvent.change(screen.getByLabelText('Keyword'), { target: { value: 'Plasma' } });
+      fireEvent.click(screen.getByRole('button', { name: /search jobs/i }));
+      expect(screen.getByText('Manufacturing Associate, Plasma Operations')).toBeInTheDocument();
+      expect(screen.getByText('Plasma Center Manager')).toBeInTheDocument();
+      expect(screen.queryByText('Senior Scientist, Immunology')).not.toBeInTheDocument();
+      expect(screen.getByText(/Showing 2 jobs/i)).toBeInTheDocument();
+    });
+
+    it('shows empty state when no jobs match', () => {
+      render(<HeroSTJobSearch {...mockProps} />);
+      fireEvent.change(screen.getByLabelText('Keyword'), { target: { value: 'astronaut' } });
+      fireEvent.click(screen.getByRole('button', { name: /search jobs/i }));
+      expect(screen.getByText('No jobs match your search')).toBeInTheDocument();
+      expect(screen.getByText(/Showing 0 jobs/i)).toBeInTheDocument();
+    });
+
+    it('applies params styles on the section', () => {
+      const { container } = render(<HeroSTJobSearch {...mockProps} />);
+      const section = container.querySelector('section');
+      expect(section).toHaveClass('test-styles');
+      expect(section).toHaveAttribute('data-variant', 'JobSearch');
     });
   });
 
