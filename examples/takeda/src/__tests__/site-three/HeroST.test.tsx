@@ -83,11 +83,11 @@ describe('HeroST', () => {
       expect(screen.getByText('Premium Audio Experience')).toBeInTheDocument();
     });
 
-    it('renders the video backdrop using Image1 as its poster', () => {
-      const { container } = render(<HeroSTDefault {...mockProps} />);
-      const video = container.querySelector('video');
-      expect(video).toBeInTheDocument();
-      expect(video?.getAttribute('poster')).toContain('/hero-bg.jpg');
+    it('renders Image1 as the hero background', () => {
+      render(<HeroSTDefault {...mockProps} />);
+      const images = screen.getAllByRole('img');
+      expect(images.length).toBeGreaterThan(0);
+      expect(images[0]).toHaveAttribute('src', expect.stringContaining('/hero-bg.jpg'));
     });
 
     it('renders call-to-action links', () => {

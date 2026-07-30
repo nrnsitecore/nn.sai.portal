@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState, type FormEvent } from 'react';
+import { useState, type FormEvent } from 'react';
 import { useContainerOffsets } from '@/hooks/useContainerOffsets';
 import { MapPin, Search } from 'lucide-react';
 import {
@@ -10,7 +10,6 @@ import {
   ImageField,
   Field,
   LinkField,
-  useSitecore,
 } from '@sitecore-content-sdk/nextjs';
 
 interface Fields {
@@ -28,23 +27,8 @@ type PageHeaderSTProps = {
 };
 
 /* -------------------------------------------------------------------------- */
-/* Default variant — video hero with the brand's red job-search panel          */
+/* Default variant — image hero with the brand's red job-search panel          */
 /* -------------------------------------------------------------------------- */
-
-/** Looping hero backdrop — lives in public/ and is copied to the editing host on deploy. */
-const HERO_VIDEO_SRC = '/header_final.mp4';
-
-/**
- * In Sitecore Pages (editing/preview), root-relative assets must be resolved against
- * the editing-host origin — same pattern as nextImageSrc and MediaSection.
- */
-const resolvePublicAssetUrl = (src: string, isNormal: boolean) => {
-  if (!src) return src;
-  if (!isNormal && src.startsWith('/') && typeof window !== 'undefined') {
-    return `${window.location.protocol}//${window.location.hostname}${src}`;
-  }
-  return src;
-};
 
 const SEARCH_RADIUS_OPTIONS = ['5 mi', '10 mi', '25 mi', '50 mi', '100 mi'] as const;
 
@@ -135,47 +119,23 @@ const HeroJobSearchPanel = ({
 };
 
 export const Default = (props: PageHeaderSTProps) => {
-  const { page } = useSitecore();
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const posterSrc = props?.fields?.Image1?.value?.src as string | undefined;
-  const resolvedPoster = posterSrc
-    ? resolvePublicAssetUrl(posterSrc, page.mode.isNormal)
-    : undefined;
-  const resolvedVideoSrc = resolvePublicAssetUrl(HERO_VIDEO_SRC, page.mode.isNormal);
   const hasEyebrow = !!props?.fields?.Eyebrow?.value;
   const hasLink1 = !!props?.fields?.Link1?.value?.href;
+  const hasImage = !!props?.fields?.Image1?.value?.src;
   const searchHref = props?.fields?.Link2?.value?.href || HERO_SEARCH_FALLBACK_HREF;
   const searchLabel = props?.fields?.Link2?.value?.text || 'Search jobs';
-
-  // Programmatic play helps muted autoplay inside the Sitecore Pages editor iframe.
-  useEffect(() => {
-    const video = videoRef.current;
-    if (!video) return;
-    // Older engines return void rather than a promise from play().
-    Promise.resolve(video.play()).catch(() => {
-      // Autoplay may be blocked; poster still provides a fallback frame.
-    });
-  }, [resolvedVideoSrc]);
 
   return (
     <section
       className={`relative isolate bg-dark ${props?.params?.styles || ''}`}
       data-class-change
     >
-      {/* Autoplaying, muted, looping video backdrop (poster falls back to Image1) */}
-      <video
-        ref={videoRef}
-        autoPlay
-        muted
-        loop
-        playsInline
-        preload="metadata"
-        poster={resolvedPoster}
-        className="absolute inset-0 z-0 h-full w-full object-cover"
-        aria-hidden
-      >
-        <source src={resolvedVideoSrc} type="video/mp4" />
-      </video>
+      {hasImage && (
+        <ContentSdkImage
+          field={props.fields.Image1}
+          className="absolute inset-0 z-0 h-full w-full object-cover"
+        />
+      )}
       {/* Legibility scrim — deeper on the left where the headline sits */}
       <div
         className="absolute inset-0 z-[1] bg-gradient-to-r from-black/75 via-black/45 to-black/25"
