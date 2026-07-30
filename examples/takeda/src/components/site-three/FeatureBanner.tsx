@@ -1,6 +1,11 @@
 'use client';
 
-import { Text as ContentSdkText, NextImage as ContentSdkImage } from '@sitecore-content-sdk/nextjs';
+import {
+  Text as ContentSdkText,
+  NextImage as ContentSdkImage,
+  Link as ContentSdkLink,
+} from '@sitecore-content-sdk/nextjs';
+import { ArrowRight } from 'lucide-react';
 import { useMemo } from 'react';
 import { IGQLImageField, IGQLLinkField, IGQLTextField } from 'types/igql';
 
@@ -27,6 +32,10 @@ type FeatureBannerProps = {
   fields: Fields;
 };
 
+/** Demo-only intro — FeatureBanner has no description field. */
+const CAREER_AREAS_INTRO =
+  'From R&D to Manufacturing, Corporate Functions to Commercial, and every team in between, everyone’s contributions at Takeda make a meaningful impact for patients, our people, and the planet.';
+
 const FeatureItem = (props: FeatureItemFields) => {
   return (
     <div className="flex flex-col items-center gap-1">
@@ -35,6 +44,20 @@ const FeatureItem = (props: FeatureItemFields) => {
         <ContentSdkText field={props?.heading?.jsonValue} />
       </p>
     </div>
+  );
+};
+
+const CareerAreaTile = (props: FeatureItemFields) => {
+  return (
+    <article className="border-border bg-background overflow-hidden border shadow-sm">
+      <div className="relative aspect-4/3 w-full overflow-hidden">
+        <ContentSdkImage
+          field={props?.image?.jsonValue}
+          className="h-full w-full object-cover"
+        />
+      </div>
+      <ContentSdkText tag="div" className="takeda-caption-bar" field={props?.heading?.jsonValue} />
+    </article>
   );
 };
 
@@ -110,6 +133,57 @@ export const Accent = (props: FeatureBannerProps) => {
             </div>
           </div>
         </div>
+      </div>
+    </section>
+  );
+};
+
+/* -------------------------------------------------------------------------- */
+/* CareerAreas — photo grid modeled on jobs.takeda.com Career Areas            */
+/* -------------------------------------------------------------------------- */
+
+export const CareerAreas = (props: FeatureBannerProps) => {
+  const datasource = useMemo(
+    () => props?.fields?.data?.datasource,
+    [props?.fields?.data?.datasource]
+  );
+  const features = datasource?.children?.results || [];
+  const hasLink = !!datasource?.link?.jsonValue?.value?.href;
+  const linkText = datasource?.link?.jsonValue?.value?.text || 'View all career areas';
+
+  return (
+    <section
+      className={`takeda-band py-16 lg:py-20 ${props?.params?.styles || ''}`}
+      data-class-change
+      data-variant="CareerAreas"
+    >
+      <div className="container mx-auto px-4">
+        <div className="mb-10 max-w-3xl lg:mb-14">
+          <h2 className="takeda-heading-bar font-(family-name:--font-heading) text-3xl font-bold tracking-tight lg:text-4xl">
+            <ContentSdkText field={datasource?.title?.jsonValue} />
+          </h2>
+          <p className="text-muted-foreground mt-4 text-base leading-relaxed">{CAREER_AREAS_INTRO}</p>
+          {hasLink && (
+            <div className="mt-6">
+              <ContentSdkLink
+                field={datasource?.link?.jsonValue}
+                prefetch={false}
+                className="font-(family-name:--font-accent) text-primary inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.08em] underline-offset-4 hover:underline"
+              >
+                {linkText}
+                <ArrowRight className="h-4 w-4" aria-hidden />
+              </ContentSdkLink>
+            </div>
+          )}
+        </div>
+
+        {features.length > 0 && (
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {features.map((item) => (
+              <CareerAreaTile key={item.id} {...item} />
+            ))}
+          </div>
+        )}
       </div>
     </section>
   );

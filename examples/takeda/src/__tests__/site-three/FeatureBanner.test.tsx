@@ -5,14 +5,21 @@ import {
   Default as FeatureBannerDefault,
   Vertical as FeatureBannerVertical,
   Accent as FeatureBannerAccent,
+  CareerAreas as FeatureBannerCareerAreas,
 } from '@/components/site-three/FeatureBanner';
 
 // Mock Sitecore SDK
 jest.mock('@sitecore-content-sdk/nextjs', () => ({
-  Text: ({ field, ...props }: any) => <span {...props}>{field?.value || ''}</span>,
+  Text: ({ field, tag: Tag = 'span', ...props }: any) =>
+    React.createElement(Tag, props, field?.value || ''),
   NextImage: ({ field, className }: any) => (
     // eslint-disable-next-line @next/next/no-img-element
     <img src={field?.value?.src || ''} alt={field?.value?.alt || ''} className={className} />
+  ),
+  Link: ({ field, children, className }: any) => (
+    <a href={field?.value?.href || '#'} className={className}>
+      {children || field?.value?.text || ''}
+    </a>
   ),
 }));
 
@@ -243,6 +250,94 @@ describe('FeatureBanner', () => {
       // Check that the section still renders with the accent styling
       expect(document.querySelector('section')).toBeInTheDocument();
       expect(document.querySelector('.bg-primary')).toBeInTheDocument();
+    });
+  });
+
+  describe('CareerAreas variant', () => {
+    const careerAreasProps = {
+      ...mockProps,
+      fields: {
+        data: {
+          datasource: {
+            ...mockProps.fields.data.datasource,
+            title: {
+              jsonValue: {
+                value: 'Career areas',
+              },
+            },
+            link: {
+              jsonValue: {
+                value: {
+                  href: '/career-areas',
+                  text: 'View all career areas',
+                },
+              },
+            },
+          },
+        },
+      },
+    };
+
+    it('renders title, CTA, and feature headings', () => {
+      render(<FeatureBannerCareerAreas {...careerAreasProps} />);
+      expect(screen.getByText('Career areas')).toBeInTheDocument();
+      expect(screen.getByRole('link', { name: /view all career areas/i })).toHaveAttribute(
+        'href',
+        '/career-areas'
+      );
+      expect(screen.getByText('High Quality')).toBeInTheDocument();
+      expect(screen.getByText('Fast Delivery')).toBeInTheDocument();
+      expect(screen.getByText('24/7 Support')).toBeInTheDocument();
+    });
+
+    it('renders photo grid with images and CareerAreas data-variant', () => {
+      render(<FeatureBannerCareerAreas {...careerAreasProps} />);
+      const section = document.querySelector('[data-variant="CareerAreas"]');
+      expect(section).toBeInTheDocument();
+      expect(section?.querySelector('.grid')).toBeInTheDocument();
+      const images = screen.getAllByRole('img');
+      expect(images).toHaveLength(3);
+      expect(images[0]).toHaveAttribute('src', '/icons/feature1.svg');
+    });
+
+    it('handles null datasource without crashing', () => {
+      const missingDatasourceProps: any = {
+        params: { styles: 'extra-styles' },
+        fields: {
+          data: {
+            datasource: null,
+          },
+        },
+      };
+      render(<FeatureBannerCareerAreas {...missingDatasourceProps} />);
+      const section = document.querySelector('[data-variant="CareerAreas"]');
+      expect(section).toBeInTheDocument();
+      expect(section?.className).toContain('extra-styles');
+      expect(screen.queryByRole('link')).not.toBeInTheDocument();
+    });
+
+    it('omits CTA when link href is missing', () => {
+      const noLinkProps: any = {
+        ...careerAreasProps,
+        fields: {
+          data: {
+            datasource: {
+              ...careerAreasProps.fields.data.datasource,
+              link: {
+                jsonValue: {
+                  value: {
+                    href: '',
+                    text: 'View all career areas',
+                  },
+                },
+              },
+            },
+          },
+        },
+      };
+      render(<FeatureBannerCareerAreas {...noLinkProps} />);
+      expect(screen.getByText('Career areas')).toBeInTheDocument();
+      expect(screen.queryByRole('link')).not.toBeInTheDocument();
     });
   });
 
