@@ -290,11 +290,14 @@ describe('FeatureBanner', () => {
       expect(screen.getByText('24/7 Support')).toBeInTheDocument();
     });
 
-    it('renders photo grid with images and CareerAreas data-variant', () => {
+    it('renders horizontal scroll row with images and CareerAreas data-variant', () => {
       render(<FeatureBannerCareerAreas {...careerAreasProps} />);
       const section = document.querySelector('[data-variant="CareerAreas"]');
       expect(section).toBeInTheDocument();
-      expect(section?.querySelector('.grid')).toBeInTheDocument();
+      const scrollRow = section?.querySelector('[data-scroll="horizontal"]');
+      expect(scrollRow).toBeInTheDocument();
+      expect(scrollRow?.className).toContain('overflow-x-auto');
+      expect(scrollRow?.querySelector('.flex-nowrap')).toBeInTheDocument();
       const images = screen.getAllByRole('img');
       expect(images).toHaveLength(3);
       expect(images[0]).toHaveAttribute('src', '/icons/feature1.svg');

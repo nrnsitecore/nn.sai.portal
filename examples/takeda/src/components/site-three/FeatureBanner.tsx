@@ -49,7 +49,7 @@ const FeatureItem = (props: FeatureItemFields) => {
 
 const CareerAreaTile = (props: FeatureItemFields) => {
   return (
-    <article className="border-border bg-background overflow-hidden border shadow-sm">
+    <article className="border-border bg-background w-[min(80vw,22rem)] shrink-0 snap-start overflow-hidden border shadow-sm">
       <div className="relative aspect-4/3 w-full overflow-hidden">
         <ContentSdkImage
           field={props?.image?.jsonValue}
@@ -139,7 +139,7 @@ export const Accent = (props: FeatureBannerProps) => {
 };
 
 /* -------------------------------------------------------------------------- */
-/* CareerAreas — photo grid modeled on jobs.takeda.com Career Areas            */
+/* CareerAreas — single-row horizontal scroll (jobs.takeda.com Career Areas)   */
 /* -------------------------------------------------------------------------- */
 
 export const CareerAreas = (props: FeatureBannerProps) => {
@@ -178,10 +178,17 @@ export const CareerAreas = (props: FeatureBannerProps) => {
         </div>
 
         {features.length > 0 && (
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {features.map((item) => (
-              <CareerAreaTile key={item.id} {...item} />
-            ))}
+          <div
+            className="-mx-4 overflow-x-auto px-4 pb-2 [scrollbar-width:thin] snap-x snap-mandatory"
+            role="region"
+            aria-label="Career areas"
+            data-scroll="horizontal"
+          >
+            <div className="flex w-max flex-nowrap gap-6">
+              {features.map((item) => (
+                <CareerAreaTile key={item.id} {...item} />
+              ))}
+            </div>
           </div>
         )}
       </div>
