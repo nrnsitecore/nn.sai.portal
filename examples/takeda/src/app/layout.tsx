@@ -1,17 +1,17 @@
 import './globals.css';
 
-import { Archivo, Zilla_Slab } from 'next/font/google';
+import { Barlow, Inter } from 'next/font/google';
 
-// Covista brand system: slab-serif display (albiona substitute) + wide humanist sans (acumin-pro-wide substitute)
-const heading = Zilla_Slab({
-  weight: ['400', '500', '600', '700'],
+// Takeda brand system: slightly condensed grotesque display + neutral UI sans
+const heading = Barlow({
+  weight: ['500', '600', '700'],
   variable: '--font-heading',
-  subsets: ['latin'],
+  subsets: ['latin', 'latin-ext'],
   display: 'swap',
   preload: true,
 });
 
-const body = Archivo({
+const body = Inter({
   weight: ['400', '500', '600', '700'],
   variable: '--font-body',
   subsets: ['latin', 'latin-ext'],
@@ -19,7 +19,7 @@ const body = Archivo({
   preload: true,
 });
 
-const accent = Archivo({
+const accent = Inter({
   weight: ['500', '600', '700'],
   variable: '--font-accent',
   subsets: ['latin', 'latin-ext'],
@@ -29,7 +29,11 @@ const accent = Archivo({
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${heading.variable} ${body.variable} ${accent.variable}`} suppressHydrationWarning>
+    <html
+      lang="en"
+      className={`${heading.variable} ${body.variable} ${accent.variable}`}
+      suppressHydrationWarning
+    >
       <head>
         <link rel="preconnect" href="https://edge-platform.sitecorecloud.io" />
         <link rel="icon" href="/favicon.ico" />

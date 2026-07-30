@@ -21,7 +21,7 @@ export const GlobalFooterBlueCompact: React.FC<GlobalFooterProps> = (props) => {
   if (fields) {
     return (
       <footer
-        className="@container bg-primary text-primary-foreground border-foreground relative w-full overflow-hidden border-b-2"
+        className="@container bg-dark text-dark-foreground border-primary relative w-full overflow-hidden border-b-2"
         ref={footerRef}
       >
         {/* Background logo - semi-transparent */}
@@ -46,7 +46,7 @@ export const GlobalFooterBlueCompact: React.FC<GlobalFooterProps> = (props) => {
                 <Text
                   tag="h2"
                   field={tagline?.jsonValue}
-                  className="font-heading mb-8 text-pretty text-5xl font-light antialiased"
+                  className="font-heading mb-8 text-pretty text-3xl font-semibold tracking-tight antialiased"
                 />
                 {/* Navigation links */}
                 <FooterNavigationColumn
@@ -88,7 +88,7 @@ export const GlobalFooterBlueCompact: React.FC<GlobalFooterProps> = (props) => {
                 <AnimatedHoverNav
                   parentRef={footerRef}
                   mobileBreakpoint={null}
-                  indicatorClassName="h-0-5 bg-secondary rounded-default bottom-0"
+                  indicatorClassName="h-0-5 bg-primary rounded-none bottom-0"
                 >
                   <ul className="@sm:mb-0 mb-0 flex list-none gap-6">
                     {socialLinks?.results?.map((socialLink, index) => (

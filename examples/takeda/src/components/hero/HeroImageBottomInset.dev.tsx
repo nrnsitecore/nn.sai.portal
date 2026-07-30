@@ -68,7 +68,7 @@ export const HeroImageBottomInset: React.FC<HeroProps> = (props) => {
                 <Text
                   tag="h1"
                   field={title}
-                  className="font-heading @md/herowrapper:text-[clamp(3rem,6cqi,6rem)] text-box-trim-top relative max-w-[15ch] text-balance text-5xl font-light leading-tight"
+                  className="font-heading @md/herowrapper:text-[clamp(3rem,6cqi,6rem)] text-box-trim-top relative max-w-[15ch] text-balance text-3xl font-semibold leading-tight"
                 />
               </AnimatedSection>
 
@@ -133,7 +133,7 @@ export const HeroImageBottomInset: React.FC<HeroProps> = (props) => {
                     >
                       <Text
                         tag="p"
-                        className="font-heading @md/herowrapper:text-lg text-pretty font-light leading-tight"
+                        className="font-heading @md/herowrapper:text-lg text-pretty font-semibold leading-tight"
                         field={bannerText}
                       />
                     </AnimatedSection>

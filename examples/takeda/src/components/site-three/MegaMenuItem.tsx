@@ -47,19 +47,19 @@ export const Default = (props: MegaMenuItemProps) => {
   if (props.params?.isSimpleLink) {
     return (
       <li
-        className={`font-(family-name:--font-accent) font-medium ${props.params?.styles}`}
+        className={`font-(family-name:--font-accent) text-sm font-semibold uppercase tracking-[0.08em] ${props.params?.styles}`}
         data-class-change
       >
         {isPageEditing ? (
           <ContentSdkLink
             field={props.fields?.Link}
-            className="inline-block p-4 font-[inherit] whitespace-nowrap cursor-pointer"
+            className="text-foreground hover:text-primary inline-block cursor-pointer whitespace-nowrap px-4 py-5 font-[inherit] transition-colors"
           />
         ) : (
           props.fields?.Link?.value?.href && (
             <Link
               href={props.fields.Link.value.href}
-              className="inline-block p-4 font-[inherit] whitespace-nowrap cursor-pointer"
+              className="text-foreground hover:text-primary inline-block cursor-pointer whitespace-nowrap px-4 py-5 font-[inherit] transition-colors"
             >
               {props.fields.Link.value.text}
             </Link>
@@ -72,7 +72,7 @@ export const Default = (props: MegaMenuItemProps) => {
   return (
     <MegaMenuToggle
       menuId={menuId}
-      className={`font-(family-name:--font-accent) font-medium ${props.params?.styles}`}
+      className={`font-(family-name:--font-accent) text-sm font-semibold uppercase tracking-[0.08em] ${props.params?.styles}`}
       trigger={<ContentSdkText field={props.fields?.Title} />}
     >
       <MegaMenuContent menuId={menuId}>
@@ -82,7 +82,7 @@ export const Default = (props: MegaMenuItemProps) => {
             {t(DICTIONARY_KEYS.BACK_BUTTON_LABEL) || 'Back'}
           </MegaMenuBackButton>
 
-          <div className="text-2xl **:font-(family-name:--font-heading) uppercase pb-8">
+          <div className="text-xl font-semibold tracking-tight **:font-(family-name:--font-heading) pb-8">
             <AppPlaceholder
               name={`mega-menu-item-primary-links-${props.params?.DynamicPlaceholderId}`}
               rendering={props.rendering}
@@ -107,7 +107,7 @@ export const Default = (props: MegaMenuItemProps) => {
                   className="w-full h-full object-cover"
                 />
               </div>
-              <div className="absolute bottom-0 lg:bottom-8 left-0 p-4 text-center bg-background shadow-lg">
+              <div className="absolute bottom-0 lg:bottom-8 left-0 border-primary border-t-2 p-4 text-center bg-background shadow-lg">
                 <h3 className="mb-4 text-sm">
                   <ContentSdkText field={featuredProduct.fields.ProductName} />
                 </h3>

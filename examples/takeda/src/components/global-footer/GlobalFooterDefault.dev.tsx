@@ -21,11 +21,11 @@ export const GlobalFooterDefault: React.FC<GlobalFooterProps> = (props) => {
   if (fields) {
     return (
       <footer
-        className="@container bg-primary text-primary-foreground border-foreground relative w-full overflow-hidden border-b-2"
+        className="@container bg-dark text-dark-foreground border-primary relative w-full overflow-hidden border-b-2"
         ref={footerRef}
       >
         {/* Main footer content */}
-        <section className="border-foreground border-b-2 px-4 py-16" aria-label="Footer main content">
+        <section className="border-white/15 border-b px-4 py-16" aria-label="Footer main content">
           <div className="@xl:px-8 relative z-10 mx-auto max-w-screen-2xl">
             <div className="@lg:grid-cols-[2fr,1fr] grid grid-cols-1 items-end justify-end gap-8">
               {/* Left section with heading */}
@@ -33,7 +33,7 @@ export const GlobalFooterDefault: React.FC<GlobalFooterProps> = (props) => {
                 <Text
                   tag="h2"
                   field={tagline?.jsonValue}
-                  className="font-heading mb-8 text-pretty text-5xl font-light antialiased"
+                  className="font-heading mb-8 text-pretty text-3xl font-semibold tracking-tight antialiased"
                 />
                 {/* Navigation links */}
                 <nav aria-label="Footer navigation">
@@ -46,7 +46,10 @@ export const GlobalFooterDefault: React.FC<GlobalFooterProps> = (props) => {
               </div>
 
               {/* Right section with subscription form */}
-              <aside className="@md:max-w-[400px] ms-auto flex w-full flex-col gap-4" aria-label="Newsletter subscription">
+              <aside
+                className="@md:max-w-[400px] ms-auto flex w-full flex-col gap-4"
+                aria-label="Newsletter subscription"
+              >
                 <Text
                   className="font-body mb-4 text-xl font-medium"
                   field={emailSubscriptionTitle?.jsonValue}
@@ -85,14 +88,17 @@ export const GlobalFooterDefault: React.FC<GlobalFooterProps> = (props) => {
         </div>
 
         {/* Bottom footer with social icons and copyright */}
-        <section className="@md:min-h-[430px] relative z-0 mx-auto mt-8 flex max-w-screen-2xl flex-col justify-end px-4 py-8" aria-label="Footer bottom">
+        <section
+          className="@md:min-h-[430px] relative z-0 mx-auto mt-8 flex max-w-screen-2xl flex-col justify-end px-4 py-8"
+          aria-label="Footer bottom"
+        >
           <div className="@sm:flex-row flex flex-col items-center justify-between">
             {/* Social media icons */}
             <nav aria-label="Social media links">
               <AnimatedHoverNav
                 parentRef={footerRef}
                 mobileBreakpoint={null}
-                indicatorClassName="h-0-5 bg-secondary rounded-default bottom-0"
+                indicatorClassName="h-0-5 bg-primary rounded-none bottom-0"
               >
                 <ul className="@sm:mb-0 mb-0 flex list-none gap-6">
                   {socialLinks?.results?.map((socialLink, index) => (

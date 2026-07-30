@@ -144,7 +144,7 @@ export function VideoModal({ isOpen, onClose, videoUrl }: VideoModalProps) {
                       }}
                     />
                   ) : (
-                    <div className="flex h-full w-full items-center justify-center bg-gray-200 text-gray-500">
+                    <div className="bg-secondary text-muted-foreground flex h-full w-full items-center justify-center">
                       No video available
                     </div>
                   )}
@@ -152,7 +152,7 @@ export function VideoModal({ isOpen, onClose, videoUrl }: VideoModalProps) {
               </motion.div>
               <motion.div variants={itemVariants} className="fixed right-4 top-4 z-[110]">
                 <Button
-                  className={`bg-white text-black hover:bg-gray-200  ${fadeOutClass} ${
+                  className={`bg-light text-light-foreground hover:bg-light-hover  ${fadeOutClass} ${
                     showCloseButton ? visibleClass : hiddenClass
                   }`}
                   variant="default"

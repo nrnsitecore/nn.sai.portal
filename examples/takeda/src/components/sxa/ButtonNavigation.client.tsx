@@ -42,16 +42,16 @@ export const ButtonNavigationClient = ({
           <ContentSdkLink
             key={section.Id}
             field={linkField}
-            className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow"
+            className="bg-card border border-border p-6 rounded-sm shadow-sm hover:border-primary transition-colors"
             prefetch={false}
           >
-            <h4 className="text-xl font-semibold text-brand-sky mb-2">
+            <h4 className="text-xl font-semibold text-primary mb-2">
               {getNavigationText({ fields: section })}
             </h4>
-            <p className="text-brand-black mb-4">
+            <p className="text-foreground mb-4">
               Explore {getNavigationText({ fields: section })} components
             </p>
-            <div className="flex items-center text-brand-sky">
+            <div className="flex items-center text-primary">
               <span className="mr-2">View components</span>
               <ArrowRight size={20} />
             </div>
@@ -61,16 +61,16 @@ export const ButtonNavigationClient = ({
             <Link
               key={section.Id}
               href={href}
-              className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow"
+              className="bg-card border border-border p-6 rounded-sm shadow-sm hover:border-primary transition-colors"
               prefetch={false}
             >
-              <h4 className="text-xl font-semibold text-brand-sky mb-2">
+              <h4 className="text-xl font-semibold text-primary mb-2">
                 {getNavigationText({ fields: section })}
               </h4>
-              <p className="text-brand-black mb-4">
+              <p className="text-foreground mb-4">
                 Explore {getNavigationText({ fields: section })} components
               </p>
-              <div className="flex items-center text-brand-sky">
+              <div className="flex items-center text-primary">
                 <span className="mr-2">View components</span>
                 <ArrowRight size={20} />
               </div>

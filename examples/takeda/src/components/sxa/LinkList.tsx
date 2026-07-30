@@ -1,7 +1,13 @@
 'use client';
 
 import React, { useEffect, useState, type JSX } from 'react';
-import { Link as ContentSdkLink, Text, LinkField, TextField, useSitecore } from '@sitecore-content-sdk/nextjs';
+import {
+  Link as ContentSdkLink,
+  Text,
+  LinkField,
+  TextField,
+  useSitecore,
+} from '@sitecore-content-sdk/nextjs';
 import Link from 'next/link';
 
 type ResultsFieldLink = {
@@ -35,6 +41,9 @@ type LinkListItemProps = {
   field: LinkField;
 };
 
+const linkListItemClass =
+  'text-muted-foreground hover:text-primary focus:border focus:border-dashed focus:border-input inline-block px-2 py-2 focus:bg-secondary focus:outline focus:outline-dashed focus:ring-ring aria-selected:bg-secondary text-nowrap word-break-[break-word] text-sm transition-colors';
+
 const LinkListItem = (props: LinkListItemProps & { isPageEditing?: boolean }) => {
   const { page } = useSitecore();
   const isEditing = props.isPageEditing || page?.mode?.isEditing;
@@ -50,18 +59,10 @@ const LinkListItem = (props: LinkListItemProps & { isPageEditing?: boolean }) =>
     <li className={className}>
       <div>
         {isEditing ? (
-          <ContentSdkLink
-            className="text-gray-600 hover:underline focus:border focus:border-dashed focus:border-gray-500 inline-block px-2 py-2 focus:bg-gray-50 focus:outline focus:outline-dashed focus:ring-gray-500 aria-selected:bg-gray-100 text-nowrap word-break-[break-word] text-sm"
-            field={props.field}
-            prefetch={false}
-          />
+          <ContentSdkLink className={linkListItemClass} field={props.field} prefetch={false} />
         ) : (
           props.field?.value?.href && (
-            <Link
-              href={props.field.value.href}
-              className="text-gray-600 hover:underline focus:border focus:border-dashed focus:border-gray-500 inline-block px-2 py-2 focus:bg-gray-50 focus:outline focus:outline-dashed focus:ring-gray-500 aria-selected:bg-gray-100 text-nowrap word-break-[break-word] text-sm"
-              prefetch={false}
-            >
+            <Link href={props.field.value.href} className={linkListItemClass} prefetch={false}>
               {props.field?.value?.text}
             </Link>
           )
@@ -97,7 +98,7 @@ export const Default = (props: LinkListProps): JSX.Element => {
           <Text
             tag="h3"
             field={datasource?.field?.title}
-            className="text-nowrap mb-5 text-xl font-bold text-gray-600"
+            className="takeda-heading-bar text-nowrap text-foreground mb-5 text-lg font-semibold md:text-lg"
           />
           <ul className="list-none p-0 m-0" aria-label="Navigation options">
             {list}
@@ -171,8 +172,10 @@ export const AnchorNav = (props: LinkListProps): JSX.Element => {
             <a
               href={href}
               onClick={(e) => handleClick(e, href)}
-              className={`text-sm font-semibold py-4 transition-colors border-b-2 block ${
-                isActive ? 'border-black' : 'border-transparent'
+              className={`block border-b-2 py-4 text-sm font-semibold uppercase tracking-[0.08em] transition-colors ${
+                isActive
+                  ? 'border-primary text-primary'
+                  : 'text-foreground hover:text-primary border-transparent'
               }`}
             >
               {link?.value?.text}
@@ -184,12 +187,12 @@ export const AnchorNav = (props: LinkListProps): JSX.Element => {
     return (
       <div
         data-class-change
-        className={`sticky top-0 shadow-lg bg-white z-20 ${styles}`}
+        className={`bg-background border-border sticky top-0 z-20 border-b shadow-sm ${styles}`}
         id={id ? id : undefined}
       >
         <div className="container mx-auto px-4">
           <ul
-            className="flex gap-12 list-none p-0 m-0"
+            className="m-0 flex list-none flex-wrap gap-x-8 gap-y-0 p-0 lg:gap-x-12"
             aria-label="Navigation options"
           >
             {list}
@@ -227,7 +230,7 @@ export const FooterLinks = (props: LinkListProps): JSX.Element => {
             {isPageEditing ? (
               <ContentSdkLink
                 key={`${key}${href}-link`}
-                className="font-[inherit]"
+                className="font-[inherit] transition-opacity hover:opacity-70"
                 field={element.field.link}
                 prefetch={false}
               />
@@ -236,7 +239,7 @@ export const FooterLinks = (props: LinkListProps): JSX.Element => {
                 <Link
                   key={`${key}${href}-link`}
                   href={href}
-                  className="font-[inherit]"
+                  className="font-[inherit] transition-opacity hover:opacity-70"
                   prefetch={false}
                 >
                   {link?.value?.text}
@@ -288,7 +291,7 @@ export const HeaderPrimaryLinks = (props: LinkListProps): JSX.Element => {
         const href = link?.value?.href || '';
 
         return (
-          <li key={`${key}${href}-link`}>
+          <li key={`${key}${href}-link`} className="hover:text-primary transition-colors">
             {isPageEditing ? (
               <ContentSdkLink field={element.field.link} prefetch={false} />
             ) : (
@@ -303,7 +306,7 @@ export const HeaderPrimaryLinks = (props: LinkListProps): JSX.Element => {
       });
 
     return (
-      <ul className={`flex flex-col gap-4 ${styles}`} id={id ? id : undefined} data-class-change>
+      <ul className={`flex flex-col gap-3 ${styles}`} id={id ? id : undefined} data-class-change>
         {list}
       </ul>
     );
@@ -333,7 +336,7 @@ export const HeaderSecondaryLinks = (props: LinkListProps): JSX.Element => {
         const href = link?.value?.href || '';
 
         return (
-          <li key={`${key}${href}-link`}>
+          <li key={`${key}${href}-link`} className="hover:text-primary text-sm transition-colors">
             {isPageEditing ? (
               <ContentSdkLink field={element.field.link} prefetch={false} />
             ) : (
@@ -348,8 +351,8 @@ export const HeaderSecondaryLinks = (props: LinkListProps): JSX.Element => {
       });
 
     return (
-      <div className={`flex flex-col gap-2 ${styles}`} id={id ? id : undefined} data-class-change>
-        <h2 className="text-sm font-(family-name:--font-accent) font-medium text-secondary-foreground uppercase">
+      <div className={`flex flex-col gap-3 ${styles}`} id={id ? id : undefined} data-class-change>
+        <h2 className="border-primary text-muted-foreground border-l-2 pl-3 font-(family-name:--font-accent) text-xs font-semibold uppercase tracking-[0.1em]">
           <Text field={datasource?.field?.title} />
         </h2>
         <ul className="flex flex-col gap-1">{list}</ul>

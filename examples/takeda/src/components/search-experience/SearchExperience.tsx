@@ -91,7 +91,7 @@ export const Default = (props: SearchExperienceProps) => {
           <div className="mb-8">
             <SearchInput value={inputValue} onChange={(value) => onSearchChange(value, true)} />
 
-            <p className="text-gray-600 mb-6">
+            <p className="text-muted-foreground mb-6">
               {total} {t(DICTIONARY_KEYS.RESULTS_FOUND) || 'results found'}
             </p>
           </div>

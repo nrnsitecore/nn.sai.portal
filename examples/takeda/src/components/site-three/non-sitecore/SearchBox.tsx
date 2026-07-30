@@ -42,7 +42,7 @@ export const SearchBox = ({ searchLink }: { searchLink: LinkField }) => {
     } catch {
       return searchTerm.trim()
         ? `${searchBaseHref}?q=${encodeURIComponent(searchTerm.trim())}`
-        : searchBaseHref ?? null;
+        : (searchBaseHref ?? null);
     }
   };
 
@@ -54,7 +54,7 @@ export const SearchBox = ({ searchLink }: { searchLink: LinkField }) => {
         <ContentSdkLink
           field={searchLink}
           prefetch={false}
-          className="block p-4 font-[family-name:var(--font-accent)] font-medium"
+          className="text-foreground hover:text-primary block px-4 py-5 font-[family-name:var(--font-accent)] text-sm font-semibold uppercase tracking-[0.08em] transition-colors"
           onClick={(e) => {
             e.preventDefault();
             setIsVisible(!isVisible);
@@ -63,32 +63,34 @@ export const SearchBox = ({ searchLink }: { searchLink: LinkField }) => {
       ) : (
         <button
           type="button"
-          className="block p-4 font-[family-name:var(--font-accent)] font-medium w-full text-left"
+          className="text-foreground hover:text-primary block w-full px-4 py-5 text-left font-[family-name:var(--font-accent)] text-sm font-semibold uppercase tracking-[0.08em] transition-colors"
           onClick={() => setIsVisible(!isVisible)}
           aria-label={t(DICTIONARY_KEYS.SEARCH_LABEL) || 'Search'}
         >
-          {searchLink?.value?.text || (t(DICTIONARY_KEYS.SEARCH_LABEL) || 'Search')}
+          {searchLink?.value?.text || t(DICTIONARY_KEYS.SEARCH_LABEL) || 'Search'}
         </button>
       )}
 
       <div
-        className={`fixed lg:absolute top-14 left-0 right-0 lg:top-full lg:left-0 lg:right-0
-          h-[calc(100vh-3.5rem)] lg:h-auto overflow-auto
+        className={`fixed lg:absolute top-20 left-0 right-0 lg:top-full lg:left-0 lg:right-0
+          h-[calc(100vh-5rem)] lg:h-auto overflow-auto
           ${
             isVisible
               ? 'opacity-100 translate-y-0 pointer-events-auto'
               : 'opacity-0 lg:translate-y-2 pointer-events-none'
           }
-          bg-background transition-all duration-300 ease-in-out
+          bg-background border-primary border-t-2 shadow-lg transition-all duration-300 ease-in-out
         `}
       >
         <div className="pt-18 p-8 lg:pt-8">
-          <h2 className="mb-4 uppercase">{t(DICTIONARY_KEYS.SEARCH_LABEL) || 'Search'}</h2>
-          <div className="flex gap-4">
+          <h2 className="takeda-heading-bar mb-6 text-2xl md:text-2xl">
+            {t(DICTIONARY_KEYS.SEARCH_LABEL) || 'Search'}
+          </h2>
+          <div className="flex gap-3">
             <input
               type="text"
               placeholder={t(DICTIONARY_KEYS.SEARCH_INPUT_PLACEHOLDER) || 'Type to search...'}
-              className="w-full border-b border-border focus-visible:outline-0 focus:border-black px-3 py-2"
+              className="border-input focus:border-primary focus:ring-primary/20 w-full rounded-sm border px-4 py-3 focus:ring-2 focus-visible:outline-0"
               autoFocus
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
@@ -105,7 +107,9 @@ export const SearchBox = ({ searchLink }: { searchLink: LinkField }) => {
                 className="btn btn-primary btn-sharp"
                 aria-label={t(DICTIONARY_KEYS.SEARCH_GO_DESCRIPTIVE) || SEARCH_GO_ARIA_LABEL}
               >
-                {t(DICTIONARY_KEYS.SEARCH_GO_DESCRIPTIVE) || t(DICTIONARY_KEYS.SEARCH_GO_LABEL) || SEARCH_GO_ARIA_LABEL}
+                {t(DICTIONARY_KEYS.SEARCH_GO_DESCRIPTIVE) ||
+                  t(DICTIONARY_KEYS.SEARCH_GO_LABEL) ||
+                  SEARCH_GO_ARIA_LABEL}
               </Link>
             ) : (
               <button
@@ -124,7 +128,9 @@ export const SearchBox = ({ searchLink }: { searchLink: LinkField }) => {
                   }
                 }}
               >
-                {t(DICTIONARY_KEYS.SEARCH_GO_DESCRIPTIVE) || t(DICTIONARY_KEYS.SEARCH_GO_LABEL) || SEARCH_GO_ARIA_LABEL}
+                {t(DICTIONARY_KEYS.SEARCH_GO_DESCRIPTIVE) ||
+                  t(DICTIONARY_KEYS.SEARCH_GO_LABEL) ||
+                  SEARCH_GO_ARIA_LABEL}
               </button>
             )}
           </div>

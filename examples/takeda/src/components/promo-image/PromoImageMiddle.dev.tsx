@@ -17,7 +17,7 @@ export const PromoImageMiddle: React.FC<PromoImageProps> = (props) => {
     return (
       <section
         data-component="Promo Image"
-        className="@container @md:py-20 relative w-full overflow-hidden border-b-2 border-t-2 bg-black py-20 [.border-b-2+&]:border-t-0"
+        className="@container @md:py-20 relative w-full overflow-hidden border-b-2 border-t-2 bg-dark py-20 [.border-b-2+&]:border-t-0"
       >
         <div className="relative mx-auto max-w-screen-xl px-8">
           {(isPageEditing || heading?.value) && (
@@ -30,7 +30,7 @@ export const PromoImageMiddle: React.FC<PromoImageProps> = (props) => {
             >
               <Text
                 tag="h2"
-                className="font-heading @xs:text-3xl @sm:text-4xl @lg:text-5xl text-primary-foreground text-pretty text-2xl"
+                className="font-heading @xs:text-2xl @sm:text-3xl @lg:text-4xl text-primary-foreground text-pretty text-2xl"
                 field={heading}
               />
             </AnimatedSection>
@@ -60,7 +60,7 @@ export const PromoImageMiddle: React.FC<PromoImageProps> = (props) => {
                   delay={900}
                 >
                   <RichText
-                    className="@md:mt-0 text-primary-foreground @xs:text-lg @md:text-xl mt-6 font-normal tracking-tight antialiased"
+                    className="@md:mt-0 text-primary-foreground @xs:text-lg @md:text-xl mt-6 font-semibold tracking-tight antialiased"
                     field={description}
                   />
                 </AnimatedSection>

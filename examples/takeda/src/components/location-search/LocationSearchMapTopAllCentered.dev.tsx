@@ -199,7 +199,7 @@ export const LocationSearchMapTopAllCentered = (props: LocationSearchProps) => {
                   }
                 )}
               >
-                <span className="font-heading text-lg font-light">Locations near</span>
+                <span className="font-heading text-lg font-semibold">Locations near</span>
                 <Button
                   variant="link"
                   onClick={() => setShowChangeZipcodeModal(true)}

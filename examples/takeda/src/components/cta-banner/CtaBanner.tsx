@@ -16,24 +16,24 @@ const ctaBannerVariants = cva('w-full mx-auto px-6 py-16 md:py-24 text-center', 
 });
 
 const ctaTitleVariants = cva(
-  'mb-6 text-pretty text-4xl font-normal leading-[1.1333] tracking-tighter antialiased md:text-7xl',
+  'mb-6 text-pretty text-3xl font-bold leading-[1.15] tracking-tight antialiased md:text-4xl',
   {
     variants: {
       colorScheme: {
         default: '',
         primary: 'text-primary-foreground',
-        secondary: 'text-primary',
+        secondary: 'text-foreground',
       },
     },
   }
 );
 
-const ctaButtonVariants = cva('text-sm font-heading font-medium', {
+const ctaButtonVariants = cva('text-sm', {
   variants: {
     colorScheme: {
       default: '',
-      primary: 'bg-accent text-accent-foreground hover:bg-accent/90',
-      secondary: 'bg-primary text-primary-foreground hover:bg-primary/90',
+      primary: 'bg-light text-light-foreground hover:bg-light-hover',
+      secondary: 'bg-primary text-primary-foreground hover:bg-primary-hover',
     },
   },
 });

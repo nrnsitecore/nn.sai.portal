@@ -28,14 +28,14 @@ export const Default: React.FC<MultiPromoItemProps> = (props) => {
         <Text
           tag="h3"
           field={title}
-          className="font-heading text-box-trim-both text-2xl font-medium leading-snug tracking-tighter antialiased"
+          className="font-heading text-box-trim-both text-2xl font-medium leading-snug tracking-tight antialiased"
         />
       )}
       {link && (
         <Button
           variant="link"
           asChild
-          className="text-box-trim-both mt-4 h-auto text-pretty px-0 pt-0 text-[0.875rem] font-normal last:pb-0"
+          className="text-box-trim-both mt-4 h-auto text-pretty px-0 pt-0 text-[0.875rem] font-semibold last:pb-0"
         >
           <Link field={link}></Link>
         </Button>

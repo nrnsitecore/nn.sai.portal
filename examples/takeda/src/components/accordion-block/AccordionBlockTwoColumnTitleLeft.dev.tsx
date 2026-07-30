@@ -38,7 +38,7 @@ export const AccordionBlockTwoColumnTitleLeft: React.FC<AccordionProps> = (props
               {heading?.jsonValue && (
                 <Text
                   tag="h2"
-                  className="@md:text-5xl @md:vertical-text max-h-[420px] text-pretty text-4xl font-light leading-[1.1] tracking-tighter antialiased"
+                  className="@md:text-3xl @md:vertical-text max-h-[420px] text-pretty text-2xl font-semibold leading-[1.1] tracking-tight antialiased"
                   field={heading?.jsonValue}
                 />
               )}
@@ -88,7 +88,7 @@ export const AccordionBlockTwoColumnTitleLeft: React.FC<AccordionProps> = (props
                     <div className="bg-primary @sm:flex-row @sm:text-start @md:flex-col @md:text-center @lg:flex-row @lg:text-start mt-6 flex flex-col flex-nowrap items-center gap-4 p-7 text-center">
                       <Text
                         tag="p"
-                        className="text-primary-foreground font-heading text-lg font-light"
+                        className="text-primary-foreground font-heading text-lg font-semibold"
                         field={description?.jsonValue}
                       />
                       {link?.jsonValue && (

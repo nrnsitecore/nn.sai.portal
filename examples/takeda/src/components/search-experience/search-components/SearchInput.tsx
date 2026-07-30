@@ -19,10 +19,10 @@ export const SearchInput = ({ value, onChange }: SearchInputProps) => {
           placeholder={t(DICTIONARY_KEYS.SEARCH_INPUT_PLACEHOLDER) || 'Search items...'}
           value={value}
           onChange={(e) => onChange(e.target.value)}
-          className="w-full px-4 py-3 pl-12 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          className="w-full px-4 py-3 pl-12 border border-input rounded-sm focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent"
         />
         <svg
-          className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400"
+          className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-muted-foreground"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -38,7 +38,7 @@ export const SearchInput = ({ value, onChange }: SearchInputProps) => {
           <button
             type="button"
             onClick={() => onChange('')}
-            className="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 hover:text-gray-600 focus:outline-none focus:text-gray-600 transition-colors"
+            className="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-muted-foreground hover:text-muted-foreground focus:outline-none focus:text-muted-foreground transition-colors"
             aria-label="Clear search"
           >
             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" className="w-full h-full">

@@ -58,7 +58,7 @@ export const HeroImageRight: React.FC<HeroProps> = (props) => {
               <Text
                 tag="h1"
                 field={title}
-                className="font-heading @md/herowrapper:text-[clamp(3rem,18cqi,6rem)] relative -ml-[2px] max-w-[15ch] text-balance text-[clamp(3rem,11cqi,4rem)] font-light leading-tight"
+                className="font-heading @md/herowrapper:text-[clamp(3rem,18cqi,6rem)] relative -ml-[2px] max-w-[15ch] text-balance text-[clamp(3rem,11cqi,4rem)] font-semibold leading-tight"
               />
             </AnimatedSection>
 
@@ -123,7 +123,7 @@ export const HeroImageRight: React.FC<HeroProps> = (props) => {
                     >
                       <Text
                         tag="p"
-                        className="font-heading @md/herowrapper:text-lg text-pretty font-light leading-tight"
+                        className="font-heading @md/herowrapper:text-lg text-pretty font-semibold leading-tight"
                         field={bannerText}
                       />
                     </AnimatedSection>

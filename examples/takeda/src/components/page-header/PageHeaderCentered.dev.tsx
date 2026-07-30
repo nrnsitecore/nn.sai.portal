@@ -54,7 +54,7 @@ export const PageHeaderCentered: React.FC<PageHeaderProps & { isPageEditing: boo
                 >
                   <Text
                     tag="h1"
-                    className="font-heading elative mx-auto text-balance text-center text-6xl font-light tracking-tighter antialiased"
+                    className="font-heading elative mx-auto text-balance text-center text-4xl font-semibold tracking-tight antialiased"
                     field={title}
                   />
                 </AnimatedSection>

@@ -70,7 +70,11 @@ export const ProductListingThreeUp: React.FC<ProductListingProps> = (props) => {
       >
         {/* JSON-LD structured data for products */}
         {productSchemas.map((schema, index) => (
-          <StructuredData key={`product-schema-${index}`} id={`product-schema-${index}`} data={schema} />
+          <StructuredData
+            key={`product-schema-${index}`}
+            id={`product-schema-${index}`}
+            data={schema}
+          />
         ))}
         <AnimatedSection
           direction="down"
@@ -81,7 +85,7 @@ export const ProductListingThreeUp: React.FC<ProductListingProps> = (props) => {
         >
           <Text
             tag="h2"
-            className="w-full text-pretty text-5xl font-light tracking-tight antialiased"
+            className="w-full text-pretty text-3xl font-semibold tracking-tight antialiased"
             field={title?.jsonValue}
           />
         </AnimatedSection>

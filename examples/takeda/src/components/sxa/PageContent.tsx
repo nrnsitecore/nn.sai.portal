@@ -76,17 +76,17 @@ export const TitleAndBody = (props: PageContentProps): JSX.Element => {
         : (route?.fields?.Content as RichTextField),
   };
   return (
-    <section className="bg-brand-gray95 py-16">
+    <section className="bg-secondary py-16">
       <div className="container mx-auto text-center">
-        <h2 className="text-4xl font-bold text-brand-black mb-4">
+        <h2 className="text-4xl font-bold text-foreground mb-4">
           <ContentSdkText field={fields.title} />
         </h2>
-        <div className="text-xl text-brand-black mb-8">
+        <div className="text-xl text-foreground mb-8">
           <ContentSdkRichText field={fields.body} />
         </div>
         <Link
           href="#components"
-          className="bg-brand-sky text-white px-6 py-3 rounded-md hover:bg-[#71B5F0] transition-colors"
+          className="bg-primary text-primary-foreground px-6 py-3 rounded-sm hover:bg-primary-hover transition-colors"
         >
           Explore Components
         </Link>

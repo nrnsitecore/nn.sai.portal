@@ -478,9 +478,9 @@ describe('PromoImage Component', () => {
       render(<PromoImageDefault {...defaultPromoImageProps} />);
 
       const heading = screen.getByRole('heading', { level: 2 });
-      expect(heading.className).toContain('@xs:text-3xl');
-      expect(heading.className).toContain('@sm:text-4xl');
-      expect(heading.className).toContain('@lg:text-5xl');
+      expect(heading.className).toContain('@xs:text-2xl');
+      expect(heading.className).toContain('@sm:text-3xl');
+      expect(heading.className).toContain('@lg:text-4xl');
     });
 
     it('includes responsive spacing and positioning', () => {

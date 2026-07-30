@@ -1,9 +1,5 @@
 import React, { type JSX } from 'react';
-import {
-  LinkField,
-  Text,
-  TextField,
-} from '@sitecore-content-sdk/nextjs';
+import { LinkField, Text, TextField } from '@sitecore-content-sdk/nextjs';
 import Link from 'next/link';
 import { NavigationMenuToggle } from './NavigationMenuToggle.client';
 import { NavigationList } from './NavigationList.client';
@@ -127,7 +123,7 @@ export const ButtonNavigation = (props: NavigationProps): JSX.Element => {
   return (
     <section className="py-16">
       <div className="container mx-auto">
-        <h3 className="text-3xl font-bold text-brand-black mb-8 text-center">
+        <h3 className="text-3xl font-bold text-foreground mb-8 text-center">
           Component Categories
         </h3>
         <ButtonNavigationClient
@@ -147,17 +143,17 @@ export const Header = (): JSX.Element => {
       <nav>
         <ul className="flex space-x-4">
           <li>
-            <Link href="/" className="hover:text-[#71B5F0]">
+            <Link href="/" className="hover:text-primary">
               Home
             </Link>
           </li>
           <li>
-            <Link href="/" className="hover:text-[#71B5F0]">
+            <Link href="/" className="hover:text-primary">
               Documentation
             </Link>
           </li>
           <li>
-            <Link href="/about" className="hover:text-[#71B5F0]">
+            <Link href="/about" className="hover:text-primary">
               About
             </Link>
           </li>

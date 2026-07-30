@@ -67,7 +67,7 @@ export const TextBanner01: React.FC<TextBannerProps> = (props) => {
               <Text
                 tag="h2"
                 field={heading}
-                className="text-box-trim-both-baseline font-heading @lg/textbanner:text-8xl relative -ml-[0.1em] text-balance text-left"
+                className="text-box-trim-both-baseline font-heading @lg/textbanner:text-5xl relative -ml-[0.1em] text-balance text-left"
               />
             </AnimatedSection>
             {/* Description */}

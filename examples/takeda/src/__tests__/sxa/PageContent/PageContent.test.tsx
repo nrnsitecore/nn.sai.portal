@@ -100,7 +100,7 @@ describe('PageContent Component', () => {
     it('should render title and body with proper structure', () => {
       const { container } = render(<TitleAndBody {...defaultPageContentProps} />);
 
-      expect(container.querySelector('.bg-brand-gray95')).toBeInTheDocument();
+      expect(container.querySelector('.bg-secondary')).toBeInTheDocument();
       expect(container.querySelector('.py-16')).toBeInTheDocument();
       expect(container.querySelector('.container')).toBeInTheDocument();
       expect(container.querySelector('h2')).toBeInTheDocument();

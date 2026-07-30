@@ -92,7 +92,7 @@ export const LoadMore = (props: SearchExperienceProps) => {
           <div className="mb-8">
             <SearchInput value={inputValue} onChange={(value) => onSearchChange(value, true)} />
 
-            <p className="text-gray-600 mb-6">
+            <p className="text-muted-foreground mb-6">
               {total} {t(DICTIONARY_KEYS.RESULTS_FOUND) || 'results found'}
             </p>
           </div>
@@ -137,7 +137,7 @@ export const LoadMore = (props: SearchExperienceProps) => {
                   loadMore();
                 }}
                 disabled={isLoadingMore}
-                className="px-4 py-2 rounded-lg cursor-pointer bg-primary text-primary-foreground hover:bg-primary-hover disabled:opacity-50"
+                className="px-4 py-2 rounded-sm cursor-pointer bg-primary text-primary-foreground hover:bg-primary-hover disabled:opacity-50"
               >
                 {t(DICTIONARY_KEYS.LOAD_MORE) || 'Load more'}
               </button>

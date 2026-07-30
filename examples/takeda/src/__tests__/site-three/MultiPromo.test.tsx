@@ -193,8 +193,8 @@ describe('MultiPromo', () => {
       const { container } = render(<MultiPromoStacked {...mockProps} />);
       const section = container.querySelector('section');
       expect(section).toHaveClass('overflow-hidden');
-      const blurElement = container.querySelector('.blur-\\[400px\\]');
-      expect(blurElement).toBeInTheDocument();
+      const heading = container.querySelector('h2');
+      expect(heading).toHaveClass('takeda-heading-bar');
     });
 
     it('renders promo images and links', () => {

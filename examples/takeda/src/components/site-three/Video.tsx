@@ -34,10 +34,10 @@ export function Default({ fields, params }: VideoComponentProps) {
     return (
       <section className={`relative lg:mt-16 lg:py-16 ${params.styles}`} data-class-change>
         <div className="container grid lg:grid-cols-2 gap-4 lg:gap-16 px-4 py-12 lg:py-16 mx-auto text-center lg:text-left">
-          <h3 className="text-xl lg:text-3xl leading-loose tracking-tight uppercase">
+          <h3 className="takeda-heading-bar text-2xl lg:text-3xl">
             <ContentSdkText field={fields.title} />
           </h3>
-          <div className="text-base lg:text-lg leading-8 tracking-normal">
+          <div className="text-muted-foreground text-base leading-relaxed">
             <ContentSdkText field={fields.caption} />
           </div>
         </div>
@@ -46,7 +46,7 @@ export function Default({ fields, params }: VideoComponentProps) {
           <div className="absolute inset-0 z-10">
             <ContentSdkImage field={fields.image2} className="w-full h-full object-cover" />
           </div>
-          <div className="flex items-center justify-center w-full px-4 py-12 lg:py-16 backdrop-blur-md bg-[linear-gradient(136deg, rgba(255, 255, 255, 0.08) 2.61%, rgba(255, 255, 255, 0.15) 73.95%)] z-20">
+          <div className="bg-dark/45 flex items-center justify-center w-full px-4 py-12 lg:py-16 z-20">
             <div className="container mx-auto">
               <VideoBase
                 fields={fields}
@@ -68,10 +68,10 @@ export function TextCenter({ fields, params }: VideoComponentProps) {
     return (
       <section className={`relative ${params.styles}`} data-class-change>
         <div className="flex flex-col items-center gap-4 max-w-3xl px-4 py-12 lg:py-16 mx-auto text-center">
-          <h3 className="lg:px-10 text-xl lg:text-3xl leading-loose tracking-normal uppercase">
+          <h3 className="takeda-heading-bar-center lg:px-10 text-2xl lg:text-3xl">
             <ContentSdkText field={fields.title} />
           </h3>
-          <div className="text-base lg:text-lg leading-8 tracking-normal">
+          <div className="text-muted-foreground text-base leading-relaxed">
             <ContentSdkText field={fields.caption} />
           </div>
         </div>
@@ -80,7 +80,7 @@ export function TextCenter({ fields, params }: VideoComponentProps) {
           <div className="absolute inset-0 z-10">
             <ContentSdkImage field={fields.image2} className="w-full h-full object-cover" />
           </div>
-          <div className="flex items-center justify-center w-full px-4 py-12 lg:py-16 backdrop-blur-md bg-[linear-gradient(136deg, rgba(255, 255, 255, 0.08) 2.61%, rgba(255, 255, 255, 0.15) 73.95%)] z-20">
+          <div className="bg-dark/45 flex items-center justify-center w-full px-4 py-12 lg:py-16 z-20">
             <div className="container mx-auto">
               <VideoBase
                 fields={fields}

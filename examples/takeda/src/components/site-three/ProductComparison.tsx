@@ -111,7 +111,7 @@ export const Default = (props: ProductComparisonProps) => {
   return (
     <section className={`relative ${props.params?.styles}`} data-class-change>
       <div className="container mx-auto px-4">
-        <h2 className="max-w-3xl mx-auto text-center text-2xl lg:text-5xl uppercase mb-16">
+        <h2 className="takeda-heading-bar-center max-w-3xl mx-auto text-center text-3xl lg:text-4xl mb-14">
           <ContentSdkText field={props.fields?.Title} />
         </h2>
 

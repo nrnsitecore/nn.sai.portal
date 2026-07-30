@@ -51,7 +51,7 @@ export const Default: React.FC<ZipcodeSearchFormProps> = ({
                 <FormControl>
                   <Input type="tel" placeholder={placeholder} {...field} />
                 </FormControl>
-                <FormMessage className="absolute top-[100%] pt-1 text-[#ff5252]" />
+                <FormMessage className="text-destructive absolute top-[100%] pt-1" />
               </FormItem>
             )}
           />

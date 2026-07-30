@@ -51,7 +51,7 @@ export const Default: React.FC<Container6321Props> = (props) => {
 
   return (
     <section
-      className={cn('container--6321', 'mt-10 bg-[#f5f5f5]', {
+      className={cn('container--6321', 'mt-10 bg-secondary', {
         'mt-0': excludeTopMargin,
         [props.params.styles as string]: props?.params?.styles,
       })}

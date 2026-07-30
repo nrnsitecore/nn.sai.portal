@@ -60,7 +60,7 @@ export const PageHeaderDefault: React.FC<PageHeaderProps & { isPageEditing: bool
                 >
                   <Text
                     tag="h1"
-                    className="font-heading @[575px]/headercontent:text-6xl @xs/headercontent:text-5xl relative -ml-[0.1em] max-w-[14ch] text-balance text-left text-4xl font-light tracking-tighter antialiased"
+                    className="font-heading @[575px]/headercontent:text-4xl @xs/headercontent:text-3xl relative -ml-[0.1em] max-w-[14ch] text-balance text-left text-4xl font-semibold tracking-tight antialiased"
                     field={title}
                   />
                 </AnimatedSection>

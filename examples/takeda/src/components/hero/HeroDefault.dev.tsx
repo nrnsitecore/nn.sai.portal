@@ -57,7 +57,7 @@ export const HeroDefault: React.FC<HeroProps> = (props) => {
             <Text
               tag="h1"
               field={title}
-              className="font-heading @md/herowrapper:text-[clamp(4.5rem,9cqi,8rem)] text-box-trim-top @lg/herowrapper:p-0 text-shadow @lg/herowrapper:text-shadow-blur-3xl @lg/herowrapper:drop-shadow-[0_35px_35px_rgba(0,0,0,0.4)] relative -ml-[2px] text-balance px-4 pt-8 text-5xl font-light leading-tight"
+              className="font-heading @md/herowrapper:text-[clamp(4.5rem,9cqi,8rem)] text-box-trim-top @lg/herowrapper:p-0 text-shadow @lg/herowrapper:text-shadow-blur-3xl @lg/herowrapper:drop-shadow-[0_35px_35px_rgba(0,0,0,0.4)] relative -ml-[2px] text-balance px-4 pt-8 text-3xl font-semibold leading-tight"
             />
           </AnimatedSection>
 
@@ -124,7 +124,7 @@ export const HeroDefault: React.FC<HeroProps> = (props) => {
                 >
                   <Text
                     tag="p"
-                    className="@md/herowrapper:text-lg font-heading text-pretty font-light leading-tight"
+                    className="@md/herowrapper:text-lg font-heading text-pretty font-semibold leading-tight"
                     field={bannerText}
                   />
                 </AnimatedSection>

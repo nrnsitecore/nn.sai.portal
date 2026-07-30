@@ -33,7 +33,7 @@ export const Default: React.FC<MultiPromoTabsProps> = (props) => {
         <Text
           tag="h2"
           field={fields.data?.datasource?.title?.jsonValue}
-          className="text-box-trim-both-baseline text-primary-foreground @md:text-6xl font-heading border-accent @sm:text-5xl -ml-1 mb-8 max-w-[20ch] text-pretty text-4xl font-normal leading-[1.1333] tracking-tighter antialiased md:max-w-[17.5ch]"
+          className="text-box-trim-both-baseline text-primary-foreground @md:text-4xl font-heading border-accent @sm:text-3xl -ml-1 mb-8 max-w-[20ch] text-pretty text-2xl font-semibold leading-[1.1333] tracking-tight antialiased md:max-w-[17.5ch]"
         />
 
         <div className="@md:hidden flex flex-col">
@@ -41,7 +41,7 @@ export const Default: React.FC<MultiPromoTabsProps> = (props) => {
             <Text
               htmlFor={id}
               tag="label"
-              className="text-primary-foreground font-body mb-2 block text-base font-normal"
+              className="text-primary-foreground font-body mb-2 block text-base font-semibold"
               field={fields.data?.datasource?.droplistLabel?.jsonValue}
             />
           )}
@@ -49,10 +49,7 @@ export const Default: React.FC<MultiPromoTabsProps> = (props) => {
             onValueChange={(value: any) => setActiveTab(Number(value))}
             defaultValue={activeTab.toString()}
           >
-            <SelectTrigger
-              id={id}
-              className="text-primary-foreground  w-full  border-0 bg-black/20"
-            >
+            <SelectTrigger id={id} className="text-primary-foreground  w-full  border-0 bg-dark/20">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -75,7 +72,7 @@ export const Default: React.FC<MultiPromoTabsProps> = (props) => {
               <TabsTrigger
                 key={index}
                 value={index.toString()}
-                className="font-body letter-spacing-[-0.8] data-[state=active]:bg-accent data-[state=active]:text-accent-foreground data-[state=active]:hover:bg-accent/90 hover:bg-accent hover:text-accent-foreground border-accent rounded-md border bg-transparent px-4 py-2 text-base font-normal text-white transition-colors"
+                className="font-body letter-spacing-[-0.8] data-[state=active]:bg-accent data-[state=active]:text-accent-foreground data-[state=active]:hover:bg-accent/90 hover:bg-accent hover:text-accent-foreground border-accent rounded-md border bg-transparent px-4 py-2 text-base font-semibold text-white transition-colors"
               >
                 <Text field={item.title?.jsonValue} />
               </TabsTrigger>

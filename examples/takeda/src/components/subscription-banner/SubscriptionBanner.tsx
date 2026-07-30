@@ -75,7 +75,7 @@ export const Default: React.FC<SubscriptionBannerProps> = ({ fields }) => {
                     <Input
                       type="email"
                       placeholder={emailPlaceholder?.value || 'Enter your email address'}
-                      className="flex-1 w-full rounded-full px-6 py-3 border-input"
+                      className="flex-1 w-full rounded-sm px-4 py-3 border-input"
                       disabled={isSubmitted}
                       {...field}
                     />
@@ -84,11 +84,7 @@ export const Default: React.FC<SubscriptionBannerProps> = ({ fields }) => {
                 </FormItem>
               )}
             />
-            <Button
-              type="submit"
-              className="flex-1 rounded-full px-8 py-2.5"
-              disabled={isSubmitted}
-            >
+            <Button type="submit" className="flex-1 rounded-sm px-8 py-3" disabled={isSubmitted}>
               {buttonLink?.value?.text || 'Subscribe'}
             </Button>
           </form>

@@ -47,7 +47,7 @@ const Default = (props: MultiPromoTabsFields) => {
           <Button
             icon={{ value: 'arrow-up-right' }}
             iconClassName="h-4 w-4"
-            className="bg-popover hover:bg-popover hover:text-popover-foreground text-popover-foreground font-body letter-spacing-[-0.8] absolute bottom-4 left-4 flex items-center gap-2 rounded-lg px-4 py-2 text-base text-sm font-medium font-normal backdrop-blur-sm transition-all duration-500 group-hover:translate-x-2"
+            className="bg-popover hover:bg-popover hover:text-popover-foreground text-popover-foreground font-body letter-spacing-[-0.8] absolute bottom-4 left-4 flex items-center gap-2 rounded-lg px-4 py-2 text-base text-sm font-medium font-semibold backdrop-blur-sm transition-all duration-500 group-hover:translate-x-2"
             buttonLink={link1.jsonValue}
             isPageEditing={isEditMode}
           />
@@ -76,7 +76,7 @@ const Default = (props: MultiPromoTabsFields) => {
           <Button
             icon={{ value: 'arrow-up-right' }}
             iconClassName="h-4 w-4"
-            className="bg-popover hover:bg-popover hover:text-popover-foreground text-popover-foreground font-body letter-spacing-[-0.8] absolute bottom-4 left-4 flex items-center gap-2 rounded-lg px-4 py-2 text-base text-sm font-medium font-normal backdrop-blur-sm transition-all duration-500 group-hover:translate-x-2"
+            className="bg-popover hover:bg-popover hover:text-popover-foreground text-popover-foreground font-body letter-spacing-[-0.8] absolute bottom-4 left-4 flex items-center gap-2 rounded-lg px-4 py-2 text-base text-sm font-medium font-semibold backdrop-blur-sm transition-all duration-500 group-hover:translate-x-2"
             buttonLink={link2.jsonValue}
             isPageEditing={isEditMode}
           />

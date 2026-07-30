@@ -127,7 +127,7 @@ describe('TopicListing Component', () => {
 
       const title = screen.getByTestId('sitecore-text');
       expect(title.tagName.toLowerCase()).toBe('h2');
-      expect(title).toHaveClass('font-heading', 'text-4xl', 'font-semibold', 'text-white');
+      expect(title).toHaveClass('font-heading', 'text-2xl', 'font-semibold', 'text-white');
     });
 
     it('renders topic items in flex container', () => {
@@ -335,10 +335,7 @@ describe('TopicListing Component', () => {
                 jsonValue: { value: 'Malformed Data Test' },
               },
               children: {
-                results: [
-                  { invalid: 'data' } as any,  
-                  null as any,
-                ],
+                results: [{ invalid: 'data' } as any, null as any],
               },
             },
           },

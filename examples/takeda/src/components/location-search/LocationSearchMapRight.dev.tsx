@@ -188,7 +188,7 @@ export const LocationSearchMapRight = (props: LocationSearchProps) => {
                 'opacity-20': googleMapsApiKey === '' && isPageEditing,
               })}
             >
-              <span className="font-heading text-lg font-light">Locations near</span>
+              <span className="font-heading text-lg font-semibold">Locations near</span>
               <Button
                 variant="link"
                 onClick={() => setShowChangeZipcodeModal(true)}

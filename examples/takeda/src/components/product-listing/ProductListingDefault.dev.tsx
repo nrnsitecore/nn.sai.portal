@@ -71,7 +71,11 @@ export const ProductListingDefault: React.FC<ProductListingProps> = (props) => {
       >
         {/* JSON-LD structured data for products */}
         {productSchemas.map((schema, index) => (
-          <StructuredData key={`product-schema-${index}`} id={`product-schema-${index}`} data={schema} />
+          <StructuredData
+            key={`product-schema-${index}`}
+            id={`product-schema-${index}`}
+            data={schema}
+          />
         ))}
         <div className="@md:px-6 @md:py-20 @lg:py-28 mx-auto max-w-screen-xl px-4 py-12">
           <AnimatedSection
@@ -85,7 +89,7 @@ export const ProductListingDefault: React.FC<ProductListingProps> = (props) => {
               <Text
                 tag="h2"
                 className={cn(
-                  '@md:text-5xl @md:w-1/2 w-full text-pretty text-7xl font-light tracking-tight antialiased',
+                  '@md:text-3xl @md:w-1/2 w-full text-pretty text-5xl font-semibold tracking-tight antialiased',
                   {
                     ' @md:absolute': leftColumnProducts.length >= 1, //if there is 1 product.
                   }

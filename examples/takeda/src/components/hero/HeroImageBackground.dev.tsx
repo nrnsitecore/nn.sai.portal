@@ -124,7 +124,7 @@ export const HeroImageBackground: React.FC<HeroProps> = (props) => {
 
           {/* Content */}
           <div className="@container/herocontent @sm/herowrapper:px-5 @sm/herowrapper:pb-5 @md/herowrapper:px-10 @md/herowrapper:pb-10 @md/herowrapper:pt-10 @lg/herowrapper:px-10 @lg/herowrapper:pb-10 @lg/herowrapper:pt-10 relative z-10 mx-auto flex max-w-[1240px] flex-col pt-4 group-[.position-right]:items-end group-[.position-center]:items-center">
-            <div className="w-6/16 p-10 bg-tertiary text-background">
+            <div className="w-6/16 bg-tertiary text-tertiary-foreground p-10">
               {isLoading && (
                 <div className="absolute top-0 right-0 p-2 text-xs">
                   Loading personalized content...
@@ -141,7 +141,7 @@ export const HeroImageBackground: React.FC<HeroProps> = (props) => {
                 <Text
                   tag="h1"
                   field={title}
-                  className="font-heading text-3xl text-box-trim-both-baseline @lg/herowrapper:p-0 text-shadow text-shadow-blur-xl @sm/herowrapper:text-shadow-blur-3xl @sm/herowrapper:px-0 relative -ml-[2px] max-w-[13ch] text-balance px-5 font-light leading-tight drop-shadow-[0_35px_35px_rgba(0,0,0,0.4)]"
+                  className="font-heading text-3xl text-box-trim-both-baseline @lg/herowrapper:p-0 text-shadow text-shadow-blur-xl @sm/herowrapper:text-shadow-blur-3xl @sm/herowrapper:px-0 relative -ml-[2px] max-w-[13ch] text-balance px-5 font-semibold leading-tight drop-shadow-[0_35px_35px_rgba(0,0,0,0.4)]"
                 />
               </AnimatedSection>
 
@@ -178,7 +178,7 @@ export const HeroImageBackground: React.FC<HeroProps> = (props) => {
                       >
                         <Text
                           tag="p"
-                          className="font-heading @md/herowrapper:text-lg text-pretty font-light leading-tight"
+                          className="font-heading @md/herowrapper:text-lg text-pretty font-semibold leading-tight"
                           field={bannerText}
                         />
                       </AnimatedSection>

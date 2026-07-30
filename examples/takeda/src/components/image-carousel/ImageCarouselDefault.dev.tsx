@@ -22,7 +22,7 @@ export const ImageCarouselDefault = (props: ImageCarouselProps) => {
   const titleWrapperClasses =
     'w-full space-y-4 px-4 group-[.position-center]:text-center group-[.position-right]:text-right';
   const titleClasses =
-    'font-heading @md:text-7xl mx-auto max-w-[760px] text-pretty px-4 text-5xl text-box-trim-bottom-baseline';
+    'font-heading @md:text-5xl mx-auto max-w-[760px] text-pretty px-4 text-3xl text-box-trim-bottom-baseline';
   const carouselContentClasses = '-ml-[100px] h-full items-stretch';
   const carouselItemClasses =
     '@md:basis-4/5 @lg:basis-2/3 pointer-events-none flex h-full basis-full flex-col justify-stretch pl-[100px] @md:max-w-1/2 mx-auto';

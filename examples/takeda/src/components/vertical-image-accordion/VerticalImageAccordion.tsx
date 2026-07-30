@@ -40,7 +40,7 @@ export const Default: React.FC<VerticalImageAccordionProps> = ({ fields }) => {
           <Text
             tag="h2"
             field={title.jsonValue}
-            className="mb-16 text-4xl font-heading font-light tracking-tight text-primary-foreground @lg:text-6xl"
+            className="mb-16 text-4xl font-heading font-semibold tracking-tight text-primary-foreground @lg:text-4xl"
           />
         )}
 

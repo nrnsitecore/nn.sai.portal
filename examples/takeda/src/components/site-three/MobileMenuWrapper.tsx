@@ -50,9 +50,9 @@ export const MobileMenuWrapper = ({ children }: MobileMenuWrapperProps) => {
         className={`${
           isMobileMenuVisible ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
         }
-          fixed top-14 left-0 right-0
+          fixed top-20 left-0 right-0
           flex flex-col items-center justify-center
-          h-[calc(100vh-3.5rem)] p-4
+          h-[calc(100vh-5rem)] p-4
           overflow-auto bg-background transition-all duration-300 ease-in-out z-50`}
       >
         {children}

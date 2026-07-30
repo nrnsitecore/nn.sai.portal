@@ -57,7 +57,7 @@ export const Default: React.FC<LogoTabsProps> = ({ fields }) => {
             <Text
               tag="h2"
               field={title.jsonValue}
-              className="font-heading text-primary-foreground mb-11 font-light tracking-tight [font-size:clamp(3rem,2.143rem_+_2.857cqi,4.5rem)]"
+              className="font-heading text-primary-foreground mb-11 font-semibold tracking-tight [font-size:clamp(3rem,2.143rem_+_2.857cqi,4.5rem)]"
             />
           )}
 

@@ -31,7 +31,7 @@ export const PromoImageRight: React.FC<PromoImageProps> = (props) => {
                 >
                   <Text
                     tag="h2"
-                    className="font-heading @xs:text-3xl @sm:text-4xl @lg:text-5xl text-pretty text-2xl"
+                    className="font-heading @xs:text-2xl @sm:text-3xl @lg:text-4xl text-pretty text-2xl"
                     field={heading}
                   />
                 </AnimatedSection>
@@ -44,7 +44,7 @@ export const PromoImageRight: React.FC<PromoImageProps> = (props) => {
                   delay={600}
                 >
                   <RichText
-                    className="text-body @xs:text-lg @md:text-xl mt-6 max-w-[51.5ch] text-base font-normal tracking-tight antialiased"
+                    className="text-body @xs:text-lg @md:text-xl mt-6 max-w-[51.5ch] text-base font-semibold tracking-tight antialiased"
                     field={description}
                   />
                 </AnimatedSection>

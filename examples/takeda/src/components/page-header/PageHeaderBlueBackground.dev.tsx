@@ -53,7 +53,7 @@ export const PageHeaderBlueBackground: React.FC<PageHeaderProps & { isPageEditin
             >
               <Text
                 tag="h1"
-                className="font-heading @xs:text-6xl leading-tighter relative max-w-[14ch] text-balance text-left  text-6xl font-light tracking-tighter antialiased"
+                className="font-heading @xs:text-4xl leading-tighter relative max-w-[14ch] text-balance text-left  text-4xl font-semibold tracking-tight antialiased"
                 field={title}
               />
             </AnimatedSection>

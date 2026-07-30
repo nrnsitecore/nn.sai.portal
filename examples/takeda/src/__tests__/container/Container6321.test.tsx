@@ -9,10 +9,14 @@ import {
 } from './Container6321.mockProps';
 
 // Mock component-map to avoid circular dependency
-jest.mock('.sitecore/component-map', () => ({
-  __esModule: true,
-  default: new Map(),
-}), { virtual: true });
+jest.mock(
+  '.sitecore/component-map',
+  () => ({
+    __esModule: true,
+    default: new Map(),
+  }),
+  { virtual: true }
+);
 
 // Mock Sitecore Content SDK
 jest.mock('@sitecore-content-sdk/nextjs', () => ({
@@ -121,7 +125,7 @@ describe('Container6321', () => {
     const { container } = render(<Container6321 {...defaultContainer6321Props} />);
 
     const section = container.querySelector('section');
-    expect(section).toHaveClass('bg-[#f5f5f5]');
+    expect(section).toHaveClass('bg-secondary');
   });
 
   it('renders with content in placeholders', () => {

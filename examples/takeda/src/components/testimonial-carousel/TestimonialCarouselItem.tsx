@@ -33,7 +33,7 @@ export const Default: React.FC<TestimonialCarouselItemProps> = (props) => {
         {testimonialQuote?.jsonValue && (
           <Text
             tag="p"
-            className="text-primary @md:text-4xl  @lg:text-5xl font-heading text-3xl font-normal tracking-tight"
+            className="text-primary @md:text-3xl @lg:text-4xl font-heading text-2xl font-semibold tracking-tight"
             field={testimonialQuote.jsonValue}
           />
         )}

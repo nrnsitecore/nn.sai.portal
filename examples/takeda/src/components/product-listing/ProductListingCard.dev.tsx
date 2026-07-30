@@ -39,7 +39,7 @@ const ProductListingCard = ({
               itemProp="name"
             />
             {(isPageEditing || product?.productBasePrice?.jsonValue?.value) && (
-              <p className="text-muted-foreground text-base font-light transition-all group-[.spotlight]:brightness-125">
+              <p className="text-muted-foreground text-base font-semibold transition-all group-[.spotlight]:brightness-125">
                 {dictionary.PRODUCTLISTING_Price}{' '}
                 <span itemProp="offers" itemScope itemType="https://schema.org/Offer">
                   <Text field={product?.productBasePrice?.jsonValue} itemProp="price" />
@@ -58,7 +58,7 @@ const ProductListingCard = ({
             />
             <Text
               tag="p"
-              className="text-muted-foreground text-base font-light transition-all group-[.spotlight]:brightness-125"
+              className="text-muted-foreground text-base font-semibold transition-all group-[.spotlight]:brightness-125"
               field={product.productFeatureText?.jsonValue}
             />
           </section>
@@ -69,7 +69,7 @@ const ProductListingCard = ({
               className="text-secondary-foreground font-regular text-2xl"
               field={product.productDrivingRange?.jsonValue}
             />
-            <p className="text-muted-foreground text-base font-light transition-all group-[.spotlight]:brightness-125">
+            <p className="text-muted-foreground text-base font-semibold transition-all group-[.spotlight]:brightness-125">
               {dictionary.PRODUCTLISTING_DrivingRange}
             </p>
           </section>

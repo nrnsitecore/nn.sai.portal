@@ -47,7 +47,7 @@ export const PromoAnimatedDefault: React.FC<PromoAnimatedProps> = (props) => {
                 />
                 <ImageWrapper
                   image={image}
-                  className="@md:max-w-[452px] aspect-square w-full rounded-full object-cover"
+                  className="@md:max-w-[452px] rounded-sm aspect-square w-full object-cover"
                   wrapperClass="relative aspect-square w-full"
                   sizes="(min-width: 768px) 452px, 350px"
                   priority={true}
@@ -75,7 +75,7 @@ export const PromoAnimatedDefault: React.FC<PromoAnimatedProps> = (props) => {
               <AnimatedSection reducedMotion={prefersReducedMotion} isPageEditing={isPageEditing}>
                 <Text
                   tag="h2"
-                  className="font-heading @sm:text-5xl @lg:text-6xl -ml-1 mt-6 max-w-[15.5ch] text-4xl font-normal leading-[1.1333] tracking-tighter antialiased"
+                  className="font-heading @sm:text-3xl @lg:text-4xl -ml-1 mt-6 max-w-[15.5ch] text-2xl font-semibold leading-[1.1333] tracking-tight antialiased"
                   field={title}
                 />
               </AnimatedSection>

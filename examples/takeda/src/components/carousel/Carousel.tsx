@@ -226,13 +226,13 @@ export const Default = (props: CarouselsProps): JSX.Element => {
       </div>
 
       {/* Carousel controls - Positioned below the slides */}
-      <div className="flex items-center justify-center gap-4 bg-white py-4">
+      <div className="bg-background border-border flex items-center justify-center gap-4 border-t py-4">
         <Button
           variant="ghost"
           size="icon"
           onClick={togglePlayPause}
           aria-label={isPlaying ? 'Pause carousel' : 'Play carousel'}
-          className="h-8 w-8 rounded-full bg-gray-100 text-gray-700 hover:bg-gray-200"
+          className="bg-secondary text-secondary-foreground hover:bg-primary hover:text-primary-foreground h-8 w-8 rounded-sm"
         >
           {isPlaying ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
         </Button>
@@ -242,7 +242,7 @@ export const Default = (props: CarouselsProps): JSX.Element => {
           size="icon"
           onClick={goToPrevSlide}
           aria-label="Previous slide"
-          className="h-8 w-8 rounded-full bg-gray-100 text-gray-700 hover:bg-gray-200"
+          className="bg-secondary text-secondary-foreground hover:bg-primary hover:text-primary-foreground h-8 w-8 rounded-sm"
         >
           <ChevronLeft className="h-4 w-4" />
         </Button>
@@ -258,7 +258,7 @@ export const Default = (props: CarouselsProps): JSX.Element => {
               role="tab"
               className={cn(
                 'h-2 w-2 rounded-full transition-all',
-                currentSlide === index ? 'bg-gray-900' : 'bg-gray-400 hover:bg-gray-600'
+                currentSlide === index ? 'bg-primary' : 'bg-border hover:bg-muted-foreground'
               )}
             />
           ))}
@@ -269,7 +269,7 @@ export const Default = (props: CarouselsProps): JSX.Element => {
           size="icon"
           onClick={goToNextSlide}
           aria-label="Next slide"
-          className="h-8 w-8 rounded-full bg-gray-100 text-gray-700 hover:bg-gray-200"
+          className="bg-secondary text-secondary-foreground hover:bg-primary hover:text-primary-foreground h-8 w-8 rounded-sm"
         >
           <ChevronRight className="h-4 w-4" />
         </Button>

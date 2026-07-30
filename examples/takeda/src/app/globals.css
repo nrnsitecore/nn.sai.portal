@@ -47,29 +47,36 @@
     }
   }
 
+  /* Takeda headings are confident but restrained — display sizes sit well below
+     the oversized scale inherited from the previous demo theme. */
   h1,
   .h1 {
-    @apply text-6xl md:text-8xl;
+    @apply text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight;
+    line-height: 1.1;
   }
 
   h2,
   .h2 {
-    @apply text-5xl md:text-7xl;
+    @apply text-3xl md:text-4xl font-bold tracking-tight;
+    line-height: 1.15;
   }
 
   h3,
   .h3 {
-    @apply text-4xl md:text-5xl;
+    @apply text-2xl md:text-3xl font-semibold tracking-tight;
+    line-height: 1.2;
   }
 
   h4,
   .h4 {
-    @apply text-2xl md:text-3xl;
+    @apply text-xl md:text-2xl font-semibold;
+    line-height: 1.25;
   }
 
   h5,
   .h5 {
-    @apply text-xl md:text-2xl;
+    @apply text-lg md:text-xl font-semibold;
+    line-height: 1.3;
   }
 
   body {
@@ -78,13 +85,13 @@
       'calt' 1;
   }
 
-  /* BUTTONS */
+  /* BUTTONS — compact, square, uppercase with tracking */
   .btn {
     font-family: var(--font-accent);
-    @apply inline-block text-sm font-semibold tracking-wide transition-colors;
+    @apply inline-block text-sm font-semibold uppercase tracking-[0.08em] transition-colors;
 
     &.btn-primary {
-      @apply py-3 px-6 rounded-md bg-primary text-primary-foreground;
+      @apply py-3 px-7 rounded-sm bg-primary text-primary-foreground;
 
       &:hover {
         @apply bg-primary-hover;
@@ -92,16 +99,15 @@
     }
 
     &.btn-secondary {
-      @apply py-3 px-6 rounded-md bg-light text-light-foreground border border-border;
+      @apply py-3 px-7 rounded-sm bg-light text-light-foreground border border-border;
 
       &:hover {
         @apply bg-light-hover;
       }
     }
 
-    /* Terracotta call-to-action, Covista's primary conversion button */
     &.btn-accent {
-      @apply py-3 px-6 rounded-md bg-accent text-accent-foreground;
+      @apply py-3 px-7 rounded-sm bg-accent text-accent-foreground;
 
       &:hover {
         @apply bg-accent-hover;
@@ -117,7 +123,7 @@
     }
 
     &.btn-outline {
-      @apply py-3 px-6 rounded-md border-2 border-current bg-transparent;
+      @apply py-3 px-7 rounded-sm border-2 border-current bg-transparent;
 
       &:hover {
         @apply opacity-80;
@@ -126,10 +132,50 @@
   }
 }
 
+/* TAKEDA MOTIFS
+   Shared utilities for the brand's signature editorial devices so components
+   stay DRY instead of re-declaring the same red bars and rules. */
+
+/* Short red vertical bar to the left of a section heading. */
+@utility takeda-heading-bar {
+  @apply relative pl-5;
+
+  &::before {
+    content: '';
+    @apply bg-primary absolute left-0 top-[0.15em] w-1;
+    height: 1em;
+  }
+}
+
+/* Centered variant: the bar sits above the heading. */
+@utility takeda-heading-bar-center {
+  @apply relative pt-6;
+
+  &::before {
+    content: '';
+    @apply bg-primary absolute left-1/2 top-0 h-4 w-1 -translate-x-1/2;
+  }
+}
+
+/* Thin red horizontal rule used as an editorial divider. */
+@utility takeda-rule {
+  @apply bg-primary h-0.5 w-16 border-0;
+}
+
+/* Solid red caption bar with a white uppercase label — the card language. */
+@utility takeda-caption-bar {
+  @apply bg-primary text-primary-foreground flex items-center justify-between gap-3 px-5 py-4 text-sm font-semibold uppercase tracking-[0.08em];
+}
+
+/* Alternating cool-gray section band. */
+@utility takeda-band {
+  @apply bg-secondary text-secondary-foreground;
+}
+
 /* BUTTONS END */
 
 main {
-  @apply text-xl;
+  @apply text-base;
 }
 
 .xa-variable {

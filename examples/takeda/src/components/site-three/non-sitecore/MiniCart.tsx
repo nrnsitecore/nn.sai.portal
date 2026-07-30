@@ -30,8 +30,8 @@ export const MiniCart = ({ cartLink }: { cartLink: LinkField }) => {
       </button>
 
       <div
-        className={`fixed lg:absolute top-14 left-0 right-0 lg:top-full lg:left-0 lg:right-0
-          h-[calc(100vh-3.5rem)] lg:h-auto overflow-auto
+        className={`fixed lg:absolute top-20 left-0 right-0 lg:top-full lg:left-0 lg:right-0
+          h-[calc(100vh-5rem)] lg:h-auto overflow-auto
           ${
             isVisible
               ? 'opacity-100 translate-y-0 pointer-events-auto'

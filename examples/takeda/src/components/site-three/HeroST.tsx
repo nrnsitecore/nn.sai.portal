@@ -1,15 +1,8 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { useContainerOffsets } from '@/hooks/useContainerOffsets';
-import { useIntersectionObserver } from '@/hooks/useIntersectionObserver';
-import {
-  ArrowRight,
-  GraduationCap,
-  School,
-  Stethoscope,
-  type LucideIcon,
-} from 'lucide-react';
+import { MapPin, Search } from 'lucide-react';
 import {
   Text as ContentSdkText,
   NextImage as ContentSdkImage,
@@ -35,17 +28,8 @@ type PageHeaderSTProps = {
 };
 
 /* -------------------------------------------------------------------------- */
-/* Default variant — covista.com-style video hero with count-up statistics    */
+/* Default variant — video hero with the brand's red job-search panel          */
 /* -------------------------------------------------------------------------- */
-
-type HeroStat = { value: number; suffix: string; label: string; icon: LucideIcon };
-
-/** Hardcoded demo stats mirroring covista.com's homepage hero. */
-const HERO_STATS: readonly HeroStat[] = [
-  { value: 5, suffix: '', label: 'post-secondary institutions', icon: School },
-  { value: 24, suffix: 'K+', label: 'healthcare graduates a year', icon: GraduationCap },
-  { value: 290, suffix: 'K+', label: 'healthcare alumni practicing worldwide', icon: Stethoscope },
-];
 
 /** Looping hero backdrop — lives in public/ and is copied to the editing host on deploy. */
 const HERO_VIDEO_SRC = '/header_final.mp4';
@@ -62,63 +46,96 @@ const resolvePublicAssetUrl = (src: string, isNormal: boolean) => {
   return src;
 };
 
-/** Stable reference so the observer effect does not re-run every render. */
-const HERO_STATS_OBSERVER_OPTIONS = { threshold: 0.3 } as const;
+const SEARCH_RADIUS_OPTIONS = ['5 mi', '10 mi', '25 mi', '50 mi', '100 mi'] as const;
 
-const prefersReducedMotion = () =>
-  typeof window !== 'undefined' &&
-  window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const HERO_SEARCH_FALLBACK_HREF = '/search';
+
+const heroPanelFieldClass =
+  'bg-white text-foreground placeholder:text-muted-foreground w-full rounded-sm border-0 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-white/70';
+
+const heroPanelLabelClass =
+  'font-(family-name:--font-accent) mb-2 block text-xs font-semibold uppercase tracking-[0.1em] text-white/90';
 
 /**
- * Animate a whole number from 0 to `target` once `active` becomes true.
- * Uses requestAnimationFrame with easeOutCubic and honors reduced-motion
- * (jumps straight to the final value).
+ * Job-search panel — the hero's signature element. Submitting composes a query
+ * string onto the search destination supplied by Link2 (or /search as fallback).
  */
-function useCountUp(target: number, active: boolean, durationMs = 1800) {
-  const [value, setValue] = useState(0);
+const HeroJobSearchPanel = ({
+  searchHref,
+  searchLabel,
+}: {
+  searchHref: string;
+  searchLabel: string;
+}) => {
+  const [location, setLocation] = useState('');
+  const [radius, setRadius] = useState<string>(SEARCH_RADIUS_OPTIONS[2]);
 
-  useEffect(() => {
-    if (!active) return;
-    if (prefersReducedMotion()) {
-      setValue(target);
-      return;
-    }
-
-    let raf = 0;
-    let startTs = 0;
-    const step = (ts: number) => {
-      if (!startTs) startTs = ts;
-      const progress = Math.min((ts - startTs) / durationMs, 1);
-      const eased = 1 - Math.pow(1 - progress, 3);
-      setValue(Math.round(eased * target));
-      if (progress < 1) raf = requestAnimationFrame(step);
-    };
-    raf = requestAnimationFrame(step);
-    return () => cancelAnimationFrame(raf);
-  }, [active, target, durationMs]);
-
-  return value;
-}
-
-const HeroStatCard = ({ stat, active }: { stat: HeroStat; active: boolean }) => {
-  const count = useCountUp(stat.value, active);
-  const Icon = stat.icon;
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const params = new URLSearchParams();
+    if (location.trim()) params.set('location', location.trim());
+    params.set('radius', radius);
+    window.location.href = `${searchHref}?${params.toString()}`;
+  };
 
   return (
-    <div className="bg-card border-border rounded-md border p-6 shadow-sm lg:p-7">
-      <Icon className="text-primary mb-5 h-9 w-9" strokeWidth={1.5} aria-hidden />
-      <div className="text-primary font-(family-name:--font-heading) text-4xl leading-none tabular-nums lg:text-5xl">
-        {count}
-        {stat.suffix}
+    <form
+      onSubmit={handleSubmit}
+      className="bg-primary text-primary-foreground w-full max-w-md p-6 shadow-xl lg:p-8"
+      aria-label="Search jobs"
+    >
+      <h2 className="font-(family-name:--font-heading) mb-6 text-2xl font-semibold tracking-tight md:text-2xl">
+        Search jobs
+      </h2>
+      <div className="mb-4">
+        <label className={heroPanelLabelClass} htmlFor="hero-search-location">
+          Location
+        </label>
+        <div className="relative">
+          <MapPin
+            className="text-muted-foreground pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2"
+            aria-hidden
+          />
+          <input
+            id="hero-search-location"
+            type="text"
+            value={location}
+            onChange={(event) => setLocation(event.target.value)}
+            placeholder="City, state, or country"
+            className={`${heroPanelFieldClass} pl-9`}
+          />
+        </div>
       </div>
-      <p className="text-muted-foreground mt-3 text-sm leading-snug lg:text-base">{stat.label}</p>
-    </div>
+      <div className="mb-6">
+        <label className={heroPanelLabelClass} htmlFor="hero-search-radius">
+          Radius
+        </label>
+        <select
+          id="hero-search-radius"
+          value={radius}
+          onChange={(event) => setRadius(event.target.value)}
+          className={heroPanelFieldClass}
+        >
+          {SEARCH_RADIUS_OPTIONS.map((option) => (
+            <option key={option} value={option}>
+              {option}
+            </option>
+          ))}
+        </select>
+      </div>
+      <button
+        type="submit"
+        className="font-(family-name:--font-accent) bg-dark hover:bg-dark-hover flex w-full items-center justify-center gap-2 rounded-sm px-6 py-3 text-sm font-semibold uppercase tracking-[0.08em] text-white transition-colors"
+      >
+        <Search className="h-4 w-4" aria-hidden />
+        {searchLabel}
+      </button>
+    </form>
   );
 };
 
 export const Default = (props: PageHeaderSTProps) => {
   const { page } = useSitecore();
-  const { ref: statsRef, isVisible } = useIntersectionObserver(HERO_STATS_OBSERVER_OPTIONS);
   const videoRef = useRef<HTMLVideoElement>(null);
   const posterSrc = props?.fields?.Image1?.value?.src as string | undefined;
   const resolvedPoster = posterSrc
@@ -126,24 +143,25 @@ export const Default = (props: PageHeaderSTProps) => {
     : undefined;
   const resolvedVideoSrc = resolvePublicAssetUrl(HERO_VIDEO_SRC, page.mode.isNormal);
   const hasEyebrow = !!props?.fields?.Eyebrow?.value;
-  const hasLink2 = !!props?.fields?.Link2?.value?.href;
-  const link1Text = props?.fields?.Link1?.value?.text || 'Our story';
+  const hasLink1 = !!props?.fields?.Link1?.value?.href;
+  const searchHref = props?.fields?.Link2?.value?.href || HERO_SEARCH_FALLBACK_HREF;
+  const searchLabel = props?.fields?.Link2?.value?.text || 'Search jobs';
 
   // Programmatic play helps muted autoplay inside the Sitecore Pages editor iframe.
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
-    video.play().catch(() => {
+    // Older engines return void rather than a promise from play().
+    Promise.resolve(video.play()).catch(() => {
       // Autoplay may be blocked; poster still provides a fallback frame.
     });
   }, [resolvedVideoSrc]);
 
   return (
-    <>
-      <section
-        className={`relative isolate bg-primary ${props?.params?.styles || ''}`}
-        data-class-change
-      >
+    <section
+      className={`relative isolate bg-dark ${props?.params?.styles || ''}`}
+      data-class-change
+    >
       {/* Autoplaying, muted, looping video backdrop (poster falls back to Image1) */}
       <video
         ref={videoRef}
@@ -158,74 +176,40 @@ export const Default = (props: PageHeaderSTProps) => {
       >
         <source src={resolvedVideoSrc} type="video/mp4" />
       </video>
-      {/* Legibility overlay */}
+      {/* Legibility scrim — deeper on the left where the headline sits */}
       <div
-        className="absolute inset-0 z-[1] bg-gradient-to-r from-black/60 via-black/30 to-transparent"
+        className="absolute inset-0 z-[1] bg-gradient-to-r from-black/75 via-black/45 to-black/25"
         aria-hidden
       />
 
-      {/* Decorative dot-grid motif */}
-      <div
-        className="pointer-events-none absolute right-8 top-28 hidden grid-cols-6 gap-2 lg:grid xl:right-16"
-        aria-hidden
-      >
-        {Array.from({ length: 36 }).map((_, i) => (
-          <span key={i} className="h-3 w-3 bg-white/25" />
-        ))}
-      </div>
-
-      <div className="container relative mx-auto px-4 pb-28 pt-28 sm:pb-32 lg:pb-48 lg:pt-40">
-        <div className="max-w-3xl">
-          {hasEyebrow && (
-            <p className="font-(family-name:--font-accent) mb-4 text-sm uppercase tracking-wide text-white/85 lg:text-base">
-              <ContentSdkText field={props?.fields?.Eyebrow} />
-            </p>
-          )}
-          <h1 className="font-(family-name:--font-heading) text-4xl leading-[1.05] text-white lg:text-7xl">
-            <ContentSdkText field={props?.fields?.Title} />
-          </h1>
-          <div className="mt-8 flex flex-wrap items-center gap-3">
-            <ContentSdkLink
-              field={props?.fields?.Link1}
-              prefetch={false}
-              className="group inline-flex items-stretch overflow-hidden rounded-md shadow-sm"
-            >
-              <span className="bg-light text-primary font-(family-name:--font-accent) inline-flex items-center px-5 py-3 text-sm font-semibold tracking-wide">
-                {link1Text}
-              </span>
-              <span className="bg-primary text-primary-foreground group-hover:bg-primary-hover inline-flex items-center justify-center px-3 transition-colors">
-                <ArrowRight className="h-5 w-5" aria-hidden />
-              </span>
-            </ContentSdkLink>
-            {hasLink2 && (
-              <ContentSdkLink
-                field={props?.fields?.Link2}
-                prefetch={false}
-                className="btn btn-outline text-white"
-              />
+      <div className="container relative z-10 mx-auto px-4 py-16 lg:py-24">
+        <div className="flex flex-col gap-10 lg:flex-row lg:items-center lg:justify-between lg:gap-16">
+          <div className="max-w-2xl">
+            {hasEyebrow && (
+              <p className="font-(family-name:--font-accent) border-primary mb-6 border-l-4 pl-4 text-sm font-semibold uppercase tracking-[0.1em] text-white">
+                <ContentSdkText field={props?.fields?.Eyebrow} />
+              </p>
+            )}
+            <h1 className="font-(family-name:--font-heading) text-4xl font-bold leading-[1.05] tracking-tight text-white sm:text-5xl lg:text-6xl">
+              <ContentSdkText field={props?.fields?.Title} />
+            </h1>
+            {hasLink1 && (
+              <div className="mt-8">
+                <ContentSdkLink
+                  field={props?.fields?.Link1}
+                  prefetch={false}
+                  className="btn btn-outline text-white"
+                />
+              </div>
             )}
           </div>
-        </div>
-      </div>
 
-      </section>
-
-      {/* Stat cards live in normal flow and are pulled up to straddle the hero's
-          bottom edge. No overflow clipping, so they stay fully visible and
-          responsive: stacked on mobile, 3-up from tablet, overlapping on desktop. */}
-      <div
-        ref={statsRef}
-        className="relative z-20 -mt-16 pb-12 sm:-mt-20 lg:-mt-24 lg:pb-16"
-      >
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-            {HERO_STATS.map((stat) => (
-              <HeroStatCard key={stat.label} stat={stat} active={isVisible} />
-            ))}
+          <div className="lg:shrink-0">
+            <HeroJobSearchPanel searchHref={searchHref} searchLabel={searchLabel} />
           </div>
         </div>
       </div>
-    </>
+    </section>
   );
 };
 
@@ -251,19 +235,19 @@ export const Right = (props: PageHeaderSTProps) => {
         className="relative lg:container w-full lg:flex lg:flex-row-reverse mx-auto z-20"
         ref={containerRef}
       >
-        <div className="flex flex-col justify-center mt-10 lg:mt-0 lg:w-2/3 lg:min-h-[50rem] px-4 py-8 lg:p-8 backdrop-blur-[20px] bg-[linear-gradient(136deg,_rgba(255,255,255,0.21)_2.61%,_rgba(255,255,255,0.42)_73.95%)]">
+        <div className="bg-background/95 flex flex-col justify-center mt-10 lg:mt-0 lg:w-2/3 lg:min-h-[42rem] px-6 py-10 lg:p-12">
           <div className="lg:max-w-3xl lg:ml-auto text-right">
-            <h1 className="text-primary text-xl lg:text-3xl pb-4 uppercase">
+            <p className="font-(family-name:--font-accent) text-primary border-primary mb-5 inline-block border-r-4 pr-4 text-sm font-semibold uppercase tracking-[0.1em]">
               <ContentSdkText field={props?.fields?.Eyebrow} />
-            </h1>
-            <h1 className="text-4xl lg:text-7xl uppercase">
+            </p>
+            <h1 className="text-3xl lg:text-5xl">
               <ContentSdkText field={props?.fields?.Title} />
             </h1>
-            <div className="mt-8">
+            <div className="mt-8 flex flex-wrap justify-end gap-3">
               <ContentSdkLink
                 field={props?.fields?.Link1}
                 prefetch={false}
-                className="btn btn-primary mr-4"
+                className="btn btn-primary"
               />
               <ContentSdkLink
                 field={props?.fields?.Link2}
@@ -308,19 +292,19 @@ export const Centered = (props: PageHeaderSTProps) => {
         />
       </div>
       <div className="relative lg:container w-full lg:flex mx-auto z-20" ref={containerRef}>
-        <div className="lg:relative lg:left-1/6 flex flex-col justify-center mt-10 lg:mt-0 lg:w-2/3 lg:min-h-[50rem] px-4 py-8 lg:p-8 backdrop-blur-[20px] bg-[linear-gradient(136deg,_rgba(255,255,255,0.21)_2.61%,_rgba(255,255,255,0.42)_73.95%)]">
+        <div className="bg-background/95 lg:relative lg:left-1/6 flex flex-col justify-center mt-10 lg:mt-0 lg:w-2/3 lg:min-h-[42rem] px-6 py-10 lg:p-12">
           <div className="lg:max-w-3xl lg:mx-auto text-center">
-            <h1 className="text-primary text-xl lg:text-3xl pb-4 uppercase">
+            <p className="takeda-heading-bar-center font-(family-name:--font-accent) text-primary mb-5 text-sm font-semibold uppercase tracking-[0.1em]">
               <ContentSdkText field={props?.fields?.Eyebrow} />
-            </h1>
-            <h1 className="text-4xl lg:text-7xl uppercase">
+            </p>
+            <h1 className="text-3xl lg:text-5xl">
               <ContentSdkText field={props?.fields?.Title} />
             </h1>
-            <div className="mt-8">
+            <div className="mt-8 flex flex-wrap justify-center gap-3">
               <ContentSdkLink
                 field={props?.fields?.Link1}
                 prefetch={false}
-                className="btn btn-primary mr-4"
+                className="btn btn-primary"
               />
               <ContentSdkLink
                 field={props?.fields?.Link2}
@@ -347,30 +331,29 @@ export const Centered = (props: PageHeaderSTProps) => {
 };
 
 export const SplitScreen = (props: PageHeaderSTProps) => {
-
   return (
     <section
-      className={`relative bg-primary border-8 lg:border-16 border-background ${props?.params?.styles || ''}`}
+      className={`relative bg-dark text-dark-foreground ${props?.params?.styles || ''}`}
       data-class-change
     >
-      <div className="flex flex-col lg:flex-row lg:min-h-[50rem]">
+      <div className="flex flex-col lg:flex-row lg:min-h-[36rem]">
         <div className="p-8 lg:basis-full lg:self-center lg:p-14">
-          <h1 className="text-xl lg:text-3xl pb-4 uppercase">
+          <p className="font-(family-name:--font-accent) border-primary mb-5 border-l-4 pl-4 text-sm font-semibold uppercase tracking-[0.1em]">
             <ContentSdkText field={props?.fields?.Eyebrow} />
-          </h1>
-          <h1 className="text-4xl lg:text-6xl uppercase">
+          </p>
+          <h1 className="text-3xl lg:text-4xl">
             <ContentSdkText field={props?.fields?.Title} />
           </h1>
-          <div className="mt-8">
+          <div className="mt-8 flex flex-wrap gap-3">
             <ContentSdkLink
               field={props?.fields?.Link1}
               prefetch={false}
-              className="btn btn-secondary mr-4"
+              className="btn btn-primary"
             />
             <ContentSdkLink
               field={props?.fields?.Link2}
               prefetch={false}
-              className="btn btn-secondary"
+              className="btn btn-outline text-white"
             />
           </div>
         </div>
@@ -383,8 +366,8 @@ export const SplitScreen = (props: PageHeaderSTProps) => {
             fetchPriority="high"
             className="absolute inset-0 w-full h-full object-cover"
           />
-          <div className="relative h-full backdrop-blur-[20px] bg-[linear-gradient(136deg,_rgba(255,255,255,0.21)_2.61%,_rgba(255,255,255,0.42)_73.95%)] z-20">
-            <div className="absolute  inset-8 lg:inset-14">
+          <div className="bg-dark/40 relative h-full z-20">
+            <div className="border-primary absolute inset-8 border-4 lg:inset-14">
               <ContentSdkImage
                 field={props?.fields?.Image1}
                 width={1920}
@@ -400,30 +383,29 @@ export const SplitScreen = (props: PageHeaderSTProps) => {
 };
 
 export const Stacked = (props: PageHeaderSTProps) => {
-
   return (
     <section
-      className={`relative flex flex-col bg-primary lg:flex-row lg:items-center lg:min-h-[50rem] lg:bg-transparent ${props?.params?.styles || ''}`}
+      className={`relative flex flex-col bg-dark text-dark-foreground lg:flex-row lg:items-center lg:min-h-[40rem] lg:bg-transparent ${props?.params?.styles || ''}`}
       data-class-change
     >
       <div className="container px-4 mx-auto">
-        <div className="relative lg:w-1/2 px-6 py-12 bg-primary z-20">
-          <h1 className="text-xl lg:text-3xl pb-4 uppercase">
+        <div className="bg-dark text-dark-foreground relative lg:w-1/2 px-8 py-12 z-20">
+          <p className="font-(family-name:--font-accent) border-primary mb-5 border-l-4 pl-4 text-sm font-semibold uppercase tracking-[0.1em]">
             <ContentSdkText field={props?.fields?.Eyebrow} />
-          </h1>
-          <h1 className="text-4xl lg:text-6xl uppercase">
+          </p>
+          <h1 className="text-3xl lg:text-4xl">
             <ContentSdkText field={props?.fields?.Title} />
           </h1>
-          <div className="mt-8">
+          <div className="mt-8 flex flex-wrap gap-3">
             <ContentSdkLink
               field={props?.fields?.Link1}
               prefetch={false}
-              className="btn btn-secondary mr-4"
+              className="btn btn-primary"
             />
             <ContentSdkLink
               field={props?.fields?.Link2}
               prefetch={false}
-              className="btn btn-secondary"
+              className="btn btn-outline text-white"
             />
           </div>
         </div>
@@ -444,7 +426,7 @@ export const Stacked = (props: PageHeaderSTProps) => {
             height={1080}
             className="absolute w-full h-full inset-0 object-cover z-10"
           />
-          <div className="absolute inset-0 backdrop-blur-[20px] bg-[linear-gradient(136deg,_rgba(255,255,255,0.21)_2.61%,_rgba(255,255,255,0.42)_73.95%)] z-20">
+          <div className="bg-dark/40 absolute inset-0 z-20">
             <ContentSdkImage
               field={props?.fields?.Image1}
               width={1920}

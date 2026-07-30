@@ -28,14 +28,10 @@ export const PromoImageDefault: React.FC<PromoImageProps> = (props) => {
                 wrapperClass="w-full h-full"
                 priority={true}
               />
-              {/* Vignette effect overlay */}
+              {/* Legibility scrim, deeper on the left where the copy sits */}
               <div
-                className="pointer-events-none absolute inset-0"
-                style={{
-                  boxShadow: 'inset 0 0 100px rgba(0,0,0,0.8)',
-                  background:
-                    'linear-gradient(to right, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0.2) 100%)',
-                }}
+                className="from-dark/80 via-dark/50 to-dark/20 pointer-events-none absolute inset-0 bg-gradient-to-r"
+                aria-hidden
               ></div>
             </div>
           )}
@@ -50,7 +46,7 @@ export const PromoImageDefault: React.FC<PromoImageProps> = (props) => {
                 >
                   <Text
                     tag="h2"
-                    className="font-heading @xs:text-3xl @sm:text-4xl @lg:text-5xl text-primary-foreground text-pretty text-2xl"
+                    className="font-heading @xs:text-2xl @sm:text-3xl @lg:text-4xl text-primary-foreground text-pretty text-2xl"
                     field={heading}
                   />
                 </AnimatedSection>
@@ -64,7 +60,7 @@ export const PromoImageDefault: React.FC<PromoImageProps> = (props) => {
                   delay={600}
                 >
                   <RichText
-                    className="text-body text-primary-foreground @xs:text-lg @md:text-xl mt-6 max-w-[51.5ch] font-normal tracking-tight antialiased"
+                    className="text-body text-primary-foreground @xs:text-lg @md:text-xl mt-6 max-w-[51.5ch] font-semibold tracking-tight antialiased"
                     field={description}
                   />
                 </AnimatedSection>

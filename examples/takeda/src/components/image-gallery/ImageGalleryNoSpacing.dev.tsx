@@ -28,7 +28,7 @@ export const ImageGalleryNoSpacing: React.FC<ImageGalleryProps> = (props) => {
       <div
         ref={containerRef}
         className={cn(
-          '@container relative min-h-[100vh] max-w-screen-xl overflow-hidden bg-black text-white',
+          '@container relative min-h-[100vh] max-w-screen-xl overflow-hidden bg-dark text-white',
           {
             [props?.params?.styles]: props?.params?.styles,
           }

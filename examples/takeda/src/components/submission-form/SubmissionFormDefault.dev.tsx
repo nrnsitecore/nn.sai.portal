@@ -46,7 +46,7 @@ export const SubmissionFormDefault: React.FC<SubmissionFormProps> = (props) => {
               {title && (
                 <Text
                   tag="h2"
-                  className="@md/submissionform:text-6xl @md/submissionform:mt-2 max-w-[15ch] text-balance text-5xl group-[.position-center]:mx-auto group-[.position-left]:mr-auto group-[.position-right]:ml-auto group-[.position-left]:text-left group-[.position-center]:text-center group-[.position-right]:text-right"
+                  className="@md/submissionform:text-4xl @md/submissionform:mt-2 max-w-[15ch] text-balance text-3xl group-[.position-center]:mx-auto group-[.position-left]:mr-auto group-[.position-right]:ml-auto group-[.position-left]:text-left group-[.position-center]:text-center group-[.position-right]:text-right"
                   field={title}
                 />
               )}

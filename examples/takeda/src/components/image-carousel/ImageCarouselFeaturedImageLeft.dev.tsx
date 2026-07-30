@@ -128,7 +128,7 @@ export const ImageCarouselFeaturedImageLeft = (props: ImageCarouselProps) => {
               <Text
                 tag="h2"
                 field={title?.jsonValue}
-                className="font-heading @md:text-7xl max-w-[760px] text-pretty text-5xl font-light leading-none tracking-normal antialiased group-[.position-left]:text-left group-[.position-center]:text-center group-[.position-right]:text-right"
+                className="font-heading @md:text-5xl max-w-[760px] text-pretty text-3xl font-semibold leading-none tracking-normal antialiased group-[.position-left]:text-left group-[.position-center]:text-center group-[.position-right]:text-right"
               />
             </AnimatedSection>
 

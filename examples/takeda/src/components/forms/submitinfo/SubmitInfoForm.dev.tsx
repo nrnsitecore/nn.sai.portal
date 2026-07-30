@@ -118,8 +118,9 @@ export const Default: React.FC<SubmitInfoFormProps> = (props) => {
   // Repeated classes
   const formItemClasses = 'relative space-y-2';
   const labelClasses = 'block text-foreground text-left';
-  const inputClasses = 'rounded-md px-2 py-3 border-foreground bg-background text-foreground';
-  const errorClasses = 'absolute -translate-y-[5px] text-[#ff5252]';
+  const inputClasses =
+    'rounded-sm px-4 py-3 border-input bg-background text-foreground focus-visible:ring-ring';
+  const errorClasses = 'text-destructive absolute -translate-y-[5px]';
 
   return (
     <Form {...form}>

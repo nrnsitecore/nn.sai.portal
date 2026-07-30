@@ -35,7 +35,7 @@ export const AccordionBlockDefault: React.FC<AccordionProps> = (props) => {
             {heading?.jsonValue && (
               <Text
                 tag="h2"
-                className="font-heading @md:text-6xl @lg:text-7xl max-w-screen-sm text-pretty text-5xl font-light leading-[1.1] tracking-tighter antialiased"
+                className="font-heading @md:text-4xl @lg:text-5xl max-w-screen-sm text-pretty text-3xl font-semibold leading-[1.1] tracking-tight antialiased"
                 field={heading?.jsonValue}
               />
             )}
@@ -54,10 +54,13 @@ export const AccordionBlockDefault: React.FC<AccordionProps> = (props) => {
               </Accordion>
             </div>
             {(isPageEditing || description?.jsonValue?.value || link?.jsonValue?.value?.href) && (
-              <aside className="bg-primary @sm:flex-row @sm:text-start @md:flex-col @md:text-center @lg:flex-row @lg:text-start mt-6 flex flex-col flex-nowrap items-center gap-4 p-7 text-center" aria-label="Additional information">
+              <aside
+                className="bg-primary @sm:flex-row @sm:text-start @md:flex-col @md:text-center @lg:flex-row @lg:text-start mt-6 flex flex-col flex-nowrap items-center gap-4 p-7 text-center"
+                aria-label="Additional information"
+              >
                 <Text
                   tag="p"
-                  className="text-primary-foreground font-heading text-lg font-light"
+                  className="text-primary-foreground font-heading text-lg font-semibold"
                   field={description?.jsonValue}
                 />
                 {link?.jsonValue && (

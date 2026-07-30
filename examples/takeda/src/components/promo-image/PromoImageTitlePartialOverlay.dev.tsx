@@ -31,7 +31,7 @@ export const PromoTitlePartialOverlay: React.FC<PromoImageProps> = (props) => {
               >
                 <Text
                   tag="h2"
-                  className="font-heading @md:text-6xl text-primary-foreground text-pretty text-5xl"
+                  className="font-heading @md:text-4xl text-primary-foreground text-pretty text-3xl"
                   field={heading}
                 />
               </AnimatedSection>
@@ -66,7 +66,7 @@ export const PromoTitlePartialOverlay: React.FC<PromoImageProps> = (props) => {
                     delay={900}
                   >
                     <RichText
-                      className="@md:mt-0 text-primary-foreground @xs:text-lg @md:text-xl mt-6 font-normal tracking-tight antialiased"
+                      className="@md:mt-0 text-primary-foreground @xs:text-lg @md:text-xl mt-6 font-semibold tracking-tight antialiased"
                       field={description}
                     />
                   </AnimatedSection>

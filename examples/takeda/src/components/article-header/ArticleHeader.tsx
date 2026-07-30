@@ -34,9 +34,10 @@ export const Default: React.FC<ArticleHeaderProps> = ({ fields, externalFields }
     const headline = pageHeaderTitle?.value || '';
     const image = imageRequired?.value?.src || '';
     const datePublished = pageDisplayDate?.value || '';
-    const authorName = pageAuthor?.value?.personFirstName?.value && pageAuthor?.value?.personLastName?.value
-      ? `${pageAuthor.value.personFirstName.value} ${pageAuthor.value.personLastName.value}`
-      : undefined;
+    const authorName =
+      pageAuthor?.value?.personFirstName?.value && pageAuthor?.value?.personLastName?.value
+        ? `${pageAuthor.value.personFirstName.value} ${pageAuthor.value.personLastName.value}`
+        : undefined;
     const authorImage = pageAuthor?.value?.personProfileImage?.value?.src;
     const authorJobTitle = pageAuthor?.value?.personJobTitle?.value;
 
@@ -207,7 +208,11 @@ export const Default: React.FC<ArticleHeaderProps> = ({ fields, externalFields }
           className={cn('@container article-header relative mb-[86px] overflow-hidden')}
           ref={headerRef}
         >
-          <article className="  relative z-0 h-[auto] overflow-hidden bg-black" itemScope itemType="https://schema.org/Article">
+          <article
+            className="  relative z-0 h-[auto] overflow-hidden bg-dark"
+            itemScope
+            itemType="https://schema.org/Article"
+          >
             {/* Background Image with Parallax */}
             <figure
               className="z-5 absolute inset-0 h-[120%] w-[120%] bg-cover bg-center opacity-70 transition-transform duration-200 ease-out"
@@ -242,14 +247,14 @@ export const Default: React.FC<ArticleHeaderProps> = ({ fields, externalFields }
                 />
                 {/* Category Badge */}
                 {eyebrowOptional && (
-                  <Badge className="bg-accent text-accent-foreground hover:bg-accent font-body mx-auto  mb-4 inline-block text-[14px] font-medium tracking-tighter">
+                  <Badge className="bg-accent text-accent-foreground hover:bg-accent font-body mx-auto  mb-4 inline-block text-[14px] font-medium tracking-tight">
                     <Text field={eyebrowOptional} />
                   </Badge>
                 )}
                 {/* Title */}
                 <Text
                   tag="h1"
-                  className="@md:text-[62px] @md:mb-0 font-heading line-height-[69px] mx-auto max-w-4xl text-pretty px-6 text-center text-4xl font-normal tracking-tighter text-white antialiased"
+                  className="@md:text-[62px] @md:mb-0 font-heading line-height-[69px] mx-auto max-w-4xl text-pretty px-6 text-center text-4xl font-semibold tracking-tight text-white antialiased"
                   field={pageHeaderTitle}
                   itemProp="headline"
                 />

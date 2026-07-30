@@ -20,7 +20,7 @@ export const ImageCarouselThumbnails = (props: ImageCarouselProps) => {
   const containerClasses =
     '@container bg-primary text-primary-foreground group relative flex w-full flex-col items-center justify-center py-16';
   const titleClasses =
-    'font-heading @md:text-6xl mx-auto max-w-[760px] text-pretty px-4 text-4xl font-light leading-none tracking-normal antialiased';
+    'font-heading @md:text-4xl mx-auto max-w-[760px] text-pretty px-4 text-4xl font-semibold leading-none tracking-normal antialiased';
   const carouselWrapperClasses = 'w-full max-w-screen-xl mx-auto px-4';
   const mainImageClasses = 'relative z-0 h-auto w-full rounded-lg overflow-hidden';
   const thumbnailImageClasses = 'h-auto w-full aspect-video object-contain';
@@ -146,7 +146,7 @@ export const ImageCarouselThumbnails = (props: ImageCarouselProps) => {
                         <Text
                           tag="p"
                           field={slide?.backgroundText?.jsonValue}
-                          className="text-foreground text-4xl font-bold leading-none md:text-5xl"
+                          className="text-foreground text-2xl font-bold leading-none md:text-3xl"
                         />
                       </div>
                     </div>

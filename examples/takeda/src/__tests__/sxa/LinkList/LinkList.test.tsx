@@ -176,7 +176,7 @@ describe('LinkList Component', () => {
       const { container } = render(<AnchorNav {...anchorNavLinkListProps} />);
 
       expect(container.querySelector('.sticky')).toBeInTheDocument();
-      expect(container.querySelector('.shadow-lg')).toBeInTheDocument();
+      expect(container.querySelector('.shadow-sm')).toBeInTheDocument();
       expect(container.querySelector('ul[aria-label="Navigation options"]')).toBeInTheDocument();
     });
 
@@ -233,7 +233,7 @@ describe('LinkList Component', () => {
 
       expect(container.querySelector('ul')).toBeInTheDocument();
       expect(container.querySelector('.flex')).toBeInTheDocument();
-      expect(container.querySelector('.gap-4')).toBeInTheDocument();
+      expect(container.querySelector('.gap-3')).toBeInTheDocument();
     });
 
     it('should render links as list items', () => {

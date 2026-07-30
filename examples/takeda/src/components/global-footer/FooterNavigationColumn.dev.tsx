@@ -30,7 +30,7 @@ export const Default: FC<FooterNavigationColumnDevProps> = (props) => {
     header,
     isPageEditing,
     parentRef,
-    indicatorClassName = 'h-0-5 bg-secondary rounded-default bottom-0',
+    indicatorClassName = 'h-0-5 bg-primary rounded-none bottom-0',
     alignItems = 'start',
     orientation = 'horizontal',
     listClassName = '@sm:gap-8m-0 flex list-none flex-wrap gap-4 p-0',

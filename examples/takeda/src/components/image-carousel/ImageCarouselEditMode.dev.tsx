@@ -24,7 +24,7 @@ export const ImageCarouselEditMode = (
           <Text
             tag="h2"
             field={title?.jsonValue}
-            className="font-heading @md:text-5xl mx-auto max-w-[760px] text-pretty text-3xl font-light leading-none tracking-normal antialiased group-[.position-center]:text-center group-[.position-right]:text-right"
+            className="font-heading @md:text-3xl mx-auto max-w-[760px] text-pretty text-3xl font-semibold leading-none tracking-normal antialiased group-[.position-center]:text-center group-[.position-right]:text-right"
           />
         </div>
         <div className="mx-auto max-w-screen-xl space-y-6">
@@ -52,7 +52,7 @@ export const ImageCarouselEditMode = (
                         <Text
                           tag="p"
                           field={slide?.backgroundText?.jsonValue}
-                          className="bg-light-gradient text-fill-transparent bg-clip-text text-9xl font-bold leading-none text-transparent"
+                          className="bg-light-gradient text-fill-transparent bg-clip-text text-6xl font-bold leading-none text-transparent"
                         />
                       </div>
                     </div>

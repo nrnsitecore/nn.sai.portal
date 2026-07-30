@@ -67,7 +67,7 @@ export const Default = (props: TextSliderProps) => {
       {/* hidden div - used to calculate repeats */}
       <h2
         ref={measureRef}
-        className="absolute top-0 invisible whitespace-nowrap uppercase text-3xl lg:text-7xl"
+        className="absolute top-0 invisible whitespace-nowrap uppercase text-3xl lg:text-5xl"
       >
         {phrase}
       </h2>
@@ -81,7 +81,7 @@ export const Default = (props: TextSliderProps) => {
             )}s`,
           }}
         >
-          <h2 className="text-3xl lg:text-7xl">
+          <h2 className="text-3xl lg:text-5xl">
             {Array(repeatCount)
               .fill('')
               .map((_el, i) => (

@@ -46,7 +46,7 @@ export const TextBannerBlueTitleRight: React.FC<TextBannerProps> = (props) => {
               <Text
                 tag="h2"
                 field={heading}
-                className="text-box-trim-both-baseline font-heading @lg/textbanner:text-8xl relative text-balance text-right"
+                className="text-box-trim-both-baseline font-heading @lg/textbanner:text-5xl relative text-balance text-right"
               />
             </AnimatedSection>
             {/* Description */}

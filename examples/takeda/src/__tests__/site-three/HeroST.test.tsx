@@ -30,6 +30,7 @@ jest.mock('@sitecore-content-sdk/nextjs', () => ({
       {children || field?.value?.text || ''}
     </a>
   ),
+  useSitecore: () => ({ page: { mode: { isEditing: false, isPreview: false, isNormal: true } } }),
 }));
 
 describe('HeroST', () => {
@@ -82,10 +83,11 @@ describe('HeroST', () => {
       expect(screen.getByText('Premium Audio Experience')).toBeInTheDocument();
     });
 
-    it('renders background image', () => {
-      render(<HeroSTDefault {...mockProps} />);
-      const images = screen.getAllByRole('img');
-      expect(images.length).toBeGreaterThan(0);
+    it('renders the video backdrop using Image1 as its poster', () => {
+      const { container } = render(<HeroSTDefault {...mockProps} />);
+      const video = container.querySelector('video');
+      expect(video).toBeInTheDocument();
+      expect(video?.getAttribute('poster')).toContain('/hero-bg.jpg');
     });
 
     it('renders call-to-action links', () => {
@@ -177,10 +179,10 @@ describe('HeroST', () => {
       expect(screen.getByText('Learn More')).toBeInTheDocument();
     });
 
-    it('applies primary background in split screen variant', () => {
+    it('applies dark background in split screen variant', () => {
       const { container } = render(<HeroSTSplitScreen {...mockProps} />);
       const section = container.querySelector('section');
-      expect(section).toHaveClass('bg-primary');
+      expect(section).toHaveClass('bg-dark');
     });
 
     it('renders images in split screen layout', () => {
@@ -219,10 +221,10 @@ describe('HeroST', () => {
       expect(screen.getByText('Learn More')).toBeInTheDocument();
     });
 
-    it('applies primary background in stacked variant', () => {
+    it('applies dark background in stacked variant', () => {
       const { container } = render(<HeroSTStacked {...mockProps} />);
       const section = container.querySelector('section');
-      expect(section).toHaveClass('bg-primary');
+      expect(section).toHaveClass('bg-dark');
     });
 
     it('renders both Image1 and Image2 in stacked layout', () => {

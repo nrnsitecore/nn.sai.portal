@@ -15,7 +15,6 @@ import {
   AccordionTrigger,
 } from 'shadcd/components/ui/accordion';
 
-
 interface Fields {
   data: {
     datasource: {
@@ -63,7 +62,7 @@ export const Default = (props: AccordionProps) => {
       <span className="absolute top-1/3 -left-1/3 w-screen h-64 bg-primary opacity-50 blur-[400px] rotate-15 z-10"></span>
       <div className="relative container mx-auto px-4 z-20">
         <div className="grid lg:grid-cols-2 gap-12">
-          <h2 className="text-2xl lg:text-5xl">
+          <h2 className="text-2xl lg:text-3xl">
             <ContentSdkText field={datasource?.heading?.jsonValue} />
           </h2>
           <div>
@@ -77,10 +76,10 @@ export const Default = (props: AccordionProps) => {
                 <ContentSdkText field={datasource?.description?.jsonValue} />
               </p>
               <ContentSdkLink
-                  field={datasource?.link?.jsonValue}
-                  prefetch={false}
-                  className="btn btn-secondary btn-sharp"
-                />
+                field={datasource?.link?.jsonValue}
+                prefetch={false}
+                className="btn btn-secondary btn-sharp"
+              />
             </div>
           </div>
         </div>
@@ -96,7 +95,7 @@ export const TwoColumn = (props: AccordionProps) => {
     <section className={`relative py-20 overflow-hidden ${props.params.styles}`} data-class-change>
       <span className="absolute top-1/3 -left-1/3 w-screen h-64 bg-primary opacity-50 blur-[400px] rotate-15 z-10"></span>
       <div className="relative container mx-auto px-4 z-20">
-        <h2 className="text-2xl lg:text-5xl">
+        <h2 className="text-2xl lg:text-3xl">
           <ContentSdkText field={datasource?.heading?.jsonValue} />
         </h2>
         <Accordion type="multiple" className="w-full grid lg:grid-cols-2 gap-x-12 my-12">
@@ -110,10 +109,10 @@ export const TwoColumn = (props: AccordionProps) => {
               <ContentSdkText field={datasource?.description?.jsonValue} />
             </p>
             <ContentSdkLink
-                  field={datasource?.link?.jsonValue}
-                  prefetch={false}
-                  className="btn btn-secondary btn-sharp"
-                />
+              field={datasource?.link?.jsonValue}
+              prefetch={false}
+              className="btn btn-secondary btn-sharp"
+            />
           </div>
         </div>
       </div>
@@ -129,7 +128,7 @@ export const Vertical = (props: AccordionProps) => {
       <span className="absolute -top-20 w-screen h-64 bg-primary opacity-50 blur-[400px] z-10"></span>
       <div className="relative container mx-auto px-4 z-20">
         <div className="flex flex-col gap-12 max-w-3xl mx-auto">
-          <h2 className="text-2xl lg:text-5xl text-center">
+          <h2 className="text-2xl lg:text-3xl text-center">
             <ContentSdkText field={datasource?.heading?.jsonValue} />
           </h2>
           <Accordion type="multiple" className="w-full">
@@ -142,10 +141,10 @@ export const Vertical = (props: AccordionProps) => {
               <ContentSdkText field={datasource?.description?.jsonValue} />
             </p>
             <ContentSdkLink
-                  field={datasource?.link?.jsonValue}
-                  prefetch={false}
-                  className="btn btn-secondary btn-sharp"
-                />
+              field={datasource?.link?.jsonValue}
+              prefetch={false}
+              className="btn btn-secondary btn-sharp"
+            />
           </div>
         </div>
       </div>
@@ -160,7 +159,7 @@ export const BoxedAccordion = (props: AccordionProps) => {
     <section className={`bg-primary py-20 ${props.params.styles}`} data-class-change>
       <div className="container mx-auto px-4">
         <div className="max-w-3xl mx-auto">
-          <h2 className="text-2xl lg:text-5xl">
+          <h2 className="text-2xl lg:text-3xl">
             <ContentSdkText field={datasource?.heading?.jsonValue} />
           </h2>
         </div>
@@ -175,10 +174,10 @@ export const BoxedAccordion = (props: AccordionProps) => {
               <ContentSdkText field={datasource?.description?.jsonValue} />
             </p>
             <ContentSdkLink
-                  field={datasource?.link?.jsonValue}
-                  prefetch={false}
-                  className="btn btn-secondary btn-sharp"
-                />
+              field={datasource?.link?.jsonValue}
+              prefetch={false}
+              className="btn btn-secondary btn-sharp"
+            />
           </div>
         </div>
       </div>
@@ -194,7 +193,7 @@ export const BoxedContent = (props: AccordionProps) => {
       <div className="container mx-auto px-4">
         <div className="bg-white p-4 lg:p-12 shadow-2xl">
           <div className="flex flex-col gap-12 max-w-5xl mx-auto">
-            <h2 className="text-2xl lg:text-5xl max-w-2xl">
+            <h2 className="text-2xl lg:text-3xl max-w-2xl">
               <ContentSdkText field={datasource?.heading?.jsonValue} />
             </h2>
             <Accordion type="multiple" className="w-full">
@@ -207,10 +206,10 @@ export const BoxedContent = (props: AccordionProps) => {
                 <ContentSdkText field={datasource?.description?.jsonValue} />
               </p>
               <ContentSdkLink
-                  field={datasource?.link?.jsonValue}
-                  prefetch={false}
-                  className="btn btn-secondary btn-sharp"
-                />
+                field={datasource?.link?.jsonValue}
+                prefetch={false}
+                className="btn btn-secondary btn-sharp"
+              />
             </div>
           </div>
         </div>
@@ -218,5 +217,3 @@ export const BoxedContent = (props: AccordionProps) => {
     </section>
   );
 };
-
-

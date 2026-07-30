@@ -207,7 +207,7 @@ describe('Navigation Component - ButtonNavigation Variant', () => {
       expect(heading).toHaveClass(
         'text-3xl',
         'font-bold',
-        'text-brand-black',
+        'text-foreground',
         'mb-8',
         'text-center'
       );
@@ -244,7 +244,7 @@ describe('Navigation Component - ButtonNavigation Variant', () => {
 
       const { container } = render(<ButtonNavigation {...(propsWithItems as any)} />);
 
-      const cards = container.querySelectorAll('.bg-white.p-6.rounded-lg.shadow-md');
+      const cards = container.querySelectorAll('.bg-card.p-6.rounded-sm.shadow-sm');
       expect(cards.length).toBeGreaterThan(0);
     });
 
@@ -270,7 +270,7 @@ describe('Navigation Component - ButtonNavigation Variant', () => {
 
       const cardTitle = container.querySelector('h4');
       expect(cardTitle).toHaveTextContent('Components');
-      expect(cardTitle).toHaveClass('text-xl', 'font-semibold', 'text-brand-sky');
+      expect(cardTitle).toHaveClass('text-xl', 'font-semibold', 'text-primary');
 
       const description = container.querySelector('p');
       expect(description).toHaveTextContent('Explore Components components');
@@ -340,7 +340,7 @@ describe('Navigation Component - Header Variant', () => {
   it('should render links with hover classes', () => {
     const { container } = render(<Header />);
 
-    const links = container.querySelectorAll('a.hover\\:text-\\[\\#71B5F0\\]');
+    const links = container.querySelectorAll('a.hover\\:text-primary');
     expect(links.length).toBe(3);
   });
 });

@@ -32,7 +32,9 @@ export const MegaMenuToggle = ({ className, trigger, children }: MegaMenuToggleP
     <MegaMenuContext.Provider value={{ isVisible, setIsVisible }}>
       <li ref={menuRef} className={className} data-class-change>
         <span
-          className="inline-block p-4 font-[inherit] whitespace-nowrap cursor-pointer"
+          className={`text-foreground hover:text-primary relative inline-block cursor-pointer whitespace-nowrap px-4 py-5 font-[inherit] transition-colors after:absolute after:inset-x-4 after:bottom-0 after:h-0.5 after:transition-colors ${
+            isVisible ? 'text-primary after:bg-primary' : 'after:bg-transparent'
+          }`}
           onClick={() => setIsVisible(!isVisible)}
         >
           {trigger}
@@ -53,14 +55,14 @@ export const MegaMenuContent = ({ menuId, children }: MegaMenuContentProps) => {
 
   return (
     <div
-      className={`fixed lg:absolute top-14 left-0 right-0 lg:top-full lg:left-0 lg:right-0
-        h-[calc(100vh-3.5rem)] lg:h-auto overflow-auto
+      className={`fixed lg:absolute top-20 left-0 right-0 lg:top-full lg:left-0 lg:right-0
+        h-[calc(100vh-5rem)] lg:h-auto overflow-auto
         ${
           isVisible
             ? 'opacity-100 translate-x-0 lg:translate-y-0 pointer-events-auto'
             : 'opacity-0 translate-x-full lg:translate-x-0 lg:translate-y-2 pointer-events-none'
         }
-        bg-background transition-all duration-300 ease-in-out
+        bg-background border-primary border-t-2 shadow-lg transition-all duration-300 ease-in-out
         [.partial-editing-mode_&]:!static [.partial-editing-mode_&]:!opacity-100 [.partial-editing-mode_&]:!translate-0 [.partial-editing-mode_&]:!pointer-events-auto`}
     >
       {children}
@@ -78,7 +80,7 @@ export const MegaMenuBackButton = ({ menuId, children }: MegaMenuBackButtonProps
 
   return (
     <div
-      className="lg:hidden flex gap-4 items-center text-sm text-secondary-foreground **:font-(family-name:--font-heading) uppercase cursor-pointer"
+      className="lg:hidden flex gap-3 items-center text-sm font-semibold tracking-[0.08em] text-primary **:font-(family-name:--font-accent) uppercase cursor-pointer"
       onClick={() => setIsVisible(false)}
     >
       {children}

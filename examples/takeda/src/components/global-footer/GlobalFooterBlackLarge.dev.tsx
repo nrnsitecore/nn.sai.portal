@@ -26,7 +26,7 @@ export const GlobalFooterBlackLarge: React.FC<GlobalFooterProps> = (props) => {
   if (fields) {
     return (
       <footer
-        className="@container bg-background text-foreground relative w-full overflow-hidden"
+        className="@container bg-dark text-dark-foreground relative w-full overflow-hidden"
         ref={footerRef}
       >
         {/* Main footer content */}
@@ -40,7 +40,7 @@ export const GlobalFooterBlackLarge: React.FC<GlobalFooterProps> = (props) => {
                   <Text
                     tag="h2"
                     field={tagline?.jsonValue}
-                    className="font-heading text-75xl mb-10 text-pretty font-light antialiased"
+                    className="font-heading mb-10 text-pretty text-4xl font-semibold tracking-tight antialiased"
                   />
                   {/* Navigation links */}
                 </div>
@@ -88,7 +88,7 @@ export const GlobalFooterBlackLarge: React.FC<GlobalFooterProps> = (props) => {
                   items={footerNavLinks?.results}
                   isPageEditing={isPageEditing}
                   parentRef={footerRef}
-                  indicatorClassName="h-0-5 bg-white rounded-default mt-10"
+                  indicatorClassName="h-0-5 bg-primary rounded-none mt-10"
                   alignItems={isMobile ? 'start' : 'end'}
                   orientation="vertical"
                   listClassName="gap-0 flex list-none flex-wrap p-0"
@@ -99,14 +99,14 @@ export const GlobalFooterBlackLarge: React.FC<GlobalFooterProps> = (props) => {
         </div>
 
         {/* Bottom footer with social icons and copyright */}
-        <div className="border-foreground border-t">
+        <div className="border-white/15 border-t">
           <div className="@sm:flex-row @sm:justify-between mx-auto flex max-w-screen-2xl flex-col items-center justify-start gap-4 px-4 py-12">
             {/* Social media icons - using responsive AnimatedHoverNav */}
             <div ref={socialContainerRef}>
               <AnimatedHoverNav
                 parentRef={footerRef}
                 orientation="horizontal"
-                indicatorClassName="h-0-5 bg-white rounded-default bottom-0 mt-10"
+                indicatorClassName="h-0-5 bg-primary rounded-none bottom-0 mt-10"
                 mobileBreakpoint={null}
               >
                 <ul className="@sm:gap-6 mx-auto flex items-center gap-4">

@@ -28,8 +28,10 @@ jest.mock('next-intl', () => ({
     selectOrdinal: jest.fn(),
     list: jest.fn(),
   }),
-  IntlProvider: ({ children }: { children: React.ReactNode }) => React.createElement(React.Fragment, null, children),
-  NextIntlClientProvider: ({ children }: { children: React.ReactNode }) => React.createElement(React.Fragment, null, children),
+  IntlProvider: ({ children }: { children: React.ReactNode }) =>
+    React.createElement(React.Fragment, null, children),
+  NextIntlClientProvider: ({ children }: { children: React.ReactNode }) =>
+    React.createElement(React.Fragment, null, children),
 }));
 
 // Mock Sitecore SDK
@@ -219,7 +221,7 @@ describe('SignupBanner', () => {
     it('applies dark background styling', () => {
       const { container } = render(<SignupBannerBackgroundDark {...mockProps} />);
       const section = container.querySelector('section');
-      expect(section).toHaveClass('bg-black');
+      expect(section).toHaveClass('bg-dark');
     });
 
     it('renders background image in dark variant', () => {

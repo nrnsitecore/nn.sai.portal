@@ -83,7 +83,7 @@ export const Default: React.FC<MultiPromoProps> = (props) => {
               <Text
                 tag="h2"
                 field={title?.jsonValue}
-                className="font-heading text-box-trim-both-baseline -ml-1 max-w-[20ch] text-pretty text-4xl font-normal leading-[1.1333] tracking-tighter antialiased sm:text-5xl md:max-w-[17.5ch] lg:text-6xl"
+                className="font-heading text-box-trim-both-baseline -ml-1 max-w-[20ch] text-pretty text-2xl font-semibold leading-[1.1333] tracking-tight antialiased sm:text-3xl md:max-w-[17.5ch] lg:text-4xl"
               />
             </div>
           )}

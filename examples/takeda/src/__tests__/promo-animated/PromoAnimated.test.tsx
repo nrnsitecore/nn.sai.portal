@@ -402,7 +402,7 @@ describe('PromoAnimated Component', () => {
       expect(imageWrapper).toHaveClass('relative', 'aspect-square', 'w-full');
 
       const image = screen.getByTestId('promo-image');
-      expect(image).toHaveClass('aspect-square', 'rounded-full', 'object-cover');
+      expect(image).toHaveClass('aspect-square', 'rounded-sm', 'object-cover');
     });
   });
 

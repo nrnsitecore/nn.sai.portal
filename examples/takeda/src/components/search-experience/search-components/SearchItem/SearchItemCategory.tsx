@@ -14,7 +14,7 @@ export const SearchItemCategory = ({ category, className, ...props }: SearchItem
         <Text
           field={category}
           tag="span"
-          className="px-2 py-1 text-xs bg-gray-100 text-gray-700 rounded"
+          className="px-2 py-1 text-xs bg-secondary text-muted-foreground rounded"
         />
       </div>
     )
