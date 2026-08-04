@@ -81,13 +81,14 @@ describe('Promo Component - Default Variant', () => {
       expect(heading?.innerHTML).toContain('Featured Product');
       expect(heading).toHaveClass('text-3xl');
       expect(heading).toHaveClass('font-bold');
+      expect(heading).toHaveClass('takeda-heading-bar');
     });
 
     it('should render PromoText2 as description', () => {
       const { container } = render(<PromoDefault {...defaultPromoProps} />);
 
-      // PromoText2 is rendered as a div with text-base mb-4 classes (without the bg-[#ffb900])
-      const descriptions = container.querySelectorAll('.text-base.mb-4');
+      // PromoText2 is the muted body copy in the card's copy column
+      const descriptions = container.querySelectorAll('.text-muted-foreground.text-base');
       const description = Array.from(descriptions).find((el) =>
         el.innerHTML.includes('Discover our amazing product features')
       );
@@ -97,7 +98,7 @@ describe('Promo Component - Default Variant', () => {
     it('should render PromoText3 as badge', () => {
       const { container } = render(<PromoDefault {...defaultPromoProps} />);
 
-      const badge = container.querySelector('.bg-\\[\\#ffb900\\]');
+      const badge = container.querySelector('.takeda-caption-bar');
       expect(badge).toBeInTheDocument();
       expect(badge?.innerHTML).toContain('New Arrival');
     });
@@ -153,13 +154,13 @@ describe('Promo Component - Default Variant', () => {
       expect(promo).toHaveClass('custom-promo-style');
     });
 
-    it('should have flex layout classes', () => {
+    it('should have container layout classes', () => {
       const { container } = render(<PromoDefault {...defaultPromoProps} />);
 
       const promo = container.querySelector('.component.promo');
-      expect(promo).toHaveClass('flex-1');
-      expect(promo).toHaveClass('shadow-lg');
-      expect(promo).toHaveClass('pointer');
+      expect(promo).toHaveClass('@container');
+      expect(promo).toHaveClass('bg-background');
+      expect(promo).toHaveClass('relative');
     });
 
     it('should apply RenderingIdentifier as id', () => {
@@ -195,8 +196,8 @@ describe('Promo Component - CenteredCard Variant', () => {
 
       const heading = container.querySelector('h2');
       expect(heading).toBeInTheDocument();
-      expect(heading).toHaveClass('text-4xl');
-      expect(heading).toHaveClass('font-bold');
+      expect(heading).toHaveClass('text-xl');
+      expect(heading).toHaveClass('font-semibold');
     });
 
     it('should render link button', () => {
