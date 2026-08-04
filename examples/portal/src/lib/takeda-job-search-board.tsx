@@ -1,8 +1,15 @@
 'use client';
 
 import { useEffect, useMemo, useState, type FormEvent } from 'react';
-import { MapPin, Search } from 'lucide-react';
+import { Bookmark, BookmarkCheck, MapPin, Search } from 'lucide-react';
+import { toast } from 'sonner';
 import { DEMO_TAXONOMY_CHANGE_EVENT, DEMO_TAXONOMY_STORAGE_KEY } from '@/lib/demo-taxonomy';
+import {
+  getSavedJobs,
+  toggleSavedJob,
+  TAKEDA_SAVED_JOBS_CHANGE_EVENT,
+  type SavedJob,
+} from '@/lib/takeda-saved-jobs';
 import {
   isTakedaTalentPersona,
   type TakedaTalentPersona,
@@ -13,17 +20,7 @@ type PageHeaderSTProps = {
   fields?: unknown;
 };
 
-type HardcodedJob = {
-  id: string;
-  title: string;
-  location: string;
-  careerArea: string;
-  postedDate: string;
-  /** Optional work arrangement shown for remote/hybrid seekers */
-  workMode?: 'On-site' | 'Hybrid' | 'Remote';
-  /** Why this role is recommended for the active persona */
-  matchReason?: string;
-};
+export type HardcodedJob = SavedJob;
 
 const JOB_BOARD_CAREER_AREAS = [
   'All career areas',
@@ -418,6 +415,7 @@ export const JobSearch = (props: PageHeaderSTProps) => {
   const [radius, setRadius] = useState<string>(JOB_BOARD_RADIUS_OPTIONS[2]);
   const [careerArea, setCareerArea] = useState<string>(JOB_BOARD_CAREER_AREAS[0]);
   const [appliedFilters, setAppliedFilters] = useState(emptyFilters);
+  const [savedIds, setSavedIds] = useState<Set<string>>(() => new Set());
 
   // When the demo persona changes, swap the catalog and clear filters so results feel personal.
   useEffect(() => {
@@ -427,6 +425,22 @@ export const JobSearch = (props: PageHeaderSTProps) => {
     setCareerArea(JOB_BOARD_CAREER_AREAS[0]);
     setAppliedFilters(emptyFilters);
   }, [persona]);
+
+  useEffect(() => {
+    const syncSaved = () => {
+      setSavedIds(new Set(getSavedJobs(persona).map((job) => job.id)));
+    };
+    syncSaved();
+    window.addEventListener(TAKEDA_SAVED_JOBS_CHANGE_EVENT, syncSaved);
+    return () => window.removeEventListener(TAKEDA_SAVED_JOBS_CHANGE_EVENT, syncSaved);
+  }, [persona]);
+
+  const handleToggleSave = (job: HardcodedJob) => {
+    const { saved } = toggleSavedJob(persona, job);
+    toast.message(saved ? 'Job saved to your profile' : 'Job removed from your profile', {
+      description: job.title,
+    });
+  };
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -619,9 +633,30 @@ export const JobSearch = (props: PageHeaderSTProps) => {
                         <span>Posted {job.postedDate}</span>
                       </p>
                     </div>
-                    <a href="/" className="btn btn-primary shrink-0 self-start sm:self-center">
-                      View job
-                    </a>
+                    <div className="flex shrink-0 flex-col gap-2 self-start sm:self-center sm:flex-row">
+                      <button
+                        type="button"
+                        className={
+                          savedIds.has(job.id)
+                            ? 'btn btn-secondary inline-flex items-center justify-center gap-2'
+                            : 'btn btn-outline inline-flex items-center justify-center gap-2'
+                        }
+                        aria-pressed={savedIds.has(job.id)}
+                        data-saved={savedIds.has(job.id) ? 'true' : 'false'}
+                        data-job-id={job.id}
+                        onClick={() => handleToggleSave(job)}
+                      >
+                        {savedIds.has(job.id) ? (
+                          <BookmarkCheck className="h-4 w-4" aria-hidden />
+                        ) : (
+                          <Bookmark className="h-4 w-4" aria-hidden />
+                        )}
+                        {savedIds.has(job.id) ? 'Saved' : 'Save job'}
+                      </button>
+                      <a href="/" className="btn btn-primary inline-flex items-center justify-center">
+                        View job
+                      </a>
+                    </div>
                   </article>
                 </li>
               ))}

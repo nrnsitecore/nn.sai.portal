@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React from 'react';
-import { act, render, screen } from '@testing-library/react';
+import { act, fireEvent, render, screen } from '@testing-library/react';
 import {
   Default as HeroSTDefault,
   Right as HeroSTRight,
@@ -8,9 +8,11 @@ import {
   SplitScreen as HeroSTSplitScreen,
   Stacked as HeroSTStacked,
   JobSearch as HeroSTJobSearch,
+  JobSeekerProfile as HeroSTJobSeekerProfile,
   Portal as HeroSTPortal,
   TalentPortal as HeroSTTalentPortal,
 } from '@/components/site-three/HeroST';
+import { getSavedJobs, TAKEDA_SAVED_JOBS_STORAGE_KEY } from '@/lib/takeda-saved-jobs';
 
 // Mock useContainerOffsets hook
 jest.mock('@/hooks/useContainerOffsets', () => ({
@@ -148,6 +150,77 @@ describe('HeroST', () => {
       expect(
         screen.queryByText('Remote Clinical Documentation Specialist')
       ).not.toBeInTheDocument();
+    });
+
+    it('saves a job to the persona profile cart', async () => {
+      window.localStorage.setItem('demo-user-taxonomy', 'Recent Graduate');
+      render(<HeroSTJobSearch {...mockProps} />);
+
+      await screen.findByText('Clinical Research Associate');
+      const saveButtons = screen.getAllByRole('button', { name: /save job/i });
+      await act(async () => {
+        fireEvent.click(saveButtons[0]);
+      });
+
+      const savedButton = await screen.findByRole('button', { name: /^saved$/i });
+      expect(savedButton).toHaveAttribute('data-saved', 'true');
+      expect(savedButton).toHaveAttribute('aria-pressed', 'true');
+      expect(getSavedJobs('Recent Graduate')).toHaveLength(1);
+      expect(getSavedJobs('Recent Graduate')[0].title).toBe('Clinical Research Associate');
+    });
+  });
+
+  describe('JobSeekerProfile variant', () => {
+    beforeEach(() => {
+      window.localStorage.clear();
+    });
+
+    it('renders login gate when no persona is selected', () => {
+      render(<HeroSTJobSeekerProfile {...mockProps} />);
+      expect(document.querySelector('[data-variant="JobSeekerProfile"]')).toBeInTheDocument();
+      expect(document.querySelector('[data-persona="none"]')).toBeInTheDocument();
+      expect(screen.getByText(/sign in to your job seeker profile/i)).toBeInTheDocument();
+    });
+
+    it('shows empty cart for a signed-in persona with no saved jobs', async () => {
+      window.localStorage.setItem('demo-user-taxonomy', 'Experienced Professional');
+      render(<HeroSTJobSeekerProfile {...mockProps} />);
+
+      expect(await screen.findByText(/alex's job seeker profile/i)).toBeInTheDocument();
+      expect(document.querySelector('[data-persona="Experienced Professional"]')).toBeInTheDocument();
+      expect(screen.getByText(/no saved jobs yet/i)).toBeInTheDocument();
+    });
+
+    it('lists saved jobs from storage and supports remove', async () => {
+      window.localStorage.setItem('demo-user-taxonomy', 'Recent Graduate');
+      window.localStorage.setItem(
+        TAKEDA_SAVED_JOBS_STORAGE_KEY,
+        JSON.stringify({
+          'Recent Graduate': [
+            {
+              id: 'grad-001',
+              title: 'Clinical Research Associate',
+              location: 'Tokyo, Japan',
+              careerArea: 'Research & Development',
+              postedDate: 'Mar 14, 2026',
+              workMode: 'On-site',
+              matchReason: 'Strong match for early-career science backgrounds',
+            },
+          ],
+        })
+      );
+
+      render(<HeroSTJobSeekerProfile {...mockProps} />);
+
+      expect(await screen.findByText('Clinical Research Associate')).toBeInTheDocument();
+      expect(document.querySelector('[data-saved-job-id="grad-001"]')).toBeInTheDocument();
+
+      await act(async () => {
+        fireEvent.click(screen.getByRole('button', { name: /remove/i }));
+      });
+
+      expect(screen.getByText(/no saved jobs yet/i)).toBeInTheDocument();
+      expect(getSavedJobs('Recent Graduate')).toHaveLength(0);
     });
   });
 

@@ -51,6 +51,7 @@ import {
 import { TAKEDA_TALENT_DASHBOARDS } from '@/lib/takeda-talent-portal';
 
 export { JobSearch } from '@/lib/takeda-job-search-board';
+export { JobSeekerProfile } from '@/lib/takeda-job-seeker-profile';
 
 interface Fields {
   Eyebrow: Field<string>;
