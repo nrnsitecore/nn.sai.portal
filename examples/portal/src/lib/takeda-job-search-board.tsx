@@ -1,7 +1,12 @@
 'use client';
 
-import { useState, type FormEvent } from 'react';
+import { useEffect, useMemo, useState, type FormEvent } from 'react';
 import { MapPin, Search } from 'lucide-react';
+import { DEMO_TAXONOMY_CHANGE_EVENT, DEMO_TAXONOMY_STORAGE_KEY } from '@/lib/demo-taxonomy';
+import {
+  isTakedaTalentPersona,
+  type TakedaTalentPersona,
+} from '@/lib/takeda-talent-personas';
 
 type PageHeaderSTProps = {
   params: { [key: string]: string };
@@ -14,6 +19,10 @@ type HardcodedJob = {
   location: string;
   careerArea: string;
   postedDate: string;
+  /** Optional work arrangement shown for remote/hybrid seekers */
+  workMode?: 'On-site' | 'Hybrid' | 'Remote';
+  /** Why this role is recommended for the active persona */
+  matchReason?: string;
 };
 
 const JOB_BOARD_CAREER_AREAS = [
@@ -28,79 +37,365 @@ const JOB_BOARD_CAREER_AREAS = [
 
 const JOB_BOARD_RADIUS_OPTIONS = ['5 miles', '15 miles', '25 miles', '35 miles', '50 miles'] as const;
 
-/** Demo-only job listings — not wired to Sitecore or a real ATS. */
-const HARDCODED_JOBS: HardcodedJob[] = [
-  {
-    id: 'job-001',
-    title: 'Senior Scientist, Immunology',
-    location: 'Cambridge, MA',
-    careerArea: 'Research & Development',
-    postedDate: 'Mar 12, 2026',
+type PersonaJobBoard = {
+  headline: string;
+  intro: string;
+  jobs: HardcodedJob[];
+};
+
+/** Default board when no demo persona is selected. */
+const DEFAULT_JOB_BOARD: PersonaJobBoard = {
+  headline: 'Search jobs',
+  intro:
+    'Find roles across R&D, Manufacturing, Commercial, and every team in between—and take the next step toward a career that improves healthcare around the globe.',
+  jobs: [
+    {
+      id: 'job-001',
+      title: 'Senior Scientist, Immunology',
+      location: 'Cambridge, MA',
+      careerArea: 'Research & Development',
+      postedDate: 'Mar 12, 2026',
+      workMode: 'On-site',
+    },
+    {
+      id: 'job-002',
+      title: 'Manufacturing Associate, Plasma Operations',
+      location: 'Social Circle, GA',
+      careerArea: 'Manufacturing & Supply',
+      postedDate: 'Mar 10, 2026',
+      workMode: 'On-site',
+    },
+    {
+      id: 'job-003',
+      title: 'Brand Manager, US Commercial',
+      location: 'Lexington, MA',
+      careerArea: 'Commercial',
+      postedDate: 'Mar 8, 2026',
+      workMode: 'Hybrid',
+    },
+    {
+      id: 'job-004',
+      title: 'HR Business Partner',
+      location: 'Zurich, Switzerland',
+      careerArea: 'Corporate Functions',
+      postedDate: 'Mar 5, 2026',
+      workMode: 'Hybrid',
+    },
+    {
+      id: 'job-005',
+      title: 'Software Engineer, Digital Health Platforms',
+      location: 'Boston, MA',
+      careerArea: 'Data, Digital & Technology',
+      postedDate: 'Mar 3, 2026',
+      workMode: 'Hybrid',
+    },
+    {
+      id: 'job-006',
+      title: 'Plasma Center Manager',
+      location: 'Austin, TX',
+      careerArea: 'BioLife',
+      postedDate: 'Feb 28, 2026',
+      workMode: 'On-site',
+    },
+    {
+      id: 'job-007',
+      title: 'Clinical Research Associate',
+      location: 'Tokyo, Japan',
+      careerArea: 'Research & Development',
+      postedDate: 'Feb 25, 2026',
+      workMode: 'On-site',
+    },
+    {
+      id: 'job-008',
+      title: 'Quality Assurance Specialist',
+      location: 'Lessines, Belgium',
+      careerArea: 'Manufacturing & Supply',
+      postedDate: 'Feb 22, 2026',
+      workMode: 'On-site',
+    },
+    {
+      id: 'job-009',
+      title: 'Medical Science Liaison',
+      location: 'Chicago, IL',
+      careerArea: 'Commercial',
+      postedDate: 'Feb 18, 2026',
+      workMode: 'Hybrid',
+    },
+    {
+      id: 'job-010',
+      title: 'Data Analyst, Global Supply Chain',
+      location: 'Singapore',
+      careerArea: 'Data, Digital & Technology',
+      postedDate: 'Feb 14, 2026',
+      workMode: 'Hybrid',
+    },
+  ],
+};
+
+/** Persona-specific catalogs — listings change with the header demo Login switcher. */
+const JOBS_BY_PERSONA: Record<TakedaTalentPersona, PersonaJobBoard> = {
+  'Recent Graduate': {
+    headline: 'Early-career roles for you',
+    intro:
+      'Recommended openings for recent graduates—associate, analyst, and rotational-ready roles to start your career at Takeda.',
+    jobs: [
+      {
+        id: 'grad-001',
+        title: 'Clinical Research Associate',
+        location: 'Tokyo, Japan',
+        careerArea: 'Research & Development',
+        postedDate: 'Mar 14, 2026',
+        workMode: 'On-site',
+        matchReason: 'Strong match for early-career science backgrounds',
+      },
+      {
+        id: 'grad-002',
+        title: 'Manufacturing Associate, Plasma Operations',
+        location: 'Social Circle, GA',
+        careerArea: 'Manufacturing & Supply',
+        postedDate: 'Mar 12, 2026',
+        workMode: 'On-site',
+        matchReason: 'Entry pathway into Manufacturing & Supply',
+      },
+      {
+        id: 'grad-003',
+        title: 'Data Analyst, Global Supply Chain',
+        location: 'Singapore',
+        careerArea: 'Data, Digital & Technology',
+        postedDate: 'Mar 10, 2026',
+        workMode: 'Hybrid',
+        matchReason: 'Open to new grads with analytics coursework',
+      },
+      {
+        id: 'grad-004',
+        title: 'Quality Assurance Specialist',
+        location: 'Lessines, Belgium',
+        careerArea: 'Manufacturing & Supply',
+        postedDate: 'Mar 8, 2026',
+        workMode: 'On-site',
+        matchReason: 'Early-career QA track with training support',
+      },
+      {
+        id: 'grad-005',
+        title: 'Associate Brand Coordinator, US Commercial',
+        location: 'Lexington, MA',
+        careerArea: 'Corporate Functions',
+        postedDate: 'Mar 5, 2026',
+        workMode: 'Hybrid',
+        matchReason: 'Rotational-friendly commercial exposure',
+      },
+      {
+        id: 'grad-006',
+        title: 'BioLife Center Associate',
+        location: 'Austin, TX',
+        careerArea: 'BioLife',
+        postedDate: 'Mar 2, 2026',
+        workMode: 'On-site',
+        matchReason: 'Hands-on patient-facing operations role',
+      },
+    ],
   },
-  {
-    id: 'job-002',
-    title: 'Manufacturing Associate, Plasma Operations',
-    location: 'Social Circle, GA',
-    careerArea: 'Manufacturing & Supply',
-    postedDate: 'Mar 10, 2026',
+  'Experienced Professional': {
+    headline: 'Roles matched to your experience',
+    intro:
+      'Senior and specialized openings across R&D, Commercial, and leadership tracks—curated for experienced professionals.',
+    jobs: [
+      {
+        id: 'exp-001',
+        title: 'Senior Scientist, Immunology',
+        location: 'Cambridge, MA',
+        careerArea: 'Research & Development',
+        postedDate: 'Mar 12, 2026',
+        workMode: 'On-site',
+        matchReason: 'Requires deep scientific expertise',
+      },
+      {
+        id: 'exp-002',
+        title: 'Brand Manager, US Commercial',
+        location: 'Lexington, MA',
+        careerArea: 'Commercial',
+        postedDate: 'Mar 8, 2026',
+        workMode: 'Hybrid',
+        matchReason: 'Aligned with mid-to-senior commercial experience',
+      },
+      {
+        id: 'exp-003',
+        title: 'Medical Science Liaison',
+        location: 'Chicago, IL',
+        careerArea: 'Commercial',
+        postedDate: 'Feb 18, 2026',
+        workMode: 'Hybrid',
+        matchReason: 'Field medical role for experienced clinicians/scientists',
+      },
+      {
+        id: 'exp-004',
+        title: 'Plasma Center Manager',
+        location: 'Austin, TX',
+        careerArea: 'BioLife',
+        postedDate: 'Feb 28, 2026',
+        workMode: 'On-site',
+        matchReason: 'People-leadership and operations experience preferred',
+      },
+      {
+        id: 'exp-005',
+        title: 'HR Business Partner',
+        location: 'Zurich, Switzerland',
+        careerArea: 'Corporate Functions',
+        postedDate: 'Mar 5, 2026',
+        workMode: 'Hybrid',
+        matchReason: 'Seasoned people-partner profile',
+      },
+      {
+        id: 'exp-006',
+        title: 'Principal Software Engineer, Digital Health',
+        location: 'Boston, MA',
+        careerArea: 'Data, Digital & Technology',
+        postedDate: 'Mar 1, 2026',
+        workMode: 'Hybrid',
+        matchReason: 'Senior IC track in digital platforms',
+      },
+    ],
   },
-  {
-    id: 'job-003',
-    title: 'Brand Manager, US Commercial',
-    location: 'Lexington, MA',
-    careerArea: 'Commercial',
-    postedDate: 'Mar 8, 2026',
+  'Career Changer': {
+    headline: 'Pathways that value transferable skills',
+    intro:
+      'Pivot-friendly roles where adjacent industry experience counts—digital, analytics, people, and operations pathways into healthcare.',
+    jobs: [
+      {
+        id: 'chg-001',
+        title: 'Software Engineer, Digital Health Platforms',
+        location: 'Boston, MA',
+        careerArea: 'Data, Digital & Technology',
+        postedDate: 'Mar 3, 2026',
+        workMode: 'Hybrid',
+        matchReason: 'Tech backgrounds welcome—healthcare experience not required',
+      },
+      {
+        id: 'chg-002',
+        title: 'Data Analyst, Global Supply Chain',
+        location: 'Singapore',
+        careerArea: 'Data, Digital & Technology',
+        postedDate: 'Feb 14, 2026',
+        workMode: 'Hybrid',
+        matchReason: 'Strong fit for analytics careers entering life sciences',
+      },
+      {
+        id: 'chg-003',
+        title: 'HR Business Partner',
+        location: 'Zurich, Switzerland',
+        careerArea: 'Corporate Functions',
+        postedDate: 'Mar 5, 2026',
+        workMode: 'Hybrid',
+        matchReason: 'People ops experience transfers across industries',
+      },
+      {
+        id: 'chg-004',
+        title: 'Quality Assurance Specialist',
+        location: 'Lessines, Belgium',
+        careerArea: 'Manufacturing & Supply',
+        postedDate: 'Feb 22, 2026',
+        workMode: 'On-site',
+        matchReason: 'Process/compliance skills map well from other regulated industries',
+      },
+      {
+        id: 'chg-005',
+        title: 'Customer Experience Lead, BioLife',
+        location: 'Austin, TX',
+        careerArea: 'BioLife',
+        postedDate: 'Mar 6, 2026',
+        workMode: 'On-site',
+        matchReason: 'Service and CX backgrounds encouraged',
+      },
+      {
+        id: 'chg-006',
+        title: 'Project Manager, Digital Transformation',
+        location: 'Cambridge, MA',
+        careerArea: 'Data, Digital & Technology',
+        postedDate: 'Mar 9, 2026',
+        workMode: 'Hybrid',
+        matchReason: 'PMO and change-management skills are portable',
+      },
+    ],
   },
-  {
-    id: 'job-004',
-    title: 'HR Business Partner',
-    location: 'Zurich, Switzerland',
-    careerArea: 'Corporate Functions',
-    postedDate: 'Mar 5, 2026',
+  'Remote Job Seeker': {
+    headline: 'Remote & hybrid opportunities',
+    intro:
+      'Roles with remote or hybrid flexibility across Takeda’s global footprint—filtered for location-flexible job seekers.',
+    jobs: [
+      {
+        id: 'rem-001',
+        title: 'Software Engineer, Digital Health Platforms',
+        location: 'Boston, MA (Hybrid / remote-eligible)',
+        careerArea: 'Data, Digital & Technology',
+        postedDate: 'Mar 3, 2026',
+        workMode: 'Hybrid',
+        matchReason: 'Hybrid with remote-eligible collaboration model',
+      },
+      {
+        id: 'rem-002',
+        title: 'Data Analyst, Global Supply Chain',
+        location: 'Singapore (Hybrid)',
+        careerArea: 'Data, Digital & Technology',
+        postedDate: 'Feb 14, 2026',
+        workMode: 'Hybrid',
+        matchReason: 'Flexible schedule across time zones',
+      },
+      {
+        id: 'rem-003',
+        title: 'Brand Manager, US Commercial',
+        location: 'Lexington, MA (Hybrid)',
+        careerArea: 'Commercial',
+        postedDate: 'Mar 8, 2026',
+        workMode: 'Hybrid',
+        matchReason: '2–3 days on-site; remainder remote',
+      },
+      {
+        id: 'rem-004',
+        title: 'HR Business Partner',
+        location: 'Zurich, Switzerland (Hybrid)',
+        careerArea: 'Corporate Functions',
+        postedDate: 'Mar 5, 2026',
+        workMode: 'Hybrid',
+        matchReason: 'Regional hybrid people-partner role',
+      },
+      {
+        id: 'rem-005',
+        title: 'Medical Science Liaison',
+        location: 'Chicago, IL (Field / hybrid)',
+        careerArea: 'Commercial',
+        postedDate: 'Feb 18, 2026',
+        workMode: 'Hybrid',
+        matchReason: 'Territory-based with home-office base',
+      },
+      {
+        id: 'rem-006',
+        title: 'Remote Clinical Documentation Specialist',
+        location: 'United States (Remote)',
+        careerArea: 'Research & Development',
+        postedDate: 'Mar 11, 2026',
+        workMode: 'Remote',
+        matchReason: 'Fully remote documentation support role',
+      },
+    ],
   },
-  {
-    id: 'job-005',
-    title: 'Software Engineer, Digital Health Platforms',
-    location: 'Boston, MA',
-    careerArea: 'Data, Digital & Technology',
-    postedDate: 'Mar 3, 2026',
-  },
-  {
-    id: 'job-006',
-    title: 'Plasma Center Manager',
-    location: 'Austin, TX',
-    careerArea: 'BioLife',
-    postedDate: 'Feb 28, 2026',
-  },
-  {
-    id: 'job-007',
-    title: 'Clinical Research Associate',
-    location: 'Tokyo, Japan',
-    careerArea: 'Research & Development',
-    postedDate: 'Feb 25, 2026',
-  },
-  {
-    id: 'job-008',
-    title: 'Quality Assurance Specialist',
-    location: 'Lessines, Belgium',
-    careerArea: 'Manufacturing & Supply',
-    postedDate: 'Feb 22, 2026',
-  },
-  {
-    id: 'job-009',
-    title: 'Medical Science Liaison',
-    location: 'Chicago, IL',
-    careerArea: 'Commercial',
-    postedDate: 'Feb 18, 2026',
-  },
-  {
-    id: 'job-010',
-    title: 'Data Analyst, Global Supply Chain',
-    location: 'Singapore',
-    careerArea: 'Data, Digital & Technology',
-    postedDate: 'Feb 14, 2026',
-  },
-];
+};
+
+function useActiveTakedaTalentPersona(): TakedaTalentPersona | null {
+  const [persona, setPersona] = useState<TakedaTalentPersona | null>(null);
+
+  useEffect(() => {
+    const read = () => {
+      const stored = window.localStorage.getItem(DEMO_TAXONOMY_STORAGE_KEY) ?? '';
+      setPersona(isTakedaTalentPersona(stored) ? stored : null);
+    };
+
+    read();
+    window.addEventListener(DEMO_TAXONOMY_CHANGE_EVENT, read);
+    return () => window.removeEventListener(DEMO_TAXONOMY_CHANGE_EVENT, read);
+  }, []);
+
+  return persona;
+}
 
 const jobBoardFieldClass =
   'border-border bg-background text-foreground placeholder:text-muted-foreground w-full rounded-sm border px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/40';
@@ -108,16 +403,30 @@ const jobBoardFieldClass =
 const jobBoardLabelClass =
   'font-(family-name:--font-accent) mb-2 block text-xs font-semibold uppercase tracking-[0.1em] text-foreground';
 
+const emptyFilters = {
+  keyword: '',
+  location: '',
+  careerArea: JOB_BOARD_CAREER_AREAS[0] as string,
+};
+
 export const JobSearch = (props: PageHeaderSTProps) => {
+  const persona = useActiveTakedaTalentPersona();
+  const board = persona ? JOBS_BY_PERSONA[persona] : DEFAULT_JOB_BOARD;
+
   const [keyword, setKeyword] = useState('');
   const [location, setLocation] = useState('');
   const [radius, setRadius] = useState<string>(JOB_BOARD_RADIUS_OPTIONS[2]);
   const [careerArea, setCareerArea] = useState<string>(JOB_BOARD_CAREER_AREAS[0]);
-  const [appliedFilters, setAppliedFilters] = useState({
-    keyword: '',
-    location: '',
-    careerArea: JOB_BOARD_CAREER_AREAS[0] as string,
-  });
+  const [appliedFilters, setAppliedFilters] = useState(emptyFilters);
+
+  // When the demo persona changes, swap the catalog and clear filters so results feel personal.
+  useEffect(() => {
+    setKeyword('');
+    setLocation('');
+    setRadius(JOB_BOARD_RADIUS_OPTIONS[2]);
+    setCareerArea(JOB_BOARD_CAREER_AREAS[0]);
+    setAppliedFilters(emptyFilters);
+  }, [persona]);
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -128,34 +437,49 @@ export const JobSearch = (props: PageHeaderSTProps) => {
     });
   };
 
-  const filteredJobs = HARDCODED_JOBS.filter((job) => {
-    const matchesKeyword =
-      !appliedFilters.keyword ||
-      job.title.toLowerCase().includes(appliedFilters.keyword) ||
-      job.careerArea.toLowerCase().includes(appliedFilters.keyword);
-    const matchesLocation =
-      !appliedFilters.location || job.location.toLowerCase().includes(appliedFilters.location);
-    const matchesCareerArea =
-      appliedFilters.careerArea === 'All career areas' ||
-      job.careerArea === appliedFilters.careerArea;
-    return matchesKeyword && matchesLocation && matchesCareerArea;
-  });
+  const filteredJobs = useMemo(
+    () =>
+      board.jobs.filter((job) => {
+        const matchesKeyword =
+          !appliedFilters.keyword ||
+          job.title.toLowerCase().includes(appliedFilters.keyword) ||
+          job.careerArea.toLowerCase().includes(appliedFilters.keyword);
+        const matchesLocation =
+          !appliedFilters.location || job.location.toLowerCase().includes(appliedFilters.location);
+        const matchesCareerArea =
+          appliedFilters.careerArea === 'All career areas' ||
+          job.careerArea === appliedFilters.careerArea;
+        return matchesKeyword && matchesLocation && matchesCareerArea;
+      }),
+    [appliedFilters, board.jobs]
+  );
 
   return (
     <section
       className={`bg-background ${props?.params?.styles || ''}`}
       data-class-change
       data-variant="JobSearch"
+      data-persona={persona || 'default'}
     >
       <div className="takeda-band border-border border-b px-4 py-12 lg:py-16">
         <div className="container mx-auto max-w-5xl">
+          {persona && (
+            <p className="font-(family-name:--font-accent) text-primary mb-3 text-xs font-semibold uppercase tracking-[0.1em]">
+              Personalized for {persona}
+            </p>
+          )}
           <h1 className="takeda-heading-bar font-(family-name:--font-heading) text-3xl font-bold tracking-tight lg:text-4xl">
-            Search jobs
+            {board.headline}
           </h1>
           <p className="text-muted-foreground mt-4 max-w-2xl text-base leading-relaxed">
-            Find roles across R&D, Manufacturing, Commercial, and every team in between—and take the
-            next step toward a career that improves healthcare around the globe.
+            {board.intro}
           </p>
+          {!persona && (
+            <p className="text-muted-foreground mt-3 text-sm">
+              Tip: choose a demo persona from the header Login menu to see personalized job
+              recommendations.
+            </p>
+          )}
         </div>
       </div>
 
@@ -252,6 +576,7 @@ export const JobSearch = (props: PageHeaderSTProps) => {
             aria-live="polite"
           >
             Showing {filteredJobs.length} {filteredJobs.length === 1 ? 'job' : 'jobs'}
+            {persona ? ` · ${persona}` : ''}
           </p>
 
           {filteredJobs.length === 0 ? (
@@ -269,6 +594,11 @@ export const JobSearch = (props: PageHeaderSTProps) => {
                 <li key={job.id}>
                   <article className="border-border hover:border-primary flex flex-col gap-4 border bg-background p-6 shadow-sm transition-colors sm:flex-row sm:items-center sm:justify-between">
                     <div>
+                      {job.matchReason && (
+                        <p className="font-(family-name:--font-accent) text-primary mb-2 text-xs font-semibold uppercase tracking-[0.08em]">
+                          Recommended · {job.matchReason}
+                        </p>
+                      )}
                       <h2 className="font-(family-name:--font-heading) text-xl font-semibold tracking-tight">
                         {job.title}
                       </h2>
@@ -279,6 +609,12 @@ export const JobSearch = (props: PageHeaderSTProps) => {
                         </span>
                         <span aria-hidden>·</span>
                         <span>{job.careerArea}</span>
+                        {job.workMode && (
+                          <>
+                            <span aria-hidden>·</span>
+                            <span>{job.workMode}</span>
+                          </>
+                        )}
                         <span aria-hidden>·</span>
                         <span>Posted {job.postedDate}</span>
                       </p>

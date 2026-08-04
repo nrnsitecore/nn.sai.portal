@@ -1689,8 +1689,8 @@ const TalentPortalLoginGate = () => (
       Sign in to the Talent Portal
     </h2>
     <p className="text-muted-foreground mt-3 text-sm leading-relaxed">
-      Choose a demo persona from the header Login menu to explore a Takeda Talent Community
-      experience for hiring managers, TA partners, candidates, and people partners.
+      Choose a demo persona from the header Login menu to explore a job-seeker experience—recent
+      graduates, experienced professionals, career changers, and remote job seekers.
     </p>
     <p className="text-muted-foreground mt-6 text-xs uppercase tracking-[0.08em]">
       Demo only — not a real authentication flow

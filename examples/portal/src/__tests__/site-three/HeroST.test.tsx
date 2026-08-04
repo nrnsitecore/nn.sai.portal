@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { act, render, screen } from '@testing-library/react';
 import {
   Default as HeroSTDefault,
   Right as HeroSTRight,
@@ -108,11 +108,46 @@ describe('HeroST', () => {
   });
 
   describe('JobSearch variant', () => {
-    it('renders job board filters and listings', () => {
+    beforeEach(() => {
+      window.localStorage.clear();
+    });
+
+    it('renders job board filters and default listings', () => {
       render(<HeroSTJobSearch {...mockProps} />);
       expect(document.querySelector('[data-variant="JobSearch"]')).toBeInTheDocument();
+      expect(document.querySelector('[data-persona="default"]')).toBeInTheDocument();
       expect(screen.getByRole('form', { name: /job search filters/i })).toBeInTheDocument();
       expect(screen.getByText('Senior Scientist, Immunology')).toBeInTheDocument();
+    });
+
+    it('personalizes listings when a Recent Graduate persona is selected', async () => {
+      window.localStorage.setItem('demo-user-taxonomy', 'Recent Graduate');
+      render(<HeroSTJobSearch {...mockProps} />);
+
+      expect(await screen.findByText(/personalized for recent graduate/i)).toBeInTheDocument();
+      expect(document.querySelector('[data-persona="Recent Graduate"]')).toBeInTheDocument();
+      expect(screen.getByText('Clinical Research Associate')).toBeInTheDocument();
+      expect(screen.getByText('Associate Brand Coordinator, US Commercial')).toBeInTheDocument();
+      expect(screen.queryByText('Senior Scientist, Immunology')).not.toBeInTheDocument();
+    });
+
+    it('swaps catalogs when persona changes via taxonomy event', async () => {
+      window.localStorage.setItem('demo-user-taxonomy', 'Remote Job Seeker');
+      render(<HeroSTJobSearch {...mockProps} />);
+
+      expect(await screen.findByText(/remote & hybrid opportunities/i)).toBeInTheDocument();
+      expect(screen.getByText('Remote Clinical Documentation Specialist')).toBeInTheDocument();
+
+      window.localStorage.setItem('demo-user-taxonomy', 'Career Changer');
+      await act(async () => {
+        window.dispatchEvent(new CustomEvent('demo-taxonomy-change'));
+      });
+
+      expect(await screen.findByText(/pathways that value transferable skills/i)).toBeInTheDocument();
+      expect(screen.getByText('Project Manager, Digital Transformation')).toBeInTheDocument();
+      expect(
+        screen.queryByText('Remote Clinical Documentation Specialist')
+      ).not.toBeInTheDocument();
     });
   });
 

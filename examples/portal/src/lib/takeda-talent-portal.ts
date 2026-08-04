@@ -1,5 +1,5 @@
 import type { LucideIcon } from 'lucide-react';
-import { Briefcase, ClipboardList, Users } from 'lucide-react';
+import { Briefcase, MapPin, Search, Sparkles } from 'lucide-react';
 import type { TakedaTalentPersona } from '@/lib/takeda-talent-personas';
 
 export type TalentStat = {
@@ -27,104 +27,26 @@ export type TalentPersonaDashboard = {
   spotlight: { eyebrow: string; title: string; body: string };
 };
 
-/** Demo-only talent dashboards — careers voice, not GATX railcars. */
+/** Demo-only job-seeker dashboards — careers voice for popular searcher types. */
 export const TAKEDA_TALENT_DASHBOARDS: Record<TakedaTalentPersona, TalentPersonaDashboard> = {
-  'Hiring Manager': {
-    name: 'Aiko',
-    role: 'Hiring Manager',
+  'Recent Graduate': {
+    name: 'Maya',
+    role: 'Recent Graduate',
     welcomeLead:
-      'Track open requisitions, interview progress, and offer decisions for your teams across R&D and Commercial.',
-    alert: '2 candidates are waiting on interview feedback — complete scorecards within 48 hours.',
-    primaryCta: { label: 'Review open reqs', icon: Briefcase },
+      'Explore early-career and rotational roles, track applications, and get ready for your first conversations with #TeamTakeda.',
+    alert: '3 new early-career roles match your profile in R&D and Data, Digital & Technology.',
+    primaryCta: { label: 'Browse early-career jobs', icon: Search },
     stats: [
-      { id: 'reqs', label: 'Open requisitions', value: '7', hint: '3 priority roles' },
-      { id: 'pipeline', label: 'Active candidates', value: '34', hint: 'Across 5 stages' },
-      { id: 'interviews', label: 'Interviews this week', value: '9', hint: '2 panels tomorrow' },
-      { id: 'offers', label: 'Offers pending', value: '2', hint: 'Awaiting approval' },
-    ],
-    pipeline: [
-      {
-        id: 'p1',
-        title: 'Senior Scientist, Immunology',
-        meta: 'Cambridge, MA · R&D',
-        status: 'Panel interview',
-      },
-      {
-        id: 'p2',
-        title: 'Brand Manager, US Commercial',
-        meta: 'Lexington, MA · Commercial',
-        status: 'Offer review',
-      },
-      {
-        id: 'p3',
-        title: 'Clinical Research Associate',
-        meta: 'Tokyo · R&D',
-        status: 'Phone screen',
-      },
-    ],
-    spotlight: {
-      eyebrow: 'Hiring focus',
-      title: 'Keep priority roles moving',
-      body: 'Complete interview feedback promptly so Talent Acquisition can advance strong candidates without losing momentum.',
-    },
-  },
-  'Talent Acquisition Partner': {
-    name: 'Jordan',
-    role: 'Talent Acquisition Partner',
-    welcomeLead:
-      'Coordinate sourcing, screening, and hiring-manager alignment for #TeamTakeda roles worldwide.',
-    alert: '5 new applications need screening for Manufacturing & Supply roles this morning.',
-    primaryCta: { label: 'Open screening queue', icon: ClipboardList },
-    stats: [
-      { id: 'apps', label: 'New applications', value: '128', hint: 'Last 7 days' },
-      { id: 'screens', label: 'Screens due', value: '18', hint: 'Today + tomorrow' },
-      { id: 'slates', label: 'Slates ready', value: '6', hint: 'Awaiting HM review' },
-      { id: 'community', label: 'Talent community', value: '2.4k', hint: 'Engaged this month' },
-    ],
-    pipeline: [
-      {
-        id: 'p1',
-        title: 'Manufacturing Associate, Plasma',
-        meta: 'Social Circle, GA · Manufacturing',
-        status: 'Screening',
-      },
-      {
-        id: 'p2',
-        title: 'Software Engineer, Digital Health',
-        meta: 'Boston, MA · DD&T',
-        status: 'HM slate',
-      },
-      {
-        id: 'p3',
-        title: 'Plasma Center Manager',
-        meta: 'Austin, TX · BioLife',
-        status: 'Sourcing',
-      },
-    ],
-    spotlight: {
-      eyebrow: 'TA focus',
-      title: 'Build diverse, qualified slates',
-      body: 'Prioritize early-career and experienced talent from the community while keeping hiring managers informed on timeline risks.',
-    },
-  },
-  'Early Career Candidate': {
-    name: 'Sam',
-    role: 'Early Career Candidate',
-    welcomeLead:
-      'Explore roles, track applications, and prepare for interviews as you start your career at Takeda.',
-    alert: 'Your application for Clinical Research Associate moved to phone screen — confirm availability.',
-    primaryCta: { label: 'View my applications', icon: Briefcase },
-    stats: [
-      { id: 'apps', label: 'Applications', value: '4', hint: '1 in progress' },
-      { id: 'saved', label: 'Saved roles', value: '11', hint: '3 new matches' },
-      { id: 'events', label: 'Upcoming events', value: '2', hint: 'Virtual career chat' },
-      { id: 'profile', label: 'Profile strength', value: '82%', hint: 'Add a resume' },
+      { id: 'matches', label: 'New matches', value: '12', hint: 'Entry & early career' },
+      { id: 'apps', label: 'Applications', value: '3', hint: '1 in review' },
+      { id: 'saved', label: 'Saved jobs', value: '8', hint: '2 closing soon' },
+      { id: 'events', label: 'Career events', value: '2', hint: 'Virtual info sessions' },
     ],
     pipeline: [
       {
         id: 'p1',
         title: 'Clinical Research Associate',
-        meta: 'Tokyo · R&D',
+        meta: 'Tokyo · R&D · Early career',
         status: 'Phone screen',
       },
       {
@@ -141,48 +63,126 @@ export const TAKEDA_TALENT_DASHBOARDS: Record<TakedaTalentPersona, TalentPersona
       },
     ],
     spotlight: {
-      eyebrow: 'Your journey',
+      eyebrow: 'Start here',
       title: 'Realize your potential',
-      body: 'Join a globally diverse team improving healthcare for patients—and discover new opportunities to grow your career.',
+      body: 'Launch your career on a globally diverse team improving healthcare for patients—and grow with mentorship and real impact from day one.',
     },
   },
-  'People Partner': {
-    name: 'Priya',
-    role: 'People Partner',
+  'Experienced Professional': {
+    name: 'Alex',
+    role: 'Experienced Professional',
     welcomeLead:
-      'Support leaders with workforce planning, inclusive hiring, and employee experience across the business.',
-    alert: 'Q2 headcount plan needs sign-off for Commercial and Corporate Functions.',
-    primaryCta: { label: 'Open workforce plan', icon: Users },
+      'Find roles that match your depth of experience across Commercial, Manufacturing, Corporate Functions, and more.',
+    alert: 'Your application for Brand Manager, US Commercial moved to hiring-manager review.',
+    primaryCta: { label: 'View my applications', icon: Briefcase },
     stats: [
-      { id: 'hc', label: 'Planned hires', value: '42', hint: 'This quarter' },
-      { id: 'dei', label: 'Slate diversity', value: '68%', hint: 'Target met' },
-      { id: 'offers', label: 'Accepted offers', value: '15', hint: 'MTD' },
-      { id: 'retention', label: '90-day retention', value: '97%', hint: 'New hires' },
+      { id: 'matches', label: 'Strong matches', value: '9', hint: 'Based on your skills' },
+      { id: 'apps', label: 'Active applications', value: '5', hint: '2 interviews scheduled' },
+      { id: 'alerts', label: 'Job alerts', value: '4', hint: 'Weekly digests on' },
+      { id: 'profile', label: 'Profile strength', value: '91%', hint: 'Add certifications' },
     ],
     pipeline: [
       {
         id: 'p1',
-        title: 'HR Business Partner',
-        meta: 'Zurich · Corporate Functions',
-        status: 'Offer stage',
+        title: 'Brand Manager, US Commercial',
+        meta: 'Lexington, MA · Commercial',
+        status: 'In review',
       },
       {
         id: 'p2',
-        title: 'Medical Science Liaison',
-        meta: 'Chicago · Commercial',
-        status: 'Final interview',
+        title: 'Senior Scientist, Immunology',
+        meta: 'Cambridge, MA · R&D',
+        status: 'Interview',
       },
       {
         id: 'p3',
-        title: 'Workforce planning sync',
-        meta: 'Global · People',
-        status: 'Due Fri',
+        title: 'Medical Science Liaison',
+        meta: 'Chicago, IL · Commercial',
+        status: 'Saved',
       },
     ],
     spotlight: {
-      eyebrow: 'People focus',
-      title: 'Inclusive teams, stronger outcomes',
-      body: 'Partner with hiring managers to create belonging and equitable access to opportunities for every candidate and colleague.',
+      eyebrow: 'Your next chapter',
+      title: 'Bring your expertise to patients',
+      body: 'Experienced professionals at Takeda lead work that spans science, markets, and operations—with room to grow globally.',
+    },
+  },
+  'Career Changer': {
+    name: 'Jordan',
+    role: 'Career Changer',
+    welcomeLead:
+      'Discover transferable-skill pathways into healthcare, digital, supply chain, and corporate roles as you pivot your career.',
+    alert: '2 roles highlight transferable skills from your background in tech and operations.',
+    primaryCta: { label: 'Explore career areas', icon: Sparkles },
+    stats: [
+      { id: 'pathways', label: 'Career pathways', value: '6', hint: 'Skill-aligned areas' },
+      { id: 'matches', label: 'Pivot-friendly roles', value: '14', hint: 'Open to adjacent experience' },
+      { id: 'apps', label: 'Applications', value: '2', hint: 'Awaiting response' },
+      { id: 'guides', label: 'Career guides', value: '5', hint: 'How we hire tips' },
+    ],
+    pipeline: [
+      {
+        id: 'p1',
+        title: 'Software Engineer, Digital Health',
+        meta: 'Boston, MA · DD&T',
+        status: 'Submitted',
+      },
+      {
+        id: 'p2',
+        title: 'HR Business Partner',
+        meta: 'Zurich · Corporate Functions',
+        status: 'Saved',
+      },
+      {
+        id: 'p3',
+        title: 'Data Analyst, Global Supply Chain',
+        meta: 'Singapore · DD&T',
+        status: 'Exploring',
+      },
+    ],
+    spotlight: {
+      eyebrow: 'Make the leap',
+      title: 'Your experience still counts',
+      body: 'Many #TeamTakeda colleagues joined from other industries. Focus on impact, curiosity, and how your skills serve patients.',
+    },
+  },
+  'Remote Job Seeker': {
+    name: 'Sam',
+    role: 'Remote Job Seeker',
+    welcomeLead:
+      'Filter for remote-friendly and hybrid opportunities across Takeda’s global footprint—and track roles that fit your location preferences.',
+    alert: '4 newly posted hybrid/remote-eligible roles match your saved search for DD&T and Corporate Functions.',
+    primaryCta: { label: 'Search remote & hybrid jobs', icon: MapPin },
+    stats: [
+      { id: 'remote', label: 'Remote-friendly', value: '7', hint: 'Open now' },
+      { id: 'hybrid', label: 'Hybrid roles', value: '18', hint: 'Near your markets' },
+      { id: 'alerts', label: 'Location alerts', value: '3', hint: 'Cities + remote' },
+      { id: 'apps', label: 'Applications', value: '4', hint: '1 phone screen' },
+    ],
+    pipeline: [
+      {
+        id: 'p1',
+        title: 'Software Engineer, Digital Health',
+        meta: 'Boston / hybrid · DD&T',
+        status: 'Phone screen',
+      },
+      {
+        id: 'p2',
+        title: 'Data Analyst, Global Supply Chain',
+        meta: 'Singapore / hybrid · DD&T',
+        status: 'Saved',
+      },
+      {
+        id: 'p3',
+        title: 'HR Business Partner',
+        meta: 'Zurich / hybrid · Corporate',
+        status: 'Submitted',
+      },
+    ],
+    spotlight: {
+      eyebrow: 'Work where you thrive',
+      title: 'Flexibility with purpose',
+      body: 'Find roles that balance location flexibility with meaningful work on a team delivering life-transforming treatments worldwide.',
     },
   },
 };
