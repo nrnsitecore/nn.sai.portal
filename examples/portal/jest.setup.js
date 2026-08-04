@@ -11,6 +11,34 @@ global.ResizeObserver = class ResizeObserver {
   disconnect() {}
 };
 
+// lucide-react ships ESM only, which next/jest excludes from transformation, so
+// stand in a proxy that resolves any icon name to a minimal inline svg.
+jest.mock('lucide-react', () => {
+  const cache = new Map();
+  const makeIcon = (name) => {
+    const Icon = ({ className, ...rest }) =>
+      React.createElement('svg', {
+        'data-testid': `lucide-${name}`,
+        'data-icon': name,
+        className,
+        ...rest,
+      });
+    Icon.displayName = name;
+    return Icon;
+  };
+  return new Proxy(
+    {},
+    {
+      get: (_target, prop) => {
+        if (prop === '__esModule') return true;
+        if (typeof prop !== 'string') return undefined;
+        if (!cache.has(prop)) cache.set(prop, makeIcon(prop));
+        return cache.get(prop);
+      },
+    }
+  );
+});
+
 jest.mock('@sitecore-content-sdk/nextjs', () => ({
   Text: ({ field, tag: Tag = 'span' }) => {
     if (!field || !field.value) return null;

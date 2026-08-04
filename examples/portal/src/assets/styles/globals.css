@@ -457,3 +457,60 @@
 [data-theme='gatx'] .bg-accent {
   color: var(--color-accent-foreground);
 }
+
+/*
+ * Takeda Talent (jobs.takeda.com) — brand red on white, cool-gray bands, charcoal dark.
+ */
+[data-theme='takeda'] {
+  --background-image-gradient: linear-gradient(180deg, #343740 0%, #1c1e24 100%);
+  --background-image-gradient-secondary: linear-gradient(90deg, #e1242a 0%, #b81d22 100%);
+  --border-radius-sm: 0.0625rem;
+  --border-radius-default: 0.125rem;
+  --border-radius-md: 0.125rem;
+  --border-radius-lg: 0.1875rem;
+  --border-radius-xl: 0.25rem;
+  --color-background: #ffffff;
+  --color-foreground: #26292f;
+  --color-card: #ffffff;
+  --color-card-foreground: #26292f;
+  --color-popover: #ffffff;
+  --color-popover-foreground: #26292f;
+  --color-primary: #e1242a;
+  --color-primary-foreground: #ffffff;
+  --color-primary-hover: #b81d22;
+  --color-secondary: #edf2f5;
+  --color-secondary-foreground: #343740;
+  --color-secondary-hover: #dde5ea;
+  --color-muted: #edf2f5;
+  --color-muted-foreground: #5a6068;
+  --color-accent: #e1242a;
+  --color-accent-foreground: #ffffff;
+  --color-accent-hover: #b81d22;
+  --color-destructive: #c62128;
+  --color-destructive-hover: #9c191f;
+  --color-destructive-foreground: #ffffff;
+  --color-border: #d6d7d8;
+  --color-input: #c3c6c9;
+  --color-ring: #e1242a;
+  --color-tertiary-foreground: #343740;
+  --color-tertiary-hover: #dde5ea;
+  --color-tertiary: #edf2f5;
+  --color-dark-foreground: #ffffff;
+  --color-dark-hover: #1c1e24;
+  --color-dark: #343740;
+  --color-light: #ffffff;
+  --color-light-hover: #edf2f5;
+  --color-light-foreground: #26292f;
+  --color-overlay: #26292fcc;
+  --font-family-heading: var(--font-heading), 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --font-family-body: var(--font-body), 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --font-family-accent: var(--font-accent), 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+[data-theme='takeda'] .bg-primary {
+  color: var(--color-primary-foreground);
+}
+
+[data-theme='takeda'] .bg-accent {
+  color: var(--color-accent-foreground);
+}

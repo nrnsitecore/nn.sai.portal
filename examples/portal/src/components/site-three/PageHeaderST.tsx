@@ -18,6 +18,13 @@ type PageHeaderSTProps = {
   fields: Fields;
 };
 
+/** Shared type scale so all five page-header variants stay in step. */
+const pageHeaderTitleClass = 'text-3xl lg:text-5xl';
+const pageHeaderBodyClass = 'text-base lg:text-lg';
+
+/** Red bar that anchors a page-header title, matching the brand heading motif. */
+const PageHeaderAccentBar = () => <span aria-hidden className="bg-primary mb-5 block h-1 w-12" />;
+
 export const Default = (props: PageHeaderSTProps) => {
   if (!props.fields) {
     return null;
@@ -25,7 +32,7 @@ export const Default = (props: PageHeaderSTProps) => {
 
   return (
     <section
-      className={`relative min-h-[20rem] lg:min-h-[40rem] flex items-center py-18 ${props.params.styles}`}
+      className={`relative min-h-[18rem] lg:min-h-[30rem] flex items-center py-16 lg:py-20 ${props.params.styles}`}
       data-class-change
     >
       <div className="absolute inset-0 z-10">
@@ -35,13 +42,17 @@ export const Default = (props: PageHeaderSTProps) => {
           height={1080}
           className="w-full h-full object-cover"
         />
+        <div className="bg-dark/65 absolute inset-0" aria-hidden />
       </div>
       <div className="relative container px-4 mx-auto z-20">
-        <div className="grid gap-12 items-center w-full lg:grid-cols-2">
-          <h1 className="text-primary text-4xl lg:text-7xl">
-            <ContentSdkText field={props.fields?.Title} />
-          </h1>
-          <div className="text-white text-xl lg:text-3xl font-medium">
+        <div className="grid gap-8 items-center w-full lg:grid-cols-2 lg:gap-12">
+          <div>
+            <PageHeaderAccentBar />
+            <h1 className={`text-white ${pageHeaderTitleClass}`}>
+              <ContentSdkText field={props.fields?.Title} />
+            </h1>
+          </div>
+          <div className={`text-white/90 ${pageHeaderBodyClass}`}>
             <ContentSdkRichText field={props.fields?.Body} />
           </div>
         </div>
@@ -57,7 +68,7 @@ export const TextRight = (props: PageHeaderSTProps) => {
 
   return (
     <section
-      className={`relative min-h-[20rem] lg:min-h-[40rem] flex items-center py-18 ${props.params.styles}`}
+      className={`relative min-h-[18rem] lg:min-h-[30rem] flex items-center py-16 lg:py-20 ${props.params.styles}`}
       data-class-change
     >
       <div className="absolute inset-0 z-10">
@@ -67,13 +78,20 @@ export const TextRight = (props: PageHeaderSTProps) => {
           height={1080}
           className="w-full h-full object-cover"
         />
+        <div
+          className="absolute inset-0 bg-gradient-to-r from-black/75 via-black/50 to-black/20"
+          aria-hidden
+        />
       </div>
       <div className="relative container px-4 mx-auto z-20">
-        <div className="grid gap-12 max-w-[36rem]">
-          <h1 className="text-primary text-4xl lg:text-7xl">
-            <ContentSdkText field={props.fields?.Title} />
-          </h1>
-          <div className="text-white text-xl lg:text-3xl font-medium">
+        <div className="grid gap-6 max-w-[36rem]">
+          <div>
+            <PageHeaderAccentBar />
+            <h1 className={`text-white ${pageHeaderTitleClass}`}>
+              <ContentSdkText field={props.fields?.Title} />
+            </h1>
+          </div>
+          <div className={`text-white/90 ${pageHeaderBodyClass}`}>
             <ContentSdkRichText field={props.fields?.Body} />
           </div>
         </div>
@@ -89,10 +107,10 @@ export const SplitScreen = (props: PageHeaderSTProps) => {
 
   return (
     <section
-      className={`relative min-h-[20rem] lg:min-h-[40rem] flex flex-col lg:flex-row items-center pb-18 lg:py-18 bg-primary ${props.params.styles}`}
+      className={`takeda-band relative min-h-[18rem] lg:min-h-[30rem] flex flex-col lg:flex-row items-center pb-14 lg:py-20 ${props.params.styles}`}
       data-class-change
     >
-      <div className="w-full mb-18 lg:absolute lg:inset-0 lg:mb-0 lg:z-10">
+      <div className="w-full mb-14 lg:absolute lg:inset-0 lg:mb-0 lg:z-10">
         <ContentSdkImage
           field={props.fields?.Image}
           width={1920}
@@ -101,11 +119,14 @@ export const SplitScreen = (props: PageHeaderSTProps) => {
         />
       </div>
       <div className="relative container px-4 mx-auto z-20">
-        <div className="grid gap-8 lg:max-w-[50%] pr-8">
-          <h1 className="text-foreground text-4xl lg:text-7xl">
-            <ContentSdkText field={props.fields?.Title} />
-          </h1>
-          <div className="text-foreground text-xl lg:text-3xl font-medium">
+        <div className="grid gap-6 lg:max-w-[50%] pr-8">
+          <div>
+            <PageHeaderAccentBar />
+            <h1 className={pageHeaderTitleClass}>
+              <ContentSdkText field={props.fields?.Title} />
+            </h1>
+          </div>
+          <div className={pageHeaderBodyClass}>
             <ContentSdkRichText field={props.fields?.Body} />
           </div>
         </div>
@@ -120,13 +141,16 @@ export const Stacked = (props: PageHeaderSTProps) => {
   }
 
   return (
-    <section className={`relative py-18 ${props.params.styles}`} data-class-change>
+    <section className={`relative py-16 lg:py-20 ${props.params.styles}`} data-class-change>
       <div className="container px-4 mx-auto">
-        <div className="grid gap-x-12 gap-y-8 items-center w-full lg:grid-cols-2">
-          <h1 className="text-4xl lg:text-7xl">
-            <ContentSdkText field={props.fields?.Title} />
-          </h1>
-          <div className="text-xl lg:text-3xl font-medium">
+        <div className="grid gap-x-12 gap-y-6 items-center w-full lg:grid-cols-2">
+          <div>
+            <PageHeaderAccentBar />
+            <h1 className={pageHeaderTitleClass}>
+              <ContentSdkText field={props.fields?.Title} />
+            </h1>
+          </div>
+          <div className={pageHeaderBodyClass}>
             <ContentSdkRichText field={props.fields?.Body} />
           </div>
         </div>
@@ -135,7 +159,7 @@ export const Stacked = (props: PageHeaderSTProps) => {
         field={props.fields.Image}
         width={1920}
         height={1080}
-        className="w-full h-[20rem] object-cover mt-18 lg:h-[33rem]"
+        className="w-full h-[20rem] object-cover mt-14 lg:h-[33rem]"
       />
     </section>
   );
@@ -147,14 +171,18 @@ export const TwoColumn = (props: PageHeaderSTProps) => {
   }
 
   return (
-    <section className={`relative pt-18 bg-primary ${props.params.styles}`} data-class-change>
+    <section
+      className={`takeda-band relative pt-16 lg:pt-20 ${props.params.styles}`}
+      data-class-change
+    >
       <div className="container px-4 mx-auto">
         <div className="grid gap-x-12 gap-y-8 w-full lg:grid-cols-2">
           <div>
-            <h1 className="text-4xl lg:text-7xl mb-8">
+            <PageHeaderAccentBar />
+            <h1 className={`${pageHeaderTitleClass} mb-6`}>
               <ContentSdkText field={props.fields?.Title} />
             </h1>
-            <div className="text-xl lg:text-3xl font-medium">
+            <div className={pageHeaderBodyClass}>
               <ContentSdkRichText field={props.fields?.Body} />
             </div>
           </div>

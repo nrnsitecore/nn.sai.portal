@@ -1,4 +1,5 @@
 import { resolveAppTheme } from '@/lib/app-theme';
+import { TAKEDA_DEMO_PERSONAS } from '@/lib/takeda-talent-personas';
 
 export type DemoPersonaOption = { label: string; taxonomy: string };
 
@@ -13,6 +14,10 @@ export const GATX_DEMO_PERSONAS = [
 /** Build-time: aligned with `<html data-theme>` and DemoUserSwitcher defaults. */
 export function getDemoPersonaOptions(): readonly DemoPersonaOption[] {
   const theme = resolveAppTheme();
+
+  if (theme === 'takeda') {
+    return TAKEDA_DEMO_PERSONAS;
+  }
 
   if (theme === 'gatx') {
     return GATX_DEMO_PERSONAS;

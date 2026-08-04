@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, type FormEvent } from 'react';
 import {
   Text as ContentSdkText,
   NextImage as ContentSdkImage,
@@ -13,6 +13,7 @@ import {
   ArrowUpRight,
   BarChart3,
   Bell,
+  Briefcase,
   Check,
   ChevronDown,
   ClipboardList,
@@ -22,6 +23,7 @@ import {
   Home,
   Lock,
   Mail,
+  MapPin,
   PanelLeft,
   Pencil,
   Phone,
@@ -42,6 +44,13 @@ import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import { Toaster as SonnerToaster } from '@/components/ui/sonner';
 import { DEMO_TAXONOMY_CHANGE_EVENT, DEMO_TAXONOMY_STORAGE_KEY } from '@/lib/demo-taxonomy';
+import {
+  isTakedaTalentPersona,
+  type TakedaTalentPersona,
+} from '@/lib/takeda-talent-personas';
+import { TAKEDA_TALENT_DASHBOARDS } from '@/lib/takeda-talent-portal';
+
+export { JobSearch } from '@/lib/takeda-job-search-board';
 
 interface Fields {
   Eyebrow: Field<string>;
@@ -76,48 +85,143 @@ type PageHeaderSTProps = {
   fields: Fields;
 };
 
+/* -------------------------------------------------------------------------- */
+/* Default — careers image hero with job-search panel (Takeda parity)          */
+/* -------------------------------------------------------------------------- */
+
+const SEARCH_RADIUS_OPTIONS = ['5 mi', '10 mi', '25 mi', '50 mi', '100 mi'] as const;
+const HERO_SEARCH_FALLBACK_HREF = '/search';
+
+const heroPanelFieldClass =
+  'bg-white text-foreground placeholder:text-muted-foreground w-full rounded-sm border-0 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-white/70';
+
+const heroPanelLabelClass =
+  'font-(family-name:--font-accent) mb-2 block text-xs font-semibold uppercase tracking-[0.1em] text-white/90';
+
+const HeroJobSearchPanel = ({
+  searchHref,
+  searchLabel,
+}: {
+  searchHref: string;
+  searchLabel: string;
+}) => {
+  const [location, setLocation] = useState('');
+  const [radius, setRadius] = useState<string>(SEARCH_RADIUS_OPTIONS[2]);
+
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const params = new URLSearchParams();
+    if (location.trim()) params.set('location', location.trim());
+    params.set('radius', radius);
+    window.location.href = `${searchHref}?${params.toString()}`;
+  };
+
+  return (
+    <form
+      onSubmit={handleSubmit}
+      className="bg-primary text-primary-foreground w-full max-w-md p-6 shadow-xl lg:p-8"
+      aria-label="Search jobs"
+    >
+      <h2 className="font-(family-name:--font-heading) mb-6 text-2xl font-semibold tracking-tight">
+        Search jobs
+      </h2>
+      <div className="mb-4">
+        <label className={heroPanelLabelClass} htmlFor="hero-search-location">
+          Location
+        </label>
+        <div className="relative">
+          <MapPin
+            className="text-muted-foreground pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2"
+            aria-hidden
+          />
+          <input
+            id="hero-search-location"
+            type="text"
+            value={location}
+            onChange={(event) => setLocation(event.target.value)}
+            placeholder="City, state, or country"
+            className={`${heroPanelFieldClass} pl-9`}
+          />
+        </div>
+      </div>
+      <div className="mb-6">
+        <label className={heroPanelLabelClass} htmlFor="hero-search-radius">
+          Radius
+        </label>
+        <select
+          id="hero-search-radius"
+          value={radius}
+          onChange={(event) => setRadius(event.target.value)}
+          className={heroPanelFieldClass}
+        >
+          {SEARCH_RADIUS_OPTIONS.map((option) => (
+            <option key={option} value={option}>
+              {option}
+            </option>
+          ))}
+        </select>
+      </div>
+      <button
+        type="submit"
+        className="font-(family-name:--font-accent) bg-dark hover:bg-dark-hover flex w-full items-center justify-center gap-2 rounded-sm px-6 py-3 text-sm font-semibold uppercase tracking-[0.08em] text-white transition-colors"
+      >
+        <Search className="h-4 w-4" aria-hidden />
+        {searchLabel}
+      </button>
+    </form>
+  );
+};
+
 export const Default = (props: PageHeaderSTProps) => {
+  const hasEyebrow = !!props?.fields?.Eyebrow?.value;
+  const hasLink1 = !!props?.fields?.Link1?.value?.href;
+  const hasImage = !!props?.fields?.Image1?.value?.src;
+  const searchHref = props?.fields?.Link2?.value?.href || HERO_SEARCH_FALLBACK_HREF;
+  const searchLabel = props?.fields?.Link2?.value?.text || 'Search jobs';
+
   return (
     <section
-      className={`relative flex items-center border-8 lg:border-16 border-background ${props?.params?.styles || ''}`}
+      className={`relative isolate bg-dark ${props?.params?.styles || ''}`}
       data-class-change
     >
-      <div className={HERO_BG_LAYER_CLASS}>
+      {hasImage && (
         <ContentSdkImage
-          field={props?.fields?.Image1}
-          width={1920}
-          height={1080}
-          priority={true}
-          fetchPriority="high"
-          className={HERO_BG_IMAGE_CLASS}
+          field={props.fields.Image1}
+          className="absolute inset-0 z-0 h-full w-full object-cover"
         />
-      </div>
-        <div className="relative z-20 mx-auto w-full lg:container lg:flex">
-          <div
-            className={`flex flex-col justify-center px-4 py-8 lg:w-2/3 lg:p-8 ${HERO_CONTENT_BAND_CLASS}`}
-          >
-            <div className="lg:max-w-3xl">
-              <h1 className="text-primary text-xl lg:text-3xl pb-4">
+      )}
+      <div
+        className="absolute inset-0 z-[1] bg-gradient-to-r from-black/75 via-black/45 to-black/25"
+        aria-hidden
+      />
+
+      <div className="container relative z-10 mx-auto px-4 py-16 lg:py-24">
+        <div className="flex flex-col gap-10 lg:flex-row lg:items-center lg:justify-between lg:gap-16">
+          <div className="max-w-2xl">
+            {hasEyebrow && (
+              <p className="font-(family-name:--font-accent) border-primary mb-6 border-l-4 pl-4 text-sm font-semibold uppercase tracking-[0.1em] text-white">
                 <ContentSdkText field={props?.fields?.Eyebrow} />
-              </h1>
-              <h1 className={HERO_TITLE_CLASS}>
-                <ContentSdkText field={props?.fields?.Title} />
-              </h1>
+              </p>
+            )}
+            <h1 className="font-(family-name:--font-heading) text-4xl font-bold leading-[1.05] tracking-tight text-white sm:text-5xl lg:text-6xl">
+              <ContentSdkText field={props?.fields?.Title} />
+            </h1>
+            {hasLink1 && (
               <div className="mt-8">
                 <ContentSdkLink
                   field={props?.fields?.Link1}
                   prefetch={false}
-                  className="btn btn-primary mr-4"
-                />
-                <ContentSdkLink
-                  field={props?.fields?.Link2}
-                  prefetch={false}
-                  className="btn btn-secondary"
+                  className="btn btn-outline text-white"
                 />
               </div>
-            </div>
+            )}
+          </div>
+
+          <div className="lg:shrink-0">
+            <HeroJobSearchPanel searchHref={searchHref} searchLabel={searchLabel} />
           </div>
         </div>
+      </div>
     </section>
   );
 };
@@ -1551,6 +1655,149 @@ export const Portal = (props: PageHeaderSTProps) => {
     >
       <div className="mx-auto w-full max-w-7xl px-4 py-8 lg:px-8">
         {persona ? <PortalDashboard key={persona} persona={persona} /> : <PortalLoginGate />}
+      </div>
+      <SonnerToaster position="bottom-right" />
+    </section>
+  );
+};
+
+/* -------------------------------------------------------------------------- */
+/* TalentPortal — Takeda Talent Community demo dashboard (parallel to GATX)    */
+/* -------------------------------------------------------------------------- */
+
+function useActiveTakedaTalentPersona(): TakedaTalentPersona | null {
+  const [persona, setPersona] = useState<TakedaTalentPersona | null>(null);
+
+  useEffect(() => {
+    const read = () => {
+      const stored = window.localStorage.getItem(DEMO_TAXONOMY_STORAGE_KEY) ?? '';
+      setPersona(isTakedaTalentPersona(stored) ? stored : null);
+    };
+
+    read();
+    window.addEventListener(DEMO_TAXONOMY_CHANGE_EVENT, read);
+    return () => window.removeEventListener(DEMO_TAXONOMY_CHANGE_EVENT, read);
+  }, []);
+
+  return persona;
+}
+
+const TalentPortalLoginGate = () => (
+  <div className="border-border bg-background mx-auto max-w-xl border px-8 py-12 text-center shadow-sm">
+    <span aria-hidden className="bg-primary mx-auto mb-6 block h-1 w-12" />
+    <h2 className="font-(family-name:--font-heading) text-2xl font-bold tracking-tight">
+      Sign in to the Talent Portal
+    </h2>
+    <p className="text-muted-foreground mt-3 text-sm leading-relaxed">
+      Choose a demo persona from the header Login menu to explore a Takeda Talent Community
+      experience for hiring managers, TA partners, candidates, and people partners.
+    </p>
+    <p className="text-muted-foreground mt-6 text-xs uppercase tracking-[0.08em]">
+      Demo only — not a real authentication flow
+    </p>
+  </div>
+);
+
+const TalentPortalDashboard = ({ persona }: { persona: TakedaTalentPersona }) => {
+  const config = TAKEDA_TALENT_DASHBOARDS[persona];
+  const CtaIcon = config.primaryCta.icon;
+
+  return (
+    <div className="flex flex-col gap-8">
+      <div className="border-border bg-background border px-6 py-6 shadow-sm lg:px-8">
+        <p className="font-(family-name:--font-accent) text-primary text-xs font-semibold uppercase tracking-[0.1em]">
+          {config.role}
+        </p>
+        <h2 className="takeda-heading-bar font-(family-name:--font-heading) mt-3 text-3xl font-bold tracking-tight">
+          Welcome, {config.name}
+        </h2>
+        <p className="text-muted-foreground mt-3 max-w-3xl text-sm leading-relaxed">
+          {config.welcomeLead}
+        </p>
+        <div className="border-primary/30 bg-secondary text-secondary-foreground mt-6 border-l-4 px-4 py-3 text-sm">
+          {config.alert}
+        </div>
+        <button
+          type="button"
+          className="btn btn-primary mt-6 inline-flex items-center gap-2"
+          onClick={() => toast.message(config.primaryCta.label, { description: 'Demo action only' })}
+        >
+          <CtaIcon className="h-4 w-4" aria-hidden />
+          {config.primaryCta.label}
+        </button>
+      </div>
+
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {config.stats.map((stat) => (
+          <article key={stat.id} className="border-border bg-background border p-5 shadow-sm">
+            <p className="font-(family-name:--font-accent) text-muted-foreground text-xs font-semibold uppercase tracking-[0.08em]">
+              {stat.label}
+            </p>
+            <p className="font-(family-name:--font-heading) mt-2 text-3xl font-bold tracking-tight">
+              {stat.value}
+            </p>
+            <p className="text-muted-foreground mt-1 text-xs">{stat.hint}</p>
+          </article>
+        ))}
+      </div>
+
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1.4fr_1fr]">
+        <section className="border-border bg-background border p-6 shadow-sm">
+          <h3 className="font-(family-name:--font-heading) text-xl font-semibold tracking-tight">
+            Pipeline
+          </h3>
+          <ul className="mt-4 flex flex-col gap-3">
+            {config.pipeline.map((item) => (
+              <li
+                key={item.id}
+                className="border-border flex flex-col gap-1 border-b pb-3 last:border-0 last:pb-0 sm:flex-row sm:items-center sm:justify-between"
+              >
+                <div>
+                  <p className="font-medium">{item.title}</p>
+                  <p className="text-muted-foreground text-xs">{item.meta}</p>
+                </div>
+                <span className="bg-secondary text-secondary-foreground inline-flex w-fit px-2 py-1 text-xs font-semibold uppercase tracking-wide">
+                  {item.status}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </section>
+
+        <aside className="bg-dark text-dark-foreground p-6">
+          <p className="font-(family-name:--font-accent) text-primary text-xs font-semibold uppercase tracking-[0.1em]">
+            {config.spotlight.eyebrow}
+          </p>
+          <h3 className="font-(family-name:--font-heading) mt-3 text-2xl font-bold tracking-tight">
+            {config.spotlight.title}
+          </h3>
+          <p className="mt-3 text-sm leading-relaxed text-white/80">{config.spotlight.body}</p>
+          <div className="mt-6 inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.08em]">
+            <Briefcase className="h-4 w-4" aria-hidden />
+            #TeamTakeda
+          </div>
+        </aside>
+      </div>
+    </div>
+  );
+};
+
+export const TalentPortal = (props: PageHeaderSTProps) => {
+  const persona = useActiveTakedaTalentPersona();
+
+  return (
+    <section
+      className={cn('takeda-band text-foreground w-full py-10 lg:py-14', props?.params?.styles)}
+      data-class-change
+      data-component="HeroST"
+      data-variant="TalentPortal"
+    >
+      <div className="container mx-auto px-4">
+        {persona ? (
+          <TalentPortalDashboard key={persona} persona={persona} />
+        ) : (
+          <TalentPortalLoginGate />
+        )}
       </div>
       <SonnerToaster position="bottom-right" />
     </section>

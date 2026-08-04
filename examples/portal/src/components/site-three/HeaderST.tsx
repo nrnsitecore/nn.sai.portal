@@ -37,7 +37,11 @@ type HeaderSTProps = ComponentProps & {
   fields: Fields;
 };
 
-const navLinkClass = 'block p-4 font-[family-name:var(--font-body)] text-secondary-foreground font-normal';
+const navLinkClass =
+  'block px-4 py-5 font-[family-name:var(--font-accent)] text-sm font-semibold uppercase tracking-[0.08em] text-foreground transition-colors hover:text-primary';
+
+const ctaLinkClass =
+  'block bg-primary px-6 py-5 font-[family-name:var(--font-accent)] text-sm font-semibold uppercase tracking-[0.08em] text-primary-foreground transition-colors hover:bg-primary-hover';
 
 /** Sitecore checkbox / string params for rendering parameter ReverseTheme */
 function isReverseThemeParam(value: string | undefined): boolean {
@@ -83,7 +87,7 @@ export const Default = (props: HeaderSTProps) => {
               <DemoUserSwitcher headerPersonas={headerPersonas} />
             </li>
             <li className="hidden lg:block">
-              <ContentSdkLink field={fields?.SupportLink} prefetch={false} className={navLinkClass} />
+              <ContentSdkLink field={fields?.SupportLink} prefetch={false} className={ctaLinkClass} />
             </li>
             <li className="mr-auto lg:mr-0">
               {params.showSearchBox ? (

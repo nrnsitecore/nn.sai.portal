@@ -29,6 +29,14 @@ const DICTIONARY_KEYS = {
   SIGNUPBANNER_InputPlaceholder: 'Signup_Form_Input_Placeholder',
 };
 
+const signupInputClass =
+  'bg-white text-foreground placeholder:text-muted-foreground rounded-sm border-0 px-4 py-3 text-sm shadow-none transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-white/70';
+
+/** Solid charcoal panel replaces the frosted-glass treatment from the prior theme. */
+const signupPanelClass = 'bg-dark/85';
+
+const signupHeadingClass = 'text-2xl lg:text-4xl font-bold tracking-tight mb-4';
+
 export const Default = (props: SignupBannerProps) => {
   const { fields } = props;
   const t = useTranslations();
@@ -45,29 +53,27 @@ export const Default = (props: SignupBannerProps) => {
         )}
       </div>
 
-      <div className="relative container mx-auto overflow-hidden backdrop-blur-[20px] bg-[linear-gradient(136deg,rgba(78,76,76,0.15)_2.61%,rgba(78,76,76,0.30)_73.95%)] z-20">
+      <div className={`relative container mx-auto overflow-hidden ${signupPanelClass} z-20`}>
         <div className="relative px-4 sm:px-8 py-14 sm:py-16 text-center text-white h-full flex flex-col justify-center">
           <div className="max-w-[38rem] mx-auto">
-            <h3 className="lg:text-5xl text-2xl mb-4">
+            <h3 className={signupHeadingClass}>
               {fields?.Heading && <ContentSdkText field={fields.Heading} />}
             </h3>
 
-            <div className="text-lg leading-relaxed mb-6">
+            <div className="text-base leading-relaxed mb-6 text-white/85">
               {fields?.Subheading && <ContentSdkRichText field={fields.Subheading} />}
             </div>
 
-            <div className="flex flex-col sm:flex-row gap-4">
+            <div className="flex flex-col sm:flex-row gap-3">
               <div className="flex-1">
                 <Input
                   type="email"
                   placeholder={t(DICTIONARY_KEYS.SIGNUPBANNER_InputPlaceholder)}
-                  className="px-4 text-sm text-gray-900 bg-muted placeholder-muted-foreground transition-all duration-200 rounded-full focus:outline-none focus:ring-0 focus:border-transparent border-0 outline-none focus:shadow-none shadow-none focus-visible:ring-0 focus-visible:outline-none"
+                  className={signupInputClass}
                 />
               </div>
 
-              <Button className="btn btn-primary">
-                {t(DICTIONARY_KEYS.SIGNUPBANNER_ButtonLabel)}
-              </Button>
+              <Button>{t(DICTIONARY_KEYS.SIGNUPBANNER_ButtonLabel)}</Button>
             </div>
           </div>
         </div>
@@ -92,29 +98,27 @@ export const ContentLeft = (props: SignupBannerProps) => {
         )}
       </div>
       <div className="relative container mx-auto z-20">
-        <div className="lg:max-w-[60%] h-full overflow-hidden backdrop-blur-[20px] bg-[linear-gradient(136deg,rgba(78,76,76,0.15)_2.61%,rgba(78,76,76,0.30)_73.95%)]">
-          <div className="relative px-4 sm:px-8 py-8 sm:py-16 py-14 text-white h-full flex flex-col justify-center">
+        <div className={`lg:max-w-[60%] h-full overflow-hidden ${signupPanelClass}`}>
+          <div className="relative px-4 sm:px-8 py-14 sm:py-16 text-white h-full flex flex-col justify-center">
             <div className="max-w-[38rem] mx-auto">
-              <h1 className="text-2xl lg:text-5xl mb-4 text-left">
+              <h2 className={`${signupHeadingClass} text-left`}>
                 {fields?.Heading && <ContentSdkText field={fields.Heading} />}
-              </h1>
+              </h2>
 
-              <div className="text-lg mb-6 leading-relaxed text-left">
+              <div className="text-base mb-6 leading-relaxed text-left text-white/85">
                 {fields?.Subheading && <ContentSdkRichText field={fields.Subheading} />}
               </div>
 
-              <div className="flex flex-col sm:flex-row gap-4">
+              <div className="flex flex-col sm:flex-row gap-3">
                 <div className="flex-1">
                   <Input
                     type="email"
                     placeholder={t(DICTIONARY_KEYS.SIGNUPBANNER_InputPlaceholder)}
-                    className="px-4 text-sm text-gray-900 bg-muted placeholder-muted-foreground transition-all duration-200 rounded-full focus:outline-none focus:ring-0 focus:border-transparent border-0 outline-none focus:shadow-none shadow-none focus-visible:ring-0 focus-visible:outline-none"
+                    className={signupInputClass}
                   />
                 </div>
 
-                <Button className="btn btn-primary">
-                  {t(DICTIONARY_KEYS.SIGNUPBANNER_ButtonLabel)}
-                </Button>
+                <Button>{t(DICTIONARY_KEYS.SIGNUPBANNER_ButtonLabel)}</Button>
               </div>
             </div>
           </div>
@@ -134,31 +138,29 @@ export const BackgroundPrimary = (props: SignupBannerProps) => {
 
   return (
     <section
-      className={`relative bg-primary overflow-hidden py-8 px-4 ${props.params.styles}`}
+      className={`relative bg-primary text-primary-foreground overflow-hidden py-8 px-4 ${props.params.styles}`}
       data-class-change
     >
-      <div className="relative container mx-auto pb-28 lg:py-16 text-center h-full flex flex-col justify-center z-20">
+      <div className="relative container mx-auto py-14 lg:py-16 text-center h-full flex flex-col justify-center z-20">
         <div className="lg:w-1/2 max-w-[38rem] mx-auto">
-          <h3 className="lg:text-5xl text-2xl mb-4">
+          <h3 className={signupHeadingClass}>
             {fields?.Heading && <ContentSdkText field={fields.Heading} />}
           </h3>
 
-          <div className="text-lg leading-relaxed mb-6">
+          <div className="text-base leading-relaxed mb-6 text-white/90">
             {fields?.Subheading && <ContentSdkRichText field={fields.Subheading} />}
           </div>
 
-          <div className="flex flex-col sm:flex-row gap-4">
+          <div className="flex flex-col sm:flex-row gap-3">
             <div className="flex-1">
               <Input
                 type="email"
                 placeholder={t(DICTIONARY_KEYS.SIGNUPBANNER_InputPlaceholder)}
-                className="px-4 text-sm text-gray-900 bg-muted placeholder-muted-foreground transition-all duration-200 rounded-full focus:outline-none focus:ring-0 focus:border-transparent border-0 outline-none focus:shadow-none shadow-none focus-visible:ring-0 focus-visible:outline-none"
+                className={signupInputClass}
               />
             </div>
 
-            <Button className="btn btn-primary outline">
-              {t(DICTIONARY_KEYS.SIGNUPBANNER_ButtonLabel)}
-            </Button>
+            <Button variant="rounded-white">{t(DICTIONARY_KEYS.SIGNUPBANNER_ButtonLabel)}</Button>
           </div>
         </div>
       </div>
@@ -175,38 +177,33 @@ export const BackgroundDark = (props: SignupBannerProps) => {
   }
 
   return (
-    <section className={`relative bg-black py-8 px-4 ${props.params.styles}`} data-class-change>
-      <div className="absolute inset-0 z-10 overflow-hidden">
+    <section className={`relative bg-dark py-8 px-4 ${props.params.styles}`} data-class-change>
+      <div className="bg-dark absolute inset-0 z-10">
         {fields?.Image && (
-          <ContentSdkImage
-            field={fields.Image}
-            className="h-full w-full object-cover mix-blend-multiply"
-          />
+          <ContentSdkImage field={fields.Image} className="w-full h-full object-cover opacity-40" />
         )}
       </div>
 
-      <div className="relative z-40 container mx-auto pb-28 lg:py-16 text-center text-white h-full flex flex-col justify-center">
+      <div className="relative z-40 container mx-auto py-14 lg:py-16 text-center text-white h-full flex flex-col justify-center">
         <div className="lg:w-1/2 max-w-[38rem] mx-auto">
-          <h3 className="lg:text-5xl text-2xl mb-4">
+          <h3 className={signupHeadingClass}>
             {fields?.Heading && <ContentSdkText field={fields.Heading} />}
           </h3>
 
-          <div className="text-lg leading-relaxed mb-6">
+          <div className="text-base leading-relaxed mb-6 text-white/85">
             {fields?.Subheading && <ContentSdkRichText field={fields.Subheading} />}
           </div>
 
-          <div className="flex flex-col sm:flex-row gap-4">
+          <div className="flex flex-col sm:flex-row gap-3">
             <div className="flex-1">
               <Input
                 type="email"
                 placeholder={t(DICTIONARY_KEYS.SIGNUPBANNER_InputPlaceholder)}
-                className="px-4 text-sm text-gray-900 bg-muted placeholder-muted-foreground transition-all duration-200 rounded-full focus:outline-none focus:ring-0 focus:border-transparent border-0 outline-none focus:shadow-none shadow-none focus-visible:ring-0 focus-visible:outline-none"
+                className={signupInputClass}
               />
             </div>
 
-            <Button className="btn btn-outline">
-              {t(DICTIONARY_KEYS.SIGNUPBANNER_ButtonLabel)}
-            </Button>
+            <Button>{t(DICTIONARY_KEYS.SIGNUPBANNER_ButtonLabel)}</Button>
           </div>
         </div>
       </div>

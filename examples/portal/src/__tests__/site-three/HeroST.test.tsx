@@ -7,6 +7,9 @@ import {
   Centered as HeroSTCentered,
   SplitScreen as HeroSTSplitScreen,
   Stacked as HeroSTStacked,
+  JobSearch as HeroSTJobSearch,
+  Portal as HeroSTPortal,
+  TalentPortal as HeroSTTalentPortal,
 } from '@/components/site-three/HeroST';
 
 // Mock useContainerOffsets hook
@@ -16,6 +19,14 @@ jest.mock('@/hooks/useContainerOffsets', () => ({
     rightOffset: 0,
     leftOffset: 0,
   }),
+}));
+
+jest.mock('sonner', () => ({
+  toast: { message: jest.fn() },
+}));
+
+jest.mock('@/components/ui/sonner', () => ({
+  Toaster: () => null,
 }));
 
 // Mock Sitecore SDK
@@ -88,10 +99,36 @@ describe('HeroST', () => {
       expect(images.length).toBeGreaterThan(0);
     });
 
-    it('renders call-to-action links', () => {
+    it('renders primary CTA and job-search panel', () => {
       render(<HeroSTDefault {...mockProps} />);
       expect(screen.getByText('Shop Now')).toBeInTheDocument();
-      expect(screen.getByText('Learn More')).toBeInTheDocument();
+      expect(screen.getByRole('form', { name: /search jobs/i })).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: /learn more/i })).toBeInTheDocument();
+    });
+  });
+
+  describe('JobSearch variant', () => {
+    it('renders job board filters and listings', () => {
+      render(<HeroSTJobSearch {...mockProps} />);
+      expect(document.querySelector('[data-variant="JobSearch"]')).toBeInTheDocument();
+      expect(screen.getByRole('form', { name: /job search filters/i })).toBeInTheDocument();
+      expect(screen.getByText('Senior Scientist, Immunology')).toBeInTheDocument();
+    });
+  });
+
+  describe('Portal variant (GATX)', () => {
+    it('renders Portal login gate when no persona is selected', () => {
+      render(<HeroSTPortal {...mockProps} />);
+      expect(document.querySelector('[data-variant="Portal"]')).toBeInTheDocument();
+      expect(screen.getByText(/sign in to the gatx customer portal/i)).toBeInTheDocument();
+    });
+  });
+
+  describe('TalentPortal variant', () => {
+    it('renders Talent Portal login gate when no persona is selected', () => {
+      render(<HeroSTTalentPortal {...mockProps} />);
+      expect(document.querySelector('[data-variant="TalentPortal"]')).toBeInTheDocument();
+      expect(screen.getByText(/sign in to the talent portal/i)).toBeInTheDocument();
     });
   });
 
