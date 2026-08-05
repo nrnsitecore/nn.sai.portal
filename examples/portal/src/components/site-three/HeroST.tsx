@@ -334,11 +334,11 @@ export const SplitScreen = (props: PageHeaderSTProps) => {
           <h1 className={HERO_TITLE_CLASS}>
             <ContentSdkText field={props?.fields?.Title} />
           </h1>
-          <div className="mt-8">
+          <div className="mt-8 flex flex-row flex-wrap items-start gap-4">
             <ContentSdkLink
               field={props?.fields?.Link1}
               prefetch={false}
-              className="btn btn-secondary mr-4"
+              className="btn btn-secondary"
             />
             <ContentSdkLink
               field={props?.fields?.Link2}
@@ -377,7 +377,7 @@ export const Stacked = (props: PageHeaderSTProps) => {
           <h1 className={HERO_TITLE_CLASS}>
             <ContentSdkText field={props?.fields?.Title} />
           </h1>
-          <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:gap-4">
+          <div className="mt-8 flex flex-row flex-wrap items-start gap-4">
             <ContentSdkLink
               field={props?.fields?.Link1}
               prefetch={false}
