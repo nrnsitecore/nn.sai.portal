@@ -36,6 +36,10 @@ jest.mock('@fortawesome/free-solid-svg-icons', () => ({
     iconName: 'shopping-cart',
     prefix: 'fas',
   },
+  faUser: {
+    iconName: 'user',
+    prefix: 'fas',
+  },
 }));
 
 // Mock component-map to avoid circular dependency
@@ -236,11 +240,27 @@ describe('HeaderST Component', () => {
     it('renders FontAwesome cart icon when mini cart is disabled', () => {
       render(<HeaderSTDefault {...headerSTPropsBasic} />);
 
-      const cartIcon = screen.getByTestId('fontawesome-icon');
+      const cartIcon = screen
+        .getAllByTestId('fontawesome-icon')
+        .find((icon) => icon.getAttribute('data-icon') === 'shopping-cart');
       expect(cartIcon).toBeInTheDocument();
-      expect(cartIcon).toHaveAttribute('data-icon', 'shopping-cart');
       expect(cartIcon).toHaveAttribute('width', '24');
       expect(cartIcon).toHaveAttribute('height', '24');
+    });
+
+    it('renders profile icon link from SupportLink instead of CTA text', () => {
+      render(<HeaderSTDefault {...headerSTPropsBasic} />);
+
+      const profileIcon = screen
+        .getAllByTestId('fontawesome-icon')
+        .find((icon) => icon.getAttribute('data-icon') === 'user');
+      expect(profileIcon).toBeInTheDocument();
+      expect(profileIcon).toHaveAttribute('width', '20');
+      expect(profileIcon).toHaveAttribute('height', '20');
+
+      const profileLink = screen.getByLabelText('Help & Support');
+      expect(profileLink).toHaveAttribute('href', '/help');
+      expect(profileLink).not.toHaveTextContent('Help & Support');
     });
   });
 
@@ -327,9 +347,9 @@ describe('HeaderST Component', () => {
     it('shows desktop-specific elements only on desktop', () => {
       render(<HeaderSTDefault {...defaultHeaderSTProps} />);
 
-      // Desktop support link should be hidden on mobile
-      const desktopSupportLink = document.querySelector('.hidden.lg\\:block');
-      expect(desktopSupportLink).toBeInTheDocument();
+      // Desktop profile icon link should be hidden on mobile
+      const desktopProfileLink = document.querySelector('.hidden.lg\\:flex');
+      expect(desktopProfileLink).toBeInTheDocument();
     });
   });
 
@@ -402,9 +422,11 @@ describe('HeaderST Component', () => {
 
       render(<HeaderSTDefault {...propsWithoutMiniCart} />);
 
-      // Should default to showing cart icon
+      // Should default to showing cart icon (profile icon is also present)
       expect(screen.queryByTestId('mini-cart')).not.toBeInTheDocument();
-      expect(screen.getByTestId('fontawesome-icon')).toBeInTheDocument();
+      const icons = screen.getAllByTestId('fontawesome-icon');
+      expect(icons.some((icon) => icon.getAttribute('data-icon') === 'shopping-cart')).toBe(true);
+      expect(icons.some((icon) => icon.getAttribute('data-icon') === 'user')).toBe(true);
     });
 
     it('handles missing styles parameter', () => {

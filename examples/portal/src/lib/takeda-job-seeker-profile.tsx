@@ -132,7 +132,6 @@ const JobSeekerProfileDashboard = ({
           <p className="font-(family-name:--font-heading) mt-2 text-3xl font-bold tracking-tight">
             {savedCount}
           </p>
-          <p className="text-muted-foreground mt-1 text-xs">Demo checkout — no real ATS</p>
         </article>
       </div>
 

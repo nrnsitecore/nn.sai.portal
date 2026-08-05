@@ -190,12 +190,11 @@
   }
 
   & :where(h2) {
-    @apply relative pl-5 text-2xl md:text-3xl;
+    @apply relative pt-6 text-2xl md:text-3xl;
 
     &::before {
       content: '';
-      @apply bg-primary absolute left-0 top-[0.15em] w-1;
-      height: 1em;
+      @apply bg-primary absolute left-1/2 top-0 h-4 w-1 -translate-x-1/2;
     }
   }
 
@@ -222,6 +221,23 @@
   & :where(strong, b) {
     @apply text-foreground font-semibold;
   }
+}
+
+/* Pages Content alignment styles — heading bar follows text alignment */
+.group.position-left .takeda-rich-text :where(h2) {
+  @apply pl-5 pt-0;
+}
+
+.group.position-left .takeda-rich-text :where(h2)::before {
+  @apply left-0 top-[0.15em] h-[1em] translate-x-0;
+}
+
+.group.position-right .takeda-rich-text :where(h2) {
+  @apply pr-5 pt-0;
+}
+
+.group.position-right .takeda-rich-text :where(h2)::before {
+  @apply left-auto right-0 top-[0.15em] h-[1em] translate-x-0;
 }
 
 /* BUTTONS END */

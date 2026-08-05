@@ -104,6 +104,29 @@ describe('RichText Component', () => {
       expect(component).toHaveClass('style-2');
       expect(component).toHaveClass('style-3');
     });
+
+    it('should default to position-center when no Pages alignment style is set', () => {
+      const { container } = render(<RichText {...richTextPropsNoStyles} />);
+
+      const component = container.querySelector('.component.rich-text');
+      expect(component).toHaveClass('position-center');
+      expect(component).toHaveClass('group');
+    });
+
+    it('should honor Pages Content alignment styles without forcing position-center', () => {
+      const props = {
+        ...defaultRichTextProps,
+        params: {
+          RenderingIdentifier: 'richtext-align',
+          styles: 'position-left',
+        },
+      };
+      const { container } = render(<RichText {...props} />);
+
+      const component = container.querySelector('.component.rich-text');
+      expect(component).toHaveClass('position-left');
+      expect(component).not.toHaveClass('position-center');
+    });
   });
 
   describe('Content Variations', () => {

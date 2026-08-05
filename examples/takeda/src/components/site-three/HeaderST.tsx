@@ -1,4 +1,4 @@
-import { faShoppingCart } from '@fortawesome/free-solid-svg-icons';
+import { faShoppingCart, faUser } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   Link as ContentSdkLink,
@@ -29,8 +29,8 @@ type HeaderSTProps = ComponentProps & {
 const navLinkClass =
   'block px-4 py-5 font-[family-name:var(--font-accent)] text-sm font-semibold uppercase tracking-[0.08em] text-foreground transition-colors hover:text-primary';
 
-const ctaLinkClass =
-  'block bg-primary px-6 py-5 font-[family-name:var(--font-accent)] text-sm font-semibold uppercase tracking-[0.08em] text-primary-foreground transition-colors hover:bg-primary-hover';
+const iconLinkClass =
+  'flex items-center justify-center p-3 text-foreground transition-colors hover:text-primary';
 
 export const Default = (props: HeaderSTProps) => {
   const { fields } = props;
@@ -110,12 +110,15 @@ export const Default = (props: HeaderSTProps) => {
                   </ContentSdkLink>
                 )}
               </li>
-              <li className="hidden lg:block self-stretch">
+              <li className="hidden lg:flex">
                 <ContentSdkLink
                   field={fields?.SupportLink}
                   prefetch={false}
-                  className={`${ctaLinkClass} h-full`}
-                />
+                  className={iconLinkClass}
+                  aria-label={fields?.SupportLink?.value?.text || 'My profile'}
+                >
+                  <FontAwesomeIcon icon={faUser} width={20} height={20} aria-hidden />
+                </ContentSdkLink>
               </li>
             </ul>
           </div>
