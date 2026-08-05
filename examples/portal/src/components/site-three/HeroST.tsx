@@ -367,15 +367,16 @@ export const Stacked = (props: PageHeaderSTProps) => {
 
   return (
     <section
-      className={`relative flex flex-col bg-primary lg:min-h-[600px] lg:max-h-[800px] lg:flex-row lg:items-center lg:bg-transparent ${props?.params?.styles || ''}`}
+      className={`relative flex flex-col bg-primary text-primary-foreground lg:min-h-[600px] lg:max-h-[800px] lg:flex-row lg:items-center lg:bg-transparent ${props?.params?.styles || ''}`}
       data-class-change
     >
       <div className="relative z-20 mx-auto w-full container px-4">
-        <div className="relative z-20 bg-primary px-6 py-10 lg:w-1/2 lg:py-12">
-          <h1 className="pb-4 text-xl lg:text-3xl">
+        <div className="relative z-20 bg-primary px-6 py-10 text-primary-foreground lg:w-1/2 lg:py-12">
+          {/* Use <p> for eyebrow — global h1 styles make Pages field chrome render as giant GUID text */}
+          <p className="font-(family-name:--font-accent) mb-4 text-sm font-semibold uppercase tracking-[0.1em]">
             <ContentSdkText field={props?.fields?.Eyebrow} />
-          </h1>
-          <h1 className={HERO_TITLE_CLASS}>
+          </p>
+          <h1 className={`${HERO_TITLE_CLASS} font-heading font-bold uppercase tracking-wide`}>
             <ContentSdkText field={props?.fields?.Title} />
           </h1>
           <div className="mt-8 flex flex-col items-stretch gap-4 sm:flex-row sm:flex-wrap sm:items-start">

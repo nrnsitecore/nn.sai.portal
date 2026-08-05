@@ -1,3 +1,5 @@
+'use client';
+
 import React, { type JSX } from 'react';
 import {
   NextImage as ContentSdkImage,
@@ -34,7 +36,7 @@ const PromoDefaultComponent = (props: PromoProps): JSX.Element => (
 
 export const Default = (props: PromoProps): JSX.Element => {
   const { page } = useSitecore();
-  const isEditing = page.mode.isEditing;
+  const isEditing = page?.mode?.isEditing ?? false;
   const id = props.params.RenderingIdentifier;
   if (props.fields) {
     const { PromoIcon, PromoText, PromoText2, PromoText3, PromoLink } = props.fields || {};
