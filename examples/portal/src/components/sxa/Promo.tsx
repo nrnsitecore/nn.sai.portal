@@ -3,6 +3,7 @@ import {
   NextImage as ContentSdkImage,
   Link as ContentSdkLink,
   RichText as ContentSdkRichText,
+  useSitecore,
   ImageField,
   Field,
   LinkField,
@@ -32,12 +33,16 @@ const PromoDefaultComponent = (props: PromoProps): JSX.Element => (
 );
 
 export const Default = (props: PromoProps): JSX.Element => {
+  const { page } = useSitecore();
+  const isEditing = page.mode.isEditing;
   const id = props.params.RenderingIdentifier;
   if (props.fields) {
-    const { PromoIcon, PromoText, PromoText2, PromoText3, PromoLink } = props.fields;
+    const { PromoIcon, PromoText, PromoText2, PromoText3, PromoLink } = props.fields || {};
     const linkText = PromoLink?.value?.text || 'Learn more';
     const hasLink = !!PromoLink?.value?.href;
     const hasEyebrow = !!PromoText3?.value;
+    // Keep the CTA mounted in Pages so authors can set PromoLink even when empty
+    const showLink = hasLink || isEditing;
 
     return (
       <section
@@ -52,7 +57,7 @@ export const Default = (props: PromoProps): JSX.Element => {
             <div className="relative aspect-4/3 w-full overflow-hidden">
               <ContentSdkImage field={PromoIcon} className="h-full w-full object-cover" />
             </div>
-            {hasEyebrow && (
+            {(hasEyebrow || isEditing) && (
               <ContentSdkRichText tag="div" className="takeda-caption-bar" field={PromoText3} />
             )}
           </div>
@@ -69,7 +74,7 @@ export const Default = (props: PromoProps): JSX.Element => {
               className="text-muted-foreground mt-6 max-w-[56ch] space-y-4 text-base leading-relaxed"
               field={PromoText2}
             />
-            {hasLink && (
+            {showLink && (
               <div className="mt-8">
                 <ContentSdkLink
                   field={PromoLink}

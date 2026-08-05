@@ -17,6 +17,7 @@ import {
 // Mock the Sitecore Content SDK components and shadcn UI Button
 /* eslint-disable @typescript-eslint/no-explicit-any */
 jest.mock('@sitecore-content-sdk/nextjs', () => ({
+  useSitecore: () => ({ page: { mode: { isEditing: false } } }),
   NextImage: ({ field, className }: any) => {
     if (!field?.value?.src) return null;
     return (

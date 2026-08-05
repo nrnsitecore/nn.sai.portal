@@ -16,7 +16,10 @@ import {
 
 // Mock the Sitecore Content SDK components and shadcn UI Button
 /* eslint-disable @typescript-eslint/no-explicit-any */
+const mockUseSitecore = jest.fn(() => ({ page: { mode: { isEditing: false } } }));
+
 jest.mock('@sitecore-content-sdk/nextjs', () => ({
+  useSitecore: () => mockUseSitecore(),
   NextImage: ({ field, className }: any) => {
     if (!field?.value?.src) return null;
     return (
@@ -31,10 +34,10 @@ jest.mock('@sitecore-content-sdk/nextjs', () => ({
     );
   },
   Link: ({ field, children, className }: any) => {
-    if (!field?.value?.href) return null;
+    if (!field?.value?.href && !children) return null;
     return (
-      <a href={field.value.href} className={className}>
-        {children || field.value.text}
+      <a href={field?.value?.href || '#'} className={className}>
+        {children || field?.value?.text}
       </a>
     );
   },
@@ -109,6 +112,38 @@ describe('Promo Component - Default Variant', () => {
       const link = container.querySelector('a[href="/products/featured"]');
       expect(link).toBeInTheDocument();
       expect(link).toHaveTextContent('Learn More');
+    });
+
+    it('should show editable PromoLink CTA in Pages editing mode when href is empty', () => {
+      mockUseSitecore.mockReturnValue({ page: { mode: { isEditing: true } } });
+      const propsWithoutHref = {
+        ...defaultPromoProps,
+        fields: {
+          ...defaultPromoProps.fields,
+          PromoLink: { value: { href: '', text: '', linktype: 'external' } },
+        },
+      };
+
+      const { container } = render(<PromoDefault {...propsWithoutHref} />);
+      const link = container.querySelector('a');
+      expect(link).toBeInTheDocument();
+      expect(link).toHaveTextContent(/learn more/i);
+
+      mockUseSitecore.mockReturnValue({ page: { mode: { isEditing: false } } });
+    });
+
+    it('should hide PromoLink CTA on the live site when href is empty', () => {
+      mockUseSitecore.mockReturnValue({ page: { mode: { isEditing: false } } });
+      const propsWithoutHref = {
+        ...defaultPromoProps,
+        fields: {
+          ...defaultPromoProps.fields,
+          PromoLink: { value: { href: '', text: '', linktype: 'external' } },
+        },
+      };
+
+      const { container } = render(<PromoDefault {...propsWithoutHref} />);
+      expect(container.querySelector('a')).not.toBeInTheDocument();
     });
   });
 
