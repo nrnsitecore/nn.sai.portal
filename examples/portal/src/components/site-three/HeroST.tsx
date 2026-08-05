@@ -363,21 +363,22 @@ export const SplitScreen = (props: PageHeaderSTProps) => {
 };
 
 export const Stacked = (props: PageHeaderSTProps) => {
+  const stackedImageClass = 'absolute inset-0 h-full w-full object-cover';
 
   return (
     <section
-      className={`relative flex flex-col bg-primary lg:flex-row lg:items-center lg:bg-transparent ${HERO_CONTENT_BAND_CLASS} ${props?.params?.styles || ''}`}
+      className={`relative flex flex-col bg-primary lg:min-h-[600px] lg:max-h-[800px] lg:flex-row lg:items-center lg:bg-transparent ${props?.params?.styles || ''}`}
       data-class-change
     >
-      <div className="container px-4 mx-auto">
-        <div className="relative lg:w-1/2 px-6 py-12 bg-primary z-20">
-          <h1 className="text-xl lg:text-3xl pb-4">
+      <div className="relative z-20 mx-auto w-full container px-4">
+        <div className="relative z-20 bg-primary px-6 py-10 lg:w-1/2 lg:py-12">
+          <h1 className="pb-4 text-xl lg:text-3xl">
             <ContentSdkText field={props?.fields?.Eyebrow} />
           </h1>
           <h1 className={HERO_TITLE_CLASS}>
             <ContentSdkText field={props?.fields?.Title} />
           </h1>
-          <div className="mt-8 flex flex-row flex-wrap items-start gap-4">
+          <div className="mt-8 flex flex-col items-stretch gap-4 sm:flex-row sm:flex-wrap sm:items-start">
             <ContentSdkLink
               field={props?.fields?.Link1}
               prefetch={false}
@@ -391,13 +392,27 @@ export const Stacked = (props: PageHeaderSTProps) => {
           </div>
         </div>
       </div>
-      <div className="relative aspect-3/2 lg:absolute lg:aspect-auto inset-0 flex z-10 bg-muted">
+
+      {/* Mobile / tablet: single full-bleed primary image under the copy */}
+      <div className="relative z-10 aspect-[4/3] w-full bg-muted lg:hidden">
+        <ContentSdkImage
+          field={props?.fields?.Image1}
+          width={1920}
+          height={1080}
+          priority={true}
+          fetchPriority="high"
+          className={stackedImageClass}
+        />
+      </div>
+
+      {/* Desktop: 1/3 + 2/3 collage behind the copy panel */}
+      <div className="absolute inset-0 z-10 hidden bg-muted lg:flex">
         <div className="relative w-1/3">
           <ContentSdkImage
             field={props?.fields?.Image2}
             width={1920}
             height={1080}
-            className={`absolute inset-0 ${HERO_BG_IMAGE_CLASS}`}
+            className={stackedImageClass}
           />
         </div>
         <div className="relative w-2/3">
@@ -405,7 +420,7 @@ export const Stacked = (props: PageHeaderSTProps) => {
             field={props?.fields?.Image1}
             width={1920}
             height={1080}
-            className={`absolute inset-0 z-10 ${HERO_BG_IMAGE_CLASS}`}
+            className={`${stackedImageClass} z-10`}
           />
         </div>
       </div>
