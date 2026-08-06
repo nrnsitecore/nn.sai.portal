@@ -1,12 +1,18 @@
 import { defineRouting } from 'next-intl/routing';
 import sitecoreConfig from 'sitecore.config';
+import { DEMO_LOCALE_CODES } from '@/lib/demo-locales';
+
+const defaultLocale = sitecoreConfig.defaultLanguage || 'en';
+
+// Ensure default locale is first and present; include demo languages from Sitecore (en, de-DE, ja-JP).
+const locales = Array.from(new Set([defaultLocale, ...DEMO_LOCALE_CODES]));
 
 export const routing = defineRouting({
-  // A list of all locales that are supported
-  locales: [sitecoreConfig.defaultLanguage],
+  // Locales must match Sitecore language versions available on the site.
+  locales,
 
   // Used when no locale matches
-  defaultLocale: sitecoreConfig.defaultLanguage,
+  defaultLocale,
 
   // No prefix is added for the default locale ("as-needed").
   // For other configuration options, refer to the next-intl documentation:

@@ -65,6 +65,7 @@ import * as AccordionBlock from 'src/components/site-three/AccordionBlock';
 import * as SearchBox from 'src/components/site-three/non-sitecore/SearchBox';
 import * as MiniCart from 'src/components/site-three/non-sitecore/MiniCart';
 import * as DemoUserSwitcher from 'src/components/site-three/non-sitecore/DemoUserSwitcher';
+import * as DemoLanguageSwitcher from 'src/components/site-three/non-sitecore/DemoLanguageSwitcher';
 import * as sitemetadataprops from 'src/components/site-metadata/site-metadata.props';
 import * as SiteMetadata from 'src/components/site-metadata/SiteMetadata';
 import * as secondarynavigationprops from 'src/components/secondary-navigation/secondary-navigation.props';
@@ -360,6 +361,7 @@ export const componentMap = new Map<string, NextjsContentSdkComponent>([
   ['SearchBox', { ...SearchBox, componentType: 'client' }],
   ['MiniCart', { ...MiniCart, componentType: 'client' }],
   ['DemoUserSwitcher', { ...DemoUserSwitcher, componentType: 'client' }],
+  ['DemoLanguageSwitcher', { ...DemoLanguageSwitcher, componentType: 'client' }],
   ['site-metadata', { ...sitemetadataprops }],
   ['SiteMetadata', { ...SiteMetadata }],
   ['secondary-navigation', { ...secondarynavigationprops }],

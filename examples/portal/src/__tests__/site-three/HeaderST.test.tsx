@@ -139,6 +139,24 @@ jest.mock('../../components/site-three/non-sitecore/DemoUserSwitcher', () => ({
   DemoUserSwitcher: () => <div data-testid="demo-user-switcher">Demo User Switcher</div>,
 }));
 
+jest.mock('../../components/site-three/non-sitecore/DemoLanguageSwitcher', () => ({
+  DemoLanguageSwitcher: () => (
+    <div data-testid="demo-language-switcher">Demo Language Switcher</div>
+  ),
+}));
+
+jest.mock('../../components/image/DamAwareNextImage', () => ({
+  DamAwareNextImage: ({ field, className, ...props }: any) => (
+    <img
+      src={field?.value?.src || ''}
+      alt={field?.value?.alt || ''}
+      className={className}
+      data-testid="sitecore-image"
+      {...props}
+    />
+  ),
+}));
+
 // Import the hook mock to control its behavior
 const mockUseToggleWithClickOutside = require('../../hooks/useToggleWithClickOutside')
   .useToggleWithClickOutside as jest.Mock;
@@ -167,6 +185,9 @@ describe('HeaderST Component', () => {
       expect(screen.getByTestId('sitecore-image')).toBeInTheDocument();
       expect(screen.getByTestId('sitecore-image')).toHaveAttribute('src', '/images/sync-logo.svg');
       expect(screen.getByTestId('sitecore-image')).toHaveAttribute('alt', 'SYNC Audio Logo');
+
+      expect(screen.getByTestId('demo-language-switcher')).toBeInTheDocument();
+      expect(screen.getByTestId('demo-user-switcher')).toBeInTheDocument();
     });
 
     it('applies custom styles from params', () => {

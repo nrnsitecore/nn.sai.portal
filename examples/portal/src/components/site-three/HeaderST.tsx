@@ -10,6 +10,7 @@ import { DamAwareNextImage as ContentSdkImage } from '@/components/image/DamAwar
 import Link from 'next/link';
 import { MiniCart } from './non-sitecore/MiniCart';
 import { SearchBox } from './non-sitecore/SearchBox';
+import { DemoLanguageSwitcher } from './non-sitecore/DemoLanguageSwitcher';
 import { DemoUserSwitcher } from './non-sitecore/DemoUserSwitcher';
 import type { SearchResultsDatasourceFields } from '@/components/search-results/search-results.props';
 import { ComponentProps } from 'lib/component-props';
@@ -83,6 +84,9 @@ export const Default = (props: HeaderSTProps) => {
           </Link>
 
           <ul className="flex min-h-[3.5rem] list-none flex-row items-center justify-end gap-0 p-0 lg:min-h-[4.5rem]">
+            <li className="flex items-center px-1 sm:px-2">
+              <DemoLanguageSwitcher />
+            </li>
             <li className="hidden items-center px-2 lg:flex">
               <DemoUserSwitcher headerPersonas={headerPersonas} />
             </li>
