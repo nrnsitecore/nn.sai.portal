@@ -45,6 +45,14 @@ jest.mock('@sitecore-content-sdk/nextjs', () => ({
   ),
 }));
 
+jest.mock('next/link', () => {
+  return ({ children, href, className, prefetch, ...props }: any) => (
+    <a href={href} className={className} data-prefetch={prefetch} {...props}>
+      {children}
+    </a>
+  );
+});
+
 describe('HeroST', () => {
   const mockProps = {
     params: {
@@ -120,6 +128,18 @@ describe('HeroST', () => {
       expect(document.querySelector('[data-persona="default"]')).toBeInTheDocument();
       expect(screen.getByRole('form', { name: /job search filters/i })).toBeInTheDocument();
       expect(screen.getByText('Senior Scientist, Immunology')).toBeInTheDocument();
+    });
+
+    it('links View job to nested Job Search detail routes', () => {
+      render(<HeroSTJobSearch {...mockProps} />);
+      const detailLink = document.querySelector('[data-job-detail-link="job-001"]');
+      expect(detailLink).toBeInTheDocument();
+      expect(detailLink).toHaveAttribute('href', '/Job-Search/job-001');
+      const viewJobLinks = screen.getAllByRole('link', { name: /view job/i });
+      expect(viewJobLinks.length).toBeGreaterThan(0);
+      viewJobLinks.forEach((link) => {
+        expect(link).toHaveAttribute('href', expect.stringMatching(/^\/Job-Search\//));
+      });
     });
 
     it('personalizes listings when a Recent Graduate persona is selected', async () => {
@@ -214,6 +234,10 @@ describe('HeroST', () => {
 
       expect(await screen.findByText('Clinical Research Associate')).toBeInTheDocument();
       expect(document.querySelector('[data-saved-job-id="grad-001"]')).toBeInTheDocument();
+      expect(document.querySelector('[data-job-detail-link="grad-001"]')).toHaveAttribute(
+        'href',
+        '/Job-Search/grad-001'
+      );
 
       await act(async () => {
         fireEvent.click(screen.getByRole('button', { name: /remove/i }));
@@ -225,6 +249,10 @@ describe('HeroST', () => {
   });
 
   describe('Portal variant (GATX)', () => {
+    beforeEach(() => {
+      window.localStorage.clear();
+    });
+
     it('renders Portal login gate when no persona is selected', () => {
       render(<HeroSTPortal {...mockProps} />);
       expect(document.querySelector('[data-variant="Portal"]')).toBeInTheDocument();
@@ -233,6 +261,10 @@ describe('HeroST', () => {
   });
 
   describe('TalentPortal variant', () => {
+    beforeEach(() => {
+      window.localStorage.clear();
+    });
+
     it('renders Talent Portal login gate when no persona is selected', () => {
       render(<HeroSTTalentPortal {...mockProps} />);
       expect(document.querySelector('[data-variant="TalentPortal"]')).toBeInTheDocument();

@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import Link from 'next/link';
 import { Briefcase, MapPin, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
@@ -12,6 +13,7 @@ import {
   TAKEDA_SAVED_JOBS_CHANGE_EVENT,
   type SavedJob,
 } from '@/lib/takeda-saved-jobs';
+import { getJobDetailPath } from '@/lib/takeda-jobs-catalog';
 import {
   isTakedaTalentPersona,
   type TakedaTalentPersona,
@@ -171,7 +173,14 @@ const JobSeekerProfileDashboard = ({
                     </p>
                   )}
                   <h3 className="font-(family-name:--font-heading) text-lg font-semibold tracking-tight">
-                    {job.title}
+                    <Link
+                      href={getJobDetailPath(job.id)}
+                      className="hover:text-primary transition-colors"
+                      prefetch={false}
+                      data-job-detail-link={job.id}
+                    >
+                      {job.title}
+                    </Link>
                   </h3>
                   <p className="text-muted-foreground mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm">
                     <span className="inline-flex items-center gap-1.5">
