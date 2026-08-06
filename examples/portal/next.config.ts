@@ -39,6 +39,12 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: 'https',
+        hostname: 'covista.sitecoresandbox.cloud',
+        port: '',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
         hostname: 'dwyer-omega.sitecoresandbox.cloud',
         port: '',
         pathname: '/**',
