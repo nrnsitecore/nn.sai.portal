@@ -94,6 +94,7 @@ import * as ImageGallerydev from 'src/components/image-gallery/ImageGallery.dev'
 import * as ImageGallery from 'src/components/image-gallery/ImageGallery';
 import * as imageoptimizationcontext from 'src/components/image/image-optimization.context';
 import * as ImageWrapperclient from 'src/components/image/ImageWrapper.client';
+import * as DamAwareNextImage from 'src/components/image/DamAwareNextImage';
 import * as Icon from 'src/components/icon/Icon';
 import * as HtmlSnippetBlock from 'src/components/html-snippet-block/HtmlSnippetBlock';
 import * as HeroImageRightdev from 'src/components/hero/HeroImageRight.dev';
@@ -226,6 +227,7 @@ export const componentMap = new Map<string, NextjsContentSdkComponent>([
   ['ImageGallery', { ...ImageGallerydev, ...ImageGallery }],
   ['image-optimization', { ...imageoptimizationcontext }],
   ['ImageWrapper', { ...ImageWrapperclient }],
+  ['DamAwareNextImage', { ...DamAwareNextImage }],
   ['Icon', { ...Icon }],
   ['HtmlSnippetBlock', { ...HtmlSnippetBlock }],
   ['HeroImageRight', { ...HeroImageRightdev }],

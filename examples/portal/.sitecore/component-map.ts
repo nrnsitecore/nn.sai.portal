@@ -169,6 +169,7 @@ import * as imageoptimizationcontext from 'src/components/image/image-optimizati
 import * as ImageWrapperdev from 'src/components/image/ImageWrapper.dev';
 import * as ImageWrapperclient from 'src/components/image/ImageWrapper.client';
 import * as ImageBlock from 'src/components/image/ImageBlock';
+import * as DamAwareNextImage from 'src/components/image/DamAwareNextImage';
 import * as Icon from 'src/components/icon/Icon';
 import * as signaldev from 'src/components/icon/svg/signal.dev';
 import * as playdev from 'src/components/icon/svg/play.dev';
@@ -458,6 +459,7 @@ export const componentMap = new Map<string, NextjsContentSdkComponent>([
   ['image-optimization', { ...imageoptimizationcontext }],
   ['ImageWrapper', { ...ImageWrapperdev, ...ImageWrapperclient }],
   ['ImageBlock', { ...ImageBlock }],
+  ['DamAwareNextImage', { ...DamAwareNextImage, componentType: 'client' }],
   ['Icon', { ...Icon, componentType: 'client' }],
   ['signal', { ...signaldev }],
   ['play', { ...playdev }],

@@ -1,10 +1,7 @@
 'use client';
 
-import {
-  Text as ContentSdkText,
-  NextImage as ContentSdkImage,
-  Link as ContentSdkLink,
-} from '@sitecore-content-sdk/nextjs';
+import { Text as ContentSdkText, Link as ContentSdkLink } from '@sitecore-content-sdk/nextjs';
+import { DamAwareNextImage as ContentSdkImage } from '@/components/image/DamAwareNextImage';
 import { ArrowRight } from 'lucide-react';
 import { useMemo } from 'react';
 import { IGQLImageField, IGQLLinkField, IGQLTextField } from 'types/igql';

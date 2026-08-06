@@ -5,11 +5,12 @@ import { useInView } from 'framer-motion';
 import NextImage, { ImageProps } from 'next/image';
 import { ImageField, Image as ContentSdkImage, useSitecore } from '@sitecore-content-sdk/nextjs';
 import { ImageOptimizationContext } from '@/components/image/image-optimization.context';
+import { shouldSkipNextImageOptimization } from '@/lib/should-skip-next-image-optimization';
 import placeholderImageLoader from '@/utils/placeholderImageLoader';
 
 /**
  * Hosts allowed by Next.js `remotePatterns` — keep optimized instead of forcing `unoptimized`.
- * Aligns with kit-nextjs-article-starter plus sandbox / PoC hosts.
+ * Note: Content Hub sandbox public links are NOT optimized (see shouldSkipNextImageOptimization).
  */
 function isAllowedRemoteImageHost(url: string): boolean {
   try {
@@ -18,8 +19,7 @@ function isAllowedRemoteImageHost(url: string): boolean {
       /^edge/.test(hostname) ||
       /^xmc-/.test(hostname) ||
       hostname.endsWith('.sitecore-staging.cloud') ||
-      hostname.endsWith('.sitecorecloud.io') ||
-      hostname.endsWith('.sitecoresandbox.cloud')
+      hostname.endsWith('.sitecorecloud.io')
     );
   } catch {
     return false;
@@ -89,7 +89,8 @@ export default function ClientImage({ image, className, sizes, priority, ...rest
     !src.includes(typeof window !== 'undefined' ? window.location.hostname : '') &&
     !isAllowedRemoteImageHost(src);
 
-  const isUnoptimized = unoptimized || isSvg || isExternalNotAllowed;
+  const isUnoptimized =
+    unoptimized || isSvg || isExternalNotAllowed || shouldSkipNextImageOptimization(src);
 
   if (isEditing || isPreview || isSvg) {
     return <ContentSdkImage field={image} className={className} />;

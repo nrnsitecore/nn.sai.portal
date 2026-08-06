@@ -3,12 +3,12 @@
 import { useEffect, useState, type FormEvent } from 'react';
 import {
   Text as ContentSdkText,
-  NextImage as ContentSdkImage,
   Link as ContentSdkLink,
   ImageField,
   Field,
   LinkField,
 } from '@sitecore-content-sdk/nextjs';
+import { DamAwareNextImage as ContentSdkImage } from '@/components/image/DamAwareNextImage';
 import {
   ArrowUpRight,
   BarChart3,

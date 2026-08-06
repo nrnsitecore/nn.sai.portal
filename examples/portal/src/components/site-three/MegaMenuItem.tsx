@@ -1,12 +1,12 @@
 import {
   Text as ContentSdkText,
   Link as ContentSdkLink,
-  NextImage as ContentSdkImage,
   LinkField,
   Field,
   ImageField,
   AppPlaceholder,
 } from '@sitecore-content-sdk/nextjs';
+import { DamAwareNextImage as ContentSdkImage } from '@/components/image/DamAwareNextImage';
 import { ComponentProps } from 'lib/component-props';
 import { ArrowLeft } from 'lucide-react';
 import { useTranslations } from 'next-intl';
