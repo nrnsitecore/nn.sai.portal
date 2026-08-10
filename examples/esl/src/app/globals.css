@@ -17,7 +17,7 @@
   html {
     font-family: var(--font-body), 'Helvetica Neue', Helvetica, Arial, sans-serif;
     font-size: 1rem;
-    line-height: 1.5;
+    line-height: 1.6;
     font-weight: 400;
     color: var(--color-foreground);
     background-color: var(--color-background);
@@ -47,12 +47,11 @@
     }
   }
 
-  /* Takeda headings are confident but restrained — display sizes sit well below
-     the oversized scale inherited from the previous demo theme. */
+  /* ESL / Oregonians-inspired type: bold geometric headlines, airy body. */
   h1,
   .h1 {
     @apply text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight;
-    line-height: 1.1;
+    line-height: 1.08;
   }
 
   h2,
@@ -85,13 +84,13 @@
       'calt' 1;
   }
 
-  /* BUTTONS — compact, square, uppercase with tracking */
+  /* BUTTONS — pill-shaped CTAs (Oregonians layout language) */
   .btn {
     font-family: var(--font-accent);
-    @apply inline-block text-sm font-semibold uppercase tracking-[0.08em] transition-colors;
+    @apply inline-block text-sm font-semibold transition-colors;
 
     &.btn-primary {
-      @apply py-3 px-7 rounded-sm bg-primary text-primary-foreground;
+      @apply rounded-full bg-primary px-8 py-3.5 text-primary-foreground;
 
       &:hover {
         @apply bg-primary-hover;
@@ -99,7 +98,7 @@
     }
 
     &.btn-secondary {
-      @apply py-3 px-7 rounded-sm bg-light text-light-foreground border border-border;
+      @apply rounded-full border border-border bg-light px-8 py-3.5 text-light-foreground;
 
       &:hover {
         @apply bg-light-hover;
@@ -107,7 +106,7 @@
     }
 
     &.btn-accent {
-      @apply py-3 px-7 rounded-sm bg-accent text-accent-foreground;
+      @apply rounded-full bg-accent px-8 py-3.5 text-accent-foreground;
 
       &:hover {
         @apply bg-accent-hover;
@@ -119,11 +118,11 @@
     }
 
     &.btn-sharp {
-      @apply rounded-none;
+      @apply rounded-md;
     }
 
     &.btn-outline {
-      @apply py-3 px-7 rounded-sm border-2 border-current bg-transparent;
+      @apply rounded-full border-2 border-current bg-transparent px-8 py-3.5;
 
       &:hover {
         @apply opacity-80;
@@ -132,57 +131,49 @@
   }
 }
 
-/* TAKEDA MOTIFS
-   Shared utilities for the brand's signature editorial devices so components
-   stay DRY instead of re-declaring the same red bars and rules. */
+/* ESL MOTIFS — shared editorial utilities (Oregonians-soft + ESL primary). */
 
-/* Short red vertical bar to the left of a section heading. */
-@utility takeda-heading-bar {
+@utility esl-heading-bar {
   @apply relative pl-5;
 
   &::before {
     content: '';
-    @apply bg-primary absolute left-0 top-[0.15em] w-1;
+    @apply absolute top-[0.15em] left-0 w-1 rounded-full bg-primary;
     height: 1em;
   }
 }
 
-/* Centered variant: the bar sits above the heading. */
-@utility takeda-heading-bar-center {
+@utility esl-heading-bar-center {
   @apply relative pt-6;
 
   &::before {
     content: '';
-    @apply bg-primary absolute left-1/2 top-0 h-4 w-1 -translate-x-1/2;
+    @apply absolute top-0 left-1/2 h-1 w-10 -translate-x-1/2 rounded-full bg-primary;
   }
 }
 
-/* Thin red horizontal rule used as an editorial divider. */
-@utility takeda-rule {
-  @apply bg-primary h-0.5 w-16 border-0;
+@utility esl-rule {
+  @apply h-1 w-16 rounded-full border-0 bg-primary;
 }
 
-/* Solid red caption bar with a white uppercase label — the card language. */
-@utility takeda-caption-bar {
-  @apply bg-primary text-primary-foreground flex items-center justify-between gap-3 px-5 py-4 text-sm font-semibold uppercase tracking-[0.08em];
+@utility esl-caption-bar {
+  @apply flex items-center justify-between gap-3 rounded-t-xl bg-primary px-5 py-4 text-sm font-semibold text-primary-foreground;
 }
 
-/* Alternating cool-gray section band. */
-@utility takeda-band {
-  @apply bg-secondary text-secondary-foreground;
+@utility esl-band {
+  @apply bg-muted text-foreground;
 }
 
-/* Nested RTE styles for SXA RichText / CKEditor output */
-@utility takeda-rich-text {
+@utility esl-rich-text {
   font-family: var(--font-body);
 
   & :where(p) {
-    @apply text-muted-foreground mb-4 text-base leading-relaxed last:mb-0;
+    @apply mb-4 text-base leading-relaxed text-muted-foreground last:mb-0;
   }
 
   & :where(h1, h2, h3, h4) {
     font-family: var(--font-heading);
-    @apply text-foreground mb-4 font-bold leading-tight tracking-tight;
+    @apply mb-4 font-bold leading-tight tracking-tight text-foreground;
   }
 
   & :where(h1) {
@@ -194,7 +185,7 @@
 
     &::before {
       content: '';
-      @apply bg-primary absolute left-1/2 top-0 h-4 w-1 -translate-x-1/2;
+      @apply absolute top-0 left-1/2 h-1 w-10 -translate-x-1/2 rounded-full bg-primary;
     }
   }
 
@@ -203,15 +194,15 @@
   }
 
   & :where(a) {
-    @apply text-primary font-semibold underline-offset-4 hover:underline;
+    @apply font-semibold text-primary underline-offset-4 hover:underline;
   }
 
   & :where(ul) {
-    @apply text-muted-foreground mb-4 list-disc space-y-2 pl-6;
+    @apply mb-4 list-disc space-y-2 pl-6 text-muted-foreground;
   }
 
   & :where(ol) {
-    @apply text-muted-foreground mb-4 list-decimal space-y-2 pl-6;
+    @apply mb-4 list-decimal space-y-2 pl-6 text-muted-foreground;
   }
 
   & :where(li) {
@@ -219,25 +210,25 @@
   }
 
   & :where(strong, b) {
-    @apply text-foreground font-semibold;
+    @apply font-semibold text-foreground;
   }
 }
 
 /* Pages Content alignment styles — heading bar follows text alignment */
-.group.position-left .takeda-rich-text :where(h2) {
+.group.position-left .esl-rich-text :where(h2) {
   @apply pl-5 pt-0;
 }
 
-.group.position-left .takeda-rich-text :where(h2)::before {
-  @apply left-0 top-[0.15em] h-[1em] translate-x-0;
+.group.position-left .esl-rich-text :where(h2)::before {
+  @apply left-0 top-[0.35em] h-1 w-8 translate-x-0;
 }
 
-.group.position-right .takeda-rich-text :where(h2) {
+.group.position-right .esl-rich-text :where(h2) {
   @apply pr-5 pt-0;
 }
 
-.group.position-right .takeda-rich-text :where(h2)::before {
-  @apply left-auto right-0 top-[0.15em] h-[1em] translate-x-0;
+.group.position-right .esl-rich-text :where(h2)::before {
+  @apply left-auto right-0 top-[0.35em] h-1 w-8 translate-x-0;
 }
 
 /* BUTTONS END */

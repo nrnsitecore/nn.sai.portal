@@ -98,7 +98,7 @@ export const Default = (props: LinkListProps): JSX.Element => {
           <Text
             tag="h3"
             field={datasource?.field?.title}
-            className="takeda-heading-bar text-nowrap text-foreground mb-5 text-lg font-semibold md:text-lg"
+            className="esl-heading-bar text-nowrap text-foreground mb-5 text-lg font-semibold md:text-lg"
           />
           <ul className="list-none p-0 m-0" aria-label="Navigation options">
             {list}
@@ -172,7 +172,7 @@ export const AnchorNav = (props: LinkListProps): JSX.Element => {
             <a
               href={href}
               onClick={(e) => handleClick(e, href)}
-              className={`block border-b-2 py-4 text-sm font-semibold uppercase tracking-[0.08em] transition-colors ${
+              className={`block border-b-2 py-4 text-sm font-semibold  transition-colors ${
                 isActive
                   ? 'border-primary text-primary'
                   : 'text-foreground hover:text-primary border-transparent'
@@ -352,7 +352,7 @@ export const HeaderSecondaryLinks = (props: LinkListProps): JSX.Element => {
 
     return (
       <div className={`flex flex-col gap-3 ${styles}`} id={id ? id : undefined} data-class-change>
-        <h2 className="border-primary text-muted-foreground border-l-2 pl-3 font-(family-name:--font-accent) text-xs font-semibold uppercase tracking-[0.1em]">
+        <h2 className="border-primary text-muted-foreground border-l-2 pl-3 font-(family-name:--font-accent) text-xs font-semibold">
           <Text field={datasource?.field?.title} />
         </h2>
         <ul className="flex flex-col gap-1">{list}</ul>

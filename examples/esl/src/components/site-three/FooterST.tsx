@@ -31,23 +31,27 @@ function hasValidLink(field: LinkField | undefined): boolean {
   return !!(href && href !== '#' && !href.startsWith('http://#'));
 }
 
-const footerSectionClass = 'relative bg-dark text-dark-foreground';
+const footerSectionClass = 'relative bg-muted text-foreground border-t border-border';
 
-/** Red accent bar that anchors the footer title, mirroring the brand's heading motif. */
-const FooterAccentBar = () => <span aria-hidden className="bg-primary mb-6 block h-1 w-12" />;
+/** Primary accent bar that anchors the footer title. */
+const FooterAccentBar = () => (
+  <span aria-hidden className="mb-6 block h-1 w-12 rounded-full bg-primary" />
+);
 
-const footerTitleClass = 'text-2xl lg:text-3xl font-semibold tracking-tight mb-8 lg:mb-10';
+const footerTitleClass =
+  'mb-8 font-[family-name:var(--font-heading)] text-2xl font-bold tracking-tight lg:mb-10 lg:text-3xl';
 
 const footerPrimaryLinksClass =
-  'font-(family-name:--font-heading) text-lg font-semibold tracking-tight';
+  'font-(family-name:--font-heading) text-base font-semibold tracking-tight text-foreground';
 
 const footerSecondaryLinksClass =
-  'font-(family-name:--font-accent) text-sm font-medium text-white/70';
+  'font-(family-name:--font-accent) text-sm font-medium text-muted-foreground';
 
-const footerMetaClass = 'text-xs text-white/60 [&_a]:underline [&_a]:underline-offset-4';
+const footerMetaClass =
+  'text-xs text-muted-foreground [&_a]:text-primary [&_a]:underline [&_a]:underline-offset-4';
 
 const SocialLinks = ({ fields }: { fields: Fields }) => (
-  <div className="flex justify-center gap-5 [&_a]:transition-colors [&_a:hover]:text-primary">
+  <div className="flex justify-center gap-5 text-foreground [&_a]:transition-colors [&_a:hover]:text-primary">
     {hasValidLink(fields?.FacebookLink) ? (
       <ContentSdkLink field={fields?.FacebookLink} prefetch={false} aria-label="Facebook">
         <FontAwesomeIcon icon={faFacebook} width={20} height={20} />
@@ -106,7 +110,7 @@ export const Default = (props: FooterSTProps) => {
           />
         </div>
       </div>
-      <div className="border-t border-white/15 my-10 lg:my-12"></div>
+      <div className="my-10 border-t border-border lg:my-12"></div>
       <div className="container mx-auto px-4">
         <div className="flex flex-col gap-4 items-center lg:flex-row lg:justify-between">
           <SocialLinks fields={props.fields} />
@@ -159,7 +163,7 @@ export const LogoLeft = (props: FooterSTProps) => {
           </div>
         </div>
       </div>
-      <div className="border-t border-white/15 mt-10 lg:mt-12"></div>
+      <div className="mt-10 border-t border-border lg:mt-12"></div>
     </section>
   );
 };
@@ -167,11 +171,11 @@ export const LogoLeft = (props: FooterSTProps) => {
 export const LogoRight = (props: FooterSTProps) => {
   return (
     <section className={`${footerSectionClass} pb-8 ${props.params.styles}`} data-class-change>
-      <div className="border-t border-white/15 mb-10 lg:mb-12"></div>
+      <div className="mb-10 border-t border-border lg:mb-12"></div>
       <div className="container mx-auto px-4">
         <div className="grid lg:grid-cols-2 gap-8">
           <div className="lg:order-2 lg:text-right">
-            <span aria-hidden className="bg-primary mb-6 block h-1 w-12 lg:ml-auto" />
+            <span aria-hidden className="mb-6 block h-1 w-12 rounded-full bg-primary lg:ml-auto" />
             <h2 className={`${footerTitleClass} !mb-0`}>
               <ContentSdkText field={props.fields?.Title} />
             </h2>

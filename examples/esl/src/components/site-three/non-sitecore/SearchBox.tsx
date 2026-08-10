@@ -54,7 +54,7 @@ export const SearchBox = ({ searchLink }: { searchLink: LinkField }) => {
         <ContentSdkLink
           field={searchLink}
           prefetch={false}
-          className="text-foreground hover:text-primary block px-4 py-5 font-[family-name:var(--font-accent)] text-sm font-semibold uppercase tracking-[0.08em] transition-colors"
+          className="block px-4 py-5 font-[family-name:var(--font-accent)] text-sm font-semibold text-foreground transition-colors hover:text-primary"
           onClick={(e) => {
             e.preventDefault();
             setIsVisible(!isVisible);
@@ -63,7 +63,7 @@ export const SearchBox = ({ searchLink }: { searchLink: LinkField }) => {
       ) : (
         <button
           type="button"
-          className="text-foreground hover:text-primary block w-full px-4 py-5 text-left font-[family-name:var(--font-accent)] text-sm font-semibold uppercase tracking-[0.08em] transition-colors"
+          className="block w-full px-4 py-5 text-left font-[family-name:var(--font-accent)] text-sm font-semibold text-foreground transition-colors hover:text-primary"
           onClick={() => setIsVisible(!isVisible)}
           aria-label={t(DICTIONARY_KEYS.SEARCH_LABEL) || 'Search'}
         >
@@ -83,14 +83,14 @@ export const SearchBox = ({ searchLink }: { searchLink: LinkField }) => {
         `}
       >
         <div className="pt-18 p-8 lg:pt-8">
-          <h2 className="takeda-heading-bar mb-6 text-2xl md:text-2xl">
+          <h2 className="esl-heading-bar mb-6 text-2xl md:text-2xl">
             {t(DICTIONARY_KEYS.SEARCH_LABEL) || 'Search'}
           </h2>
           <div className="flex gap-3">
             <input
               type="text"
               placeholder={t(DICTIONARY_KEYS.SEARCH_INPUT_PLACEHOLDER) || 'Type to search...'}
-              className="border-input focus:border-primary focus:ring-primary/20 w-full rounded-sm border px-4 py-3 focus:ring-2 focus-visible:outline-0"
+              className="w-full rounded-full border border-input px-4 py-3 focus:border-primary focus:ring-2 focus:ring-primary/20 focus-visible:outline-0"
               autoFocus
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}

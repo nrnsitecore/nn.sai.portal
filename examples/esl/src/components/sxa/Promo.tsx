@@ -54,13 +54,13 @@ export const Default = (props: PromoProps): JSX.Element => {
         id={id ? id : undefined}
       >
         <div className="mx-auto grid max-w-7xl grid-cols-1 items-center gap-10 px-4 py-16 @md:grid-cols-2 @md:gap-14 @md:px-8 @md:py-20">
-          {/* Image with the brand's solid red caption bar */}
-          <div className="border-border border shadow-sm">
+          {/* Image with ESL caption bar */}
+          <div className="overflow-hidden rounded-2xl border border-border/60 shadow-md">
             <div className="relative aspect-4/3 w-full overflow-hidden">
               <ContentSdkImage field={PromoIcon} className="h-full w-full object-cover" />
             </div>
             {(hasEyebrow || isEditing) && (
-              <ContentSdkRichText tag="div" className="takeda-caption-bar" field={PromoText3} />
+              <ContentSdkRichText tag="div" className="esl-caption-bar" field={PromoText3} />
             )}
           </div>
 
@@ -68,7 +68,7 @@ export const Default = (props: PromoProps): JSX.Element => {
           <div className="flex flex-col justify-center">
             <ContentSdkRichText
               tag="h2"
-              className="takeda-heading-bar font-heading text-pretty text-3xl font-bold leading-tight tracking-tight @lg:text-4xl"
+              className="esl-heading-bar font-heading text-pretty text-3xl font-bold leading-tight tracking-tight @lg:text-4xl"
               field={PromoText}
             />
             <ContentSdkRichText

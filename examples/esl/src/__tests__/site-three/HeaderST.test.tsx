@@ -35,6 +35,10 @@ jest.mock('@fortawesome/free-solid-svg-icons', () => ({
     iconName: 'shopping-cart',
     prefix: 'fas',
   },
+  faUser: {
+    iconName: 'user',
+    prefix: 'fas',
+  },
 }));
 
 // Mock component-map to avoid circular dependency
@@ -220,11 +224,13 @@ describe('HeaderST Component', () => {
     it('renders FontAwesome cart icon when mini cart is disabled', () => {
       render(<HeaderSTDefault {...headerSTPropsBasic} />);
 
-      const cartIcon = screen.getByTestId('fontawesome-icon');
+      const cartIcon = screen
+        .getAllByTestId('fontawesome-icon')
+        .find((el) => el.getAttribute('data-icon') === 'shopping-cart');
       expect(cartIcon).toBeInTheDocument();
       expect(cartIcon).toHaveAttribute('data-icon', 'shopping-cart');
-      expect(cartIcon).toHaveAttribute('width', '24');
-      expect(cartIcon).toHaveAttribute('height', '24');
+      expect(cartIcon).toHaveAttribute('width', '22');
+      expect(cartIcon).toHaveAttribute('height', '22');
     });
   });
 
@@ -311,8 +317,8 @@ describe('HeaderST Component', () => {
     it('shows desktop-specific elements only on desktop', () => {
       render(<HeaderSTDefault {...defaultHeaderSTProps} />);
 
-      // Desktop support link should be hidden on mobile
-      const desktopSupportLink = document.querySelector('.hidden.lg\\:block');
+      // Desktop support CTA should be hidden on mobile
+      const desktopSupportLink = document.querySelector('.hidden.lg\\:flex');
       expect(desktopSupportLink).toBeInTheDocument();
     });
   });
@@ -388,7 +394,9 @@ describe('HeaderST Component', () => {
 
       // Should default to showing cart icon
       expect(screen.queryByTestId('mini-cart')).not.toBeInTheDocument();
-      expect(screen.getByTestId('fontawesome-icon')).toBeInTheDocument();
+      expect(
+        document.querySelector('[data-testid="fontawesome-icon"][data-icon="shopping-cart"]')
+      ).toBeInTheDocument();
     });
 
     it('handles missing styles parameter', () => {

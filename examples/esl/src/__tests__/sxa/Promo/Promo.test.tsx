@@ -82,7 +82,7 @@ describe('Promo Component - Default Variant', () => {
       expect(heading?.innerHTML).toContain('Featured Product');
       expect(heading).toHaveClass('text-3xl');
       expect(heading).toHaveClass('font-bold');
-      expect(heading).toHaveClass('takeda-heading-bar');
+      expect(heading).toHaveClass('esl-heading-bar');
     });
 
     it('should render PromoText2 as description', () => {
@@ -99,7 +99,7 @@ describe('Promo Component - Default Variant', () => {
     it('should render PromoText3 as badge', () => {
       const { container } = render(<PromoDefault {...defaultPromoProps} />);
 
-      const badge = container.querySelector('.takeda-caption-bar');
+      const badge = container.querySelector('.esl-caption-bar');
       expect(badge).toBeInTheDocument();
       expect(badge?.innerHTML).toContain('New Arrival');
     });

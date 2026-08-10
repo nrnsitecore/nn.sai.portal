@@ -42,7 +42,7 @@ export const ButtonNavigationClient = ({
           <ContentSdkLink
             key={section.Id}
             field={linkField}
-            className="bg-card border border-border p-6 rounded-sm shadow-sm hover:border-primary transition-colors"
+            className="rounded-2xl border border-border bg-card p-6 shadow-md transition-colors hover:border-primary"
             prefetch={false}
           >
             <h4 className="text-xl font-semibold text-primary mb-2">
@@ -61,7 +61,7 @@ export const ButtonNavigationClient = ({
             <Link
               key={section.Id}
               href={href}
-              className="bg-card border border-border p-6 rounded-sm shadow-sm hover:border-primary transition-colors"
+              className="rounded-2xl border border-border bg-card p-6 shadow-md transition-colors hover:border-primary"
               prefetch={false}
             >
               <h4 className="text-xl font-semibold text-primary mb-2">

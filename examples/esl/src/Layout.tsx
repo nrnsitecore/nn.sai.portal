@@ -6,14 +6,14 @@ import { Field, ImageField, Page, AppPlaceholder } from '@sitecore-content-sdk/n
 import Scripts from 'src/Scripts';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import Providers from 'src/Providers';
-import { Barlow, Inter } from 'next/font/google';
+import { DM_Sans, Source_Sans_3 } from 'next/font/google';
 import { DesignLibraryApp } from '@sitecore-content-sdk/nextjs';
 import componentMap from '.sitecore/component-map';
 import { generateOrganizationSchema, generateWebSiteSchema } from 'src/lib/structured-data/schema';
 import { StructuredData } from 'src/components/structured-data/StructuredData';
 
-// Takeda brand system: slightly condensed grotesque display + neutral UI sans
-const heading = Barlow({
+// ESL brand system: geometric display + open sans body (Semplicita Pro substitute)
+const heading = DM_Sans({
   weight: ['500', '600', '700'],
   variable: '--font-heading',
   subsets: ['latin', 'latin-ext'],
@@ -21,7 +21,7 @@ const heading = Barlow({
   preload: true,
 });
 
-const body = Inter({
+const body = Source_Sans_3({
   weight: ['400', '500', '600', '700'],
   variable: '--font-body',
   subsets: ['latin', 'latin-ext'],
@@ -29,7 +29,7 @@ const body = Inter({
   preload: true,
 });
 
-const accent = Inter({
+const accent = DM_Sans({
   weight: ['500', '600', '700'],
   variable: '--font-accent',
   subsets: ['latin', 'latin-ext'],
@@ -83,12 +83,12 @@ const Layout = ({ page, baseUrl: baseUrlProp }: LayoutProps): JSX.Element => {
   // Generate JSON-LD structured data for Organization and WebSite (use request-derived baseUrl when provided)
   const baseUrl = baseUrlProp ?? process.env.NEXT_PUBLIC_SITE_URL ?? '';
   const organizationSchema = generateOrganizationSchema({
-    name: 'Takeda',
+    name: 'ESL Federal Credit Union',
     ...(baseUrl && { url: baseUrl }),
   });
 
   const websiteSchema = generateWebSiteSchema({
-    name: 'Takeda',
+    name: 'ESL Federal Credit Union',
     url: baseUrl,
   });
 

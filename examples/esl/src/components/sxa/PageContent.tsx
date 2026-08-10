@@ -86,7 +86,7 @@ export const TitleAndBody = (props: PageContentProps): JSX.Element => {
         </div>
         <Link
           href="#components"
-          className="bg-primary text-primary-foreground px-6 py-3 rounded-sm hover:bg-primary-hover transition-colors"
+          className="rounded-full bg-primary px-6 py-3 text-primary-foreground transition-colors hover:bg-primary-hover"
         >
           Explore Components
         </Link>

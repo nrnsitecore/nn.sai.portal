@@ -25,7 +25,7 @@ export const Default = (props: ImageBannerProps) => {
     <section className={`relative py-16 ${props.params?.styles || ''}`} data-class-change>
       <div className="container px-4 mx-auto">
         <div className="max-w-3xl mx-auto text-center">
-          <h2 className="takeda-heading-bar-center text-3xl lg:text-4xl mb-6">
+          <h2 className="esl-heading-bar-center text-3xl lg:text-4xl mb-6">
             <ContentSdkText field={props.fields?.Title} />
           </h2>
           <div className="text-muted-foreground text-base">
@@ -40,7 +40,7 @@ export const Default = (props: ImageBannerProps) => {
               field={props.fields?.Image1}
               width={1920}
               height={1080}
-              className="w-full h-full object-cover shadow-sm transition-transform duration-300 hover:scale-[1.02]"
+              className="h-full w-full rounded-2xl object-cover shadow-md transition-transform duration-300 hover:scale-[1.02]"
             />
           </div>
           <div className="aspect-9/10">
@@ -48,7 +48,7 @@ export const Default = (props: ImageBannerProps) => {
               field={props.fields?.Image2}
               width={1920}
               height={1080}
-              className="w-full h-full object-cover shadow-sm transition-transform duration-300 hover:scale-[1.02]"
+              className="h-full w-full rounded-2xl object-cover shadow-md transition-transform duration-300 hover:scale-[1.02]"
             />
           </div>
           <div className="aspect-11/10">
@@ -56,7 +56,7 @@ export const Default = (props: ImageBannerProps) => {
               field={props.fields?.Image3}
               width={1920}
               height={1080}
-              className="w-full h-full object-cover shadow-sm transition-transform duration-300 hover:scale-[1.02]"
+              className="h-full w-full rounded-2xl object-cover shadow-md transition-transform duration-300 hover:scale-[1.02]"
             />
           </div>
         </div>
@@ -70,7 +70,7 @@ export const Grid = (props: ImageBannerProps) => {
     <section className={`relative py-16 ${props.params?.styles || ''}`} data-class-change>
       <div className="container px-4 mx-auto">
         <div className="max-w-3xl mx-auto text-center">
-          <h2 className="takeda-heading-bar-center text-3xl lg:text-4xl mb-6">
+          <h2 className="esl-heading-bar-center text-3xl lg:text-4xl mb-6">
             <ContentSdkText field={props.fields?.Title} />
           </h2>
           <div className="text-muted-foreground text-base">
@@ -84,7 +84,7 @@ export const Grid = (props: ImageBannerProps) => {
               field={props.fields?.Image1}
               width={1920}
               height={1080}
-              className="w-full h-full object-cover shadow-sm transition-transform duration-300 hover:scale-[1.02]"
+              className="h-full w-full rounded-2xl object-cover shadow-md transition-transform duration-300 hover:scale-[1.02]"
             />
           </div>
           <div className="col-span-7 row-span-2">
@@ -92,7 +92,7 @@ export const Grid = (props: ImageBannerProps) => {
               field={props.fields?.Image2}
               width={1920}
               height={1080}
-              className="w-full h-full object-cover shadow-sm transition-transform duration-300 hover:scale-[1.02]"
+              className="h-full w-full rounded-2xl object-cover shadow-md transition-transform duration-300 hover:scale-[1.02]"
             />
           </div>
           <div className="aspect-4/3 col-span-9">
@@ -100,7 +100,7 @@ export const Grid = (props: ImageBannerProps) => {
               field={props.fields?.Image3}
               width={1920}
               height={1080}
-              className="w-full h-full object-cover shadow-sm transition-transform duration-300 hover:scale-[1.02]"
+              className="h-full w-full rounded-2xl object-cover shadow-md transition-transform duration-300 hover:scale-[1.02]"
             />
           </div>
         </div>
@@ -114,7 +114,7 @@ export const FullWidthRow = (props: ImageBannerProps) => {
     <section className={`relative py-16 ${props.params?.styles || ''}`} data-class-change>
       <div className="container px-4 mx-auto">
         <div className="max-w-3xl mx-auto text-center">
-          <h2 className="takeda-heading-bar-center text-3xl lg:text-4xl mb-6">
+          <h2 className="esl-heading-bar-center text-3xl lg:text-4xl mb-6">
             <ContentSdkText field={props.fields?.Title} />
           </h2>
           <div className="text-muted-foreground text-base">
@@ -129,7 +129,7 @@ export const FullWidthRow = (props: ImageBannerProps) => {
             field={props.fields?.Image1}
             width={1920}
             height={1080}
-            className="w-full h-full object-cover shadow-sm transition-transform duration-300 hover:scale-[1.02]"
+            className="h-full w-full rounded-2xl object-cover shadow-md transition-transform duration-300 hover:scale-[1.02]"
           />
         </div>
         <div className="col-span-10 h-64 lg:h-84">
@@ -137,7 +137,7 @@ export const FullWidthRow = (props: ImageBannerProps) => {
             field={props.fields?.Image2}
             width={1920}
             height={1080}
-            className="w-full h-full object-cover shadow-sm transition-transform duration-300 hover:scale-[1.02]"
+            className="h-full w-full rounded-2xl object-cover shadow-md transition-transform duration-300 hover:scale-[1.02]"
           />
         </div>
         <div className="col-span-7 h-64 lg:h-84">
@@ -145,7 +145,7 @@ export const FullWidthRow = (props: ImageBannerProps) => {
             field={props.fields?.Image3}
             width={1920}
             height={1080}
-            className="w-full h-full object-cover shadow-sm transition-transform duration-300 hover:scale-[1.02]"
+            className="h-full w-full rounded-2xl object-cover shadow-md transition-transform duration-300 hover:scale-[1.02]"
           />
         </div>
       </div>
@@ -158,7 +158,7 @@ export const SingleRowGrid = (props: ImageBannerProps) => {
     <section className={`relative py-16 ${props.params?.styles || ''}`} data-class-change>
       <div className="container px-4 mx-auto">
         <div className="max-w-3xl mx-auto text-center">
-          <h2 className="takeda-heading-bar-center text-3xl lg:text-4xl mb-6">
+          <h2 className="esl-heading-bar-center text-3xl lg:text-4xl mb-6">
             <ContentSdkText field={props.fields?.Title} />
           </h2>
           <div className="text-muted-foreground text-base">
@@ -172,7 +172,7 @@ export const SingleRowGrid = (props: ImageBannerProps) => {
               field={props.fields?.Image1}
               width={1920}
               height={1080}
-              className="w-full h-full object-cover shadow-sm transition-transform duration-300 hover:scale-[1.02]"
+              className="h-full w-full rounded-2xl object-cover shadow-md transition-transform duration-300 hover:scale-[1.02]"
             />
           </div>
           <div className="col-span-4 h-64 lg:h-84">
@@ -180,7 +180,7 @@ export const SingleRowGrid = (props: ImageBannerProps) => {
               field={props.fields?.Image2}
               width={1920}
               height={1080}
-              className="w-full h-full object-cover shadow-sm transition-transform duration-300 hover:scale-[1.02]"
+              className="h-full w-full rounded-2xl object-cover shadow-md transition-transform duration-300 hover:scale-[1.02]"
             />
           </div>
           <div className="col-span-3 h-64 lg:h-84 mt-10">
@@ -188,7 +188,7 @@ export const SingleRowGrid = (props: ImageBannerProps) => {
               field={props.fields?.Image3}
               width={1920}
               height={1080}
-              className="w-full h-full object-cover shadow-sm transition-transform duration-300 hover:scale-[1.02]"
+              className="h-full w-full rounded-2xl object-cover shadow-md transition-transform duration-300 hover:scale-[1.02]"
             />
           </div>
         </div>
@@ -202,7 +202,7 @@ export const Stacked = (props: ImageBannerProps) => {
     <section className={`relative py-16 ${props.params?.styles || ''}`} data-class-change>
       <div className="container px-4 mx-auto">
         <div className="max-w-3xl mx-auto text-center">
-          <h2 className="takeda-heading-bar-center text-3xl lg:text-4xl mb-6">
+          <h2 className="esl-heading-bar-center text-3xl lg:text-4xl mb-6">
             <ContentSdkText field={props.fields?.Title} />
           </h2>
           <div className="text-muted-foreground text-base">
@@ -217,7 +217,7 @@ export const Stacked = (props: ImageBannerProps) => {
               field={props.fields?.Image1}
               width={1920}
               height={1080}
-              className="w-full h-full object-cover shadow-sm transition-transform duration-300 hover:scale-[1.02]"
+              className="h-full w-full rounded-2xl object-cover shadow-md transition-transform duration-300 hover:scale-[1.02]"
             />
           </div>
           <div className="col-span-6 col-start-7 aspect-square">
@@ -225,7 +225,7 @@ export const Stacked = (props: ImageBannerProps) => {
               field={props.fields?.Image2}
               width={1920}
               height={1080}
-              className="w-full h-full object-cover shadow-sm transition-transform duration-300 hover:scale-[1.02]"
+              className="h-full w-full rounded-2xl object-cover shadow-md transition-transform duration-300 hover:scale-[1.02]"
             />
           </div>
           <div className="col-span-7 col-start-3 aspect-square">
@@ -233,7 +233,7 @@ export const Stacked = (props: ImageBannerProps) => {
               field={props.fields?.Image3}
               width={1920}
               height={1080}
-              className="w-full h-full object-cover shadow-sm transition-transform duration-300 hover:scale-[1.02]"
+              className="h-full w-full rounded-2xl object-cover shadow-md transition-transform duration-300 hover:scale-[1.02]"
             />
           </div>
         </div>

@@ -13,6 +13,7 @@ import * as TextBanner02dev from 'src/components/text-banner/TextBanner02.dev';
 import * as TextBanner01dev from 'src/components/text-banner/TextBanner01.dev';
 import * as TextBanner from 'src/components/text-banner/TextBanner';
 import * as TestimonialCarousel from 'src/components/testimonial-carousel/TestimonialCarousel';
+import * as Promo from 'src/components/sxa/Promo';
 import * as NavigationMenuToggleclient from 'src/components/sxa/NavigationMenuToggle.client';
 import * as NavigationListclient from 'src/components/sxa/NavigationList.client';
 import * as LinkList from 'src/components/sxa/LinkList';
@@ -135,6 +136,7 @@ export const componentMap = new Map<string, NextjsContentSdkComponent>([
   ['TextBanner01', { ...TextBanner01dev }],
   ['TextBanner', { ...TextBanner }],
   ['TestimonialCarousel', { ...TestimonialCarousel }],
+  ['Promo', { ...Promo }],
   ['NavigationMenuToggle', { ...NavigationMenuToggleclient }],
   ['NavigationList', { ...NavigationListclient }],
   ['LinkList', { ...LinkList }],

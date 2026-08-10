@@ -34,13 +34,15 @@ type FeatureBannerProps = {
 
 /** Demo-only intro — FeatureBanner has no description field. */
 const CAREER_AREAS_INTRO =
-  'From R&D to Manufacturing, Corporate Functions to Commercial, and every team in between, everyone’s contributions at Takeda make a meaningful impact for patients, our people, and the planet.';
+  'From personal banking to business services, community impact to financial wellness, ESL members get local expertise and tools that help them move forward — one step at a time.';
 
 const FeatureItem = (props: FeatureItemFields) => {
   return (
-    <div className="flex flex-col items-center gap-1">
-      <ContentSdkImage field={props?.image?.jsonValue} className="w-6 h-6 object-contain" />
-      <p className="text-base text-center">
+    <div className="flex max-w-[12rem] flex-col items-center gap-3 text-center">
+      <div className="flex h-16 w-16 items-center justify-center rounded-full border-2 border-accent bg-background p-3 shadow-sm">
+        <ContentSdkImage field={props?.image?.jsonValue} className="h-8 w-8 object-contain" />
+      </div>
+      <p className="text-base font-semibold text-foreground">
         <ContentSdkText field={props?.heading?.jsonValue} />
       </p>
     </div>
@@ -49,14 +51,14 @@ const FeatureItem = (props: FeatureItemFields) => {
 
 const CareerAreaTile = (props: FeatureItemFields) => {
   return (
-    <article className="border-border bg-background w-[min(80vw,22rem)] shrink-0 snap-start overflow-hidden border shadow-sm">
+    <article className="w-[min(80vw,22rem)] shrink-0 snap-start overflow-hidden rounded-2xl border border-border/60 bg-background shadow-md">
       <div className="relative aspect-4/3 w-full overflow-hidden">
         <ContentSdkImage
           field={props?.image?.jsonValue}
           className="h-full w-full object-cover"
         />
       </div>
-      <ContentSdkText tag="div" className="takeda-caption-bar" field={props?.heading?.jsonValue} />
+      <ContentSdkText tag="div" className="esl-caption-bar" field={props?.heading?.jsonValue} />
     </article>
   );
 };
@@ -71,7 +73,7 @@ export const Default = (props: FeatureBannerProps) => {
     <section className={`py-16 ${props?.params?.styles}`} data-class-change>
       <div className="container mx-auto px-4">
         <div className="flex flex-col lg:flex-row justify-between items-center gap-8 py-12 border-t border-b border-border">
-          <h2 className="takeda-heading-bar text-2xl lg:text-3xl">
+          <h2 className="esl-heading-bar text-2xl lg:text-3xl">
             <ContentSdkText field={datasource?.title?.jsonValue} />
           </h2>
           <div className="flex flex-wrap lg:flex-nowrap justify-center items-start gap-8">
@@ -95,7 +97,7 @@ export const Vertical = (props: FeatureBannerProps) => {
     <section className={`py-16 ${props?.params?.styles}`} data-class-change>
       <div className="container mx-auto px-4">
         <div className="flex flex-col items-center gap-8 lg:gap-12 py-12 border-t border-b border-border">
-          <h2 className="takeda-heading-bar-center text-2xl lg:text-3xl">
+          <h2 className="esl-heading-bar-center text-2xl lg:text-3xl">
             <ContentSdkText field={datasource?.title?.jsonValue} />
           </h2>
           <div className="flex flex-wrap lg:flex-nowrap justify-center items-start gap-10">
@@ -139,7 +141,7 @@ export const Accent = (props: FeatureBannerProps) => {
 };
 
 /* -------------------------------------------------------------------------- */
-/* CareerAreas — single-row horizontal scroll (jobs.takeda.com Career Areas)   */
+/* CareerAreas — single-row horizontal scroll (Oregonians-style feature cards) */
 /* -------------------------------------------------------------------------- */
 
 export const CareerAreas = (props: FeatureBannerProps) => {
@@ -153,13 +155,13 @@ export const CareerAreas = (props: FeatureBannerProps) => {
 
   return (
     <section
-      className={`takeda-band py-16 lg:py-20 ${props?.params?.styles || ''}`}
+      className={`esl-band py-16 lg:py-20 ${props?.params?.styles || ''}`}
       data-class-change
       data-variant="CareerAreas"
     >
       <div className="container mx-auto px-4">
         <div className="mb-10 max-w-3xl lg:mb-14">
-          <h2 className="takeda-heading-bar font-(family-name:--font-heading) text-3xl font-bold tracking-tight lg:text-4xl">
+          <h2 className="esl-heading-bar font-(family-name:--font-heading) text-3xl font-bold tracking-tight lg:text-4xl">
             <ContentSdkText field={datasource?.title?.jsonValue} />
           </h2>
           <p className="text-muted-foreground mt-4 text-base leading-relaxed">{CAREER_AREAS_INTRO}</p>
@@ -168,7 +170,7 @@ export const CareerAreas = (props: FeatureBannerProps) => {
               <ContentSdkLink
                 field={datasource?.link?.jsonValue}
                 prefetch={false}
-                className="font-(family-name:--font-accent) text-primary inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.08em] underline-offset-4 hover:underline"
+                className="inline-flex items-center gap-2 font-(family-name:--font-accent) text-sm font-semibold text-primary underline-offset-4 hover:underline"
               >
                 {linkText}
                 <ArrowRight className="h-4 w-4" aria-hidden />

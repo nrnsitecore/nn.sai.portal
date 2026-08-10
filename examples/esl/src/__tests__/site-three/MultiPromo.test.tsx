@@ -194,7 +194,7 @@ describe('MultiPromo', () => {
       const section = container.querySelector('section');
       expect(section).toHaveClass('overflow-hidden');
       const heading = container.querySelector('h2');
-      expect(heading).toHaveClass('takeda-heading-bar');
+      expect(heading).toHaveClass('esl-heading-bar');
     });
 
     it('renders promo images and links', () => {

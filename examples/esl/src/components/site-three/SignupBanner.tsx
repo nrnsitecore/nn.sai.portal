@@ -30,10 +30,10 @@ const DICTIONARY_KEYS = {
 };
 
 const signupInputClass =
-  'bg-white text-foreground placeholder:text-muted-foreground rounded-sm border-0 px-4 py-3 text-sm shadow-none transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-white/70';
+  'rounded-full border-0 bg-white px-5 py-3 text-sm text-foreground shadow-none placeholder:text-muted-foreground transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-white/70';
 
-/** Solid charcoal panel replaces the frosted-glass treatment from the prior theme. */
-const signupPanelClass = 'bg-dark/85';
+/** Navy panel over photography — ESL dark + Oregonians promo treatment. */
+const signupPanelClass = 'rounded-2xl bg-dark/80';
 
 const signupHeadingClass = 'text-2xl lg:text-4xl font-bold tracking-tight mb-4';
 

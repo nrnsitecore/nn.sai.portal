@@ -2,7 +2,15 @@
 
 import { useState, type FormEvent } from 'react';
 import { useContainerOffsets } from '@/hooks/useContainerOffsets';
-import { MapPin, Search } from 'lucide-react';
+import {
+  ArrowRight,
+  Briefcase,
+  Landmark,
+  MapPin,
+  Search,
+  UserRound,
+  type LucideIcon,
+} from 'lucide-react';
 import {
   Text as ContentSdkText,
   NextImage as ContentSdkImage,
@@ -27,149 +35,149 @@ type PageHeaderSTProps = {
 };
 
 /* -------------------------------------------------------------------------- */
-/* Default variant — image hero with the brand's red job-search panel          */
+/* Default variant — Covista-style image hero (no video) + service cards      */
+/* Layout mirrors Oregonians CU: full-bleed media, left copy, straddling cards */
 /* -------------------------------------------------------------------------- */
 
-const SEARCH_RADIUS_OPTIONS = ['5 mi', '10 mi', '25 mi', '50 mi', '100 mi'] as const;
+type HeroService = {
+  title: string;
+  description: string;
+  href: string;
+  icon: LucideIcon;
+};
 
-const HERO_SEARCH_FALLBACK_HREF = '/search';
+/** ESL.org primary service areas — static feature cards under the hero. */
+const HERO_SERVICES: readonly HeroService[] = [
+  {
+    title: 'Personal',
+    description:
+      'Checking, savings, loans, mortgages, and digital banking built for everyday life.',
+    href: 'https://www.esl.org/Personal',
+    icon: UserRound,
+  },
+  {
+    title: 'Business',
+    description:
+      'Accounts, lending, and cash management to help your business grow with confidence.',
+    href: 'https://www.esl.org/Business',
+    icon: Briefcase,
+  },
+  {
+    title: 'Wealth',
+    description:
+      'Investment planning and trust services to help you build and protect your future.',
+    href: 'https://www.esl.org/Wealth',
+    icon: Landmark,
+  },
+];
 
-const heroPanelFieldClass =
-  'bg-white text-foreground placeholder:text-muted-foreground w-full rounded-sm border-0 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-white/70';
-
-const heroPanelLabelClass =
-  'font-(family-name:--font-accent) mb-2 block text-xs font-semibold uppercase tracking-[0.1em] text-white/90';
-
-/**
- * Job-search panel — the hero's signature element. Submitting composes a query
- * string onto the search destination supplied by Link2 (or /search as fallback).
- */
-const HeroJobSearchPanel = ({
-  searchHref,
-  searchLabel,
-}: {
-  searchHref: string;
-  searchLabel: string;
-}) => {
-  const [location, setLocation] = useState('');
-  const [radius, setRadius] = useState<string>(SEARCH_RADIUS_OPTIONS[2]);
-
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const params = new URLSearchParams();
-    if (location.trim()) params.set('location', location.trim());
-    params.set('radius', radius);
-    window.location.href = `${searchHref}?${params.toString()}`;
-  };
+const HeroServiceCard = ({ service }: { service: HeroService }) => {
+  const Icon = service.icon;
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="bg-primary text-primary-foreground w-full max-w-md p-6 shadow-xl lg:p-8"
-      aria-label="Search jobs"
+    <a
+      href={service.href}
+      className="group block rounded-2xl border border-border bg-card p-6 shadow-md transition-shadow hover:shadow-lg lg:p-7"
     >
-      <h2 className="font-(family-name:--font-heading) mb-6 text-2xl font-semibold tracking-tight md:text-2xl">
-        Search jobs
+      <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-full border-2 border-accent bg-background">
+        <Icon className="h-7 w-7 text-primary" strokeWidth={1.5} aria-hidden />
+      </div>
+      <h2 className="font-(family-name:--font-heading) text-2xl font-bold tracking-tight text-foreground lg:text-3xl">
+        {service.title}
       </h2>
-      <div className="mb-4">
-        <label className={heroPanelLabelClass} htmlFor="hero-search-location">
-          Location
-        </label>
-        <div className="relative">
-          <MapPin
-            className="text-muted-foreground pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2"
-            aria-hidden
-          />
-          <input
-            id="hero-search-location"
-            type="text"
-            value={location}
-            onChange={(event) => setLocation(event.target.value)}
-            placeholder="City, state, or country"
-            className={`${heroPanelFieldClass} pl-9`}
-          />
-        </div>
-      </div>
-      <div className="mb-6">
-        <label className={heroPanelLabelClass} htmlFor="hero-search-radius">
-          Radius
-        </label>
-        <select
-          id="hero-search-radius"
-          value={radius}
-          onChange={(event) => setRadius(event.target.value)}
-          className={heroPanelFieldClass}
-        >
-          {SEARCH_RADIUS_OPTIONS.map((option) => (
-            <option key={option} value={option}>
-              {option}
-            </option>
-          ))}
-        </select>
-      </div>
-      <button
-        type="submit"
-        className="font-(family-name:--font-accent) bg-dark hover:bg-dark-hover flex w-full items-center justify-center gap-2 rounded-sm px-6 py-3 text-sm font-semibold uppercase tracking-[0.08em] text-white transition-colors"
-      >
-        <Search className="h-4 w-4" aria-hidden />
-        {searchLabel}
-      </button>
-    </form>
+      <p className="mt-3 text-sm leading-snug text-muted-foreground lg:text-base">
+        {service.description}
+      </p>
+      <span className="mt-5 inline-flex items-center gap-1 font-(family-name:--font-accent) text-sm font-semibold text-primary underline-offset-4 group-hover:underline">
+        Learn more
+        <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" aria-hidden />
+      </span>
+    </a>
   );
 };
 
 export const Default = (props: PageHeaderSTProps) => {
   const hasEyebrow = !!props?.fields?.Eyebrow?.value;
-  const hasLink1 = !!props?.fields?.Link1?.value?.href;
   const hasImage = !!props?.fields?.Image1?.value?.src;
-  const searchHref = props?.fields?.Link2?.value?.href || HERO_SEARCH_FALLBACK_HREF;
-  const searchLabel = props?.fields?.Link2?.value?.text || 'Search jobs';
+  const hasLink2 = !!props?.fields?.Link2?.value?.href;
+  const link1Text = props?.fields?.Link1?.value?.text || 'Become a Member';
 
   return (
-    <section
-      className={`relative isolate bg-dark ${props?.params?.styles || ''}`}
-      data-class-change
-    >
-      {hasImage && (
-        <ContentSdkImage
-          field={props.fields.Image1}
-          className="absolute inset-0 z-0 h-full w-full object-cover"
+    <>
+      <section
+        className={`relative isolate bg-dark ${props?.params?.styles || ''}`}
+        data-class-change
+      >
+        {hasImage && (
+          <ContentSdkImage
+            field={props.fields.Image1}
+            priority
+            fetchPriority="high"
+            className="absolute inset-0 z-0 h-full w-full object-cover"
+          />
+        )}
+        {/* Legibility overlay */}
+        <div
+          className="absolute inset-0 z-[1] bg-gradient-to-r from-dark/80 via-dark/45 to-transparent"
+          aria-hidden
         />
-      )}
-      {/* Legibility scrim — deeper on the left where the headline sits */}
-      <div
-        className="absolute inset-0 z-[1] bg-gradient-to-r from-black/75 via-black/45 to-black/25"
-        aria-hidden
-      />
 
-      <div className="container relative z-10 mx-auto px-4 py-16 lg:py-24">
-        <div className="flex flex-col gap-10 lg:flex-row lg:items-center lg:justify-between lg:gap-16">
-          <div className="max-w-2xl">
+        {/* Decorative dot-grid motif */}
+        <div
+          className="pointer-events-none absolute top-28 right-8 hidden grid-cols-6 gap-2 lg:grid xl:right-16"
+          aria-hidden
+        >
+          {Array.from({ length: 36 }).map((_, i) => (
+            <span key={i} className="h-3 w-3 rounded-full bg-white/25" />
+          ))}
+        </div>
+
+        <div className="container relative mx-auto px-4 pt-28 pb-28 sm:pb-32 lg:pt-40 lg:pb-48">
+          <div className="max-w-3xl">
             {hasEyebrow && (
-              <p className="font-(family-name:--font-accent) border-primary mb-6 border-l-4 pl-4 text-sm font-semibold uppercase tracking-[0.1em] text-white">
+              <p className="mb-4 font-(family-name:--font-accent) text-sm tracking-wide text-white/85 lg:text-base">
                 <ContentSdkText field={props?.fields?.Eyebrow} />
               </p>
             )}
-            <h1 className="font-(family-name:--font-heading) text-4xl font-bold leading-[1.05] tracking-tight text-white sm:text-5xl lg:text-6xl">
+            <h1 className="font-(family-name:--font-heading) text-4xl leading-[1.05] font-bold text-white lg:text-7xl">
               <ContentSdkText field={props?.fields?.Title} />
             </h1>
-            {hasLink1 && (
-              <div className="mt-8">
+            <div className="mt-8 flex flex-wrap items-center gap-3">
+              <ContentSdkLink
+                field={props?.fields?.Link1}
+                prefetch={false}
+                className="group inline-flex items-stretch overflow-hidden rounded-full shadow-sm"
+              >
+                <span className="inline-flex items-center bg-light px-6 py-3 font-(family-name:--font-accent) text-sm font-semibold tracking-wide text-primary">
+                  {link1Text}
+                </span>
+                <span className="inline-flex items-center justify-center bg-primary px-3.5 text-primary-foreground transition-colors group-hover:bg-primary-hover">
+                  <ArrowRight className="h-5 w-5" aria-hidden />
+                </span>
+              </ContentSdkLink>
+              {hasLink2 && (
                 <ContentSdkLink
-                  field={props?.fields?.Link1}
+                  field={props?.fields?.Link2}
                   prefetch={false}
                   className="btn btn-outline text-white"
                 />
-              </div>
-            )}
+              )}
+            </div>
           </div>
+        </div>
+      </section>
 
-          <div className="lg:shrink-0">
-            <HeroJobSearchPanel searchHref={searchHref} searchLabel={searchLabel} />
+      {/* Service cards straddle the hero bottom edge (Oregonians / Covista pattern). */}
+      <div className="relative z-20 -mt-16 pb-12 sm:-mt-20 lg:-mt-24 lg:pb-16">
+        <div className="container mx-auto px-4">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+            {HERO_SERVICES.map((service) => (
+              <HeroServiceCard key={service.title} service={service} />
+            ))}
           </div>
         </div>
       </div>
-    </section>
+    </>
   );
 };
 
@@ -197,7 +205,7 @@ export const Right = (props: PageHeaderSTProps) => {
       >
         <div className="bg-background/95 flex flex-col justify-center mt-10 lg:mt-0 lg:w-2/3 lg:min-h-[42rem] px-6 py-10 lg:p-12">
           <div className="lg:max-w-3xl lg:ml-auto text-right">
-            <p className="font-(family-name:--font-accent) text-primary border-primary mb-5 inline-block border-r-4 pr-4 text-sm font-semibold uppercase tracking-[0.1em]">
+            <p className="font-(family-name:--font-accent) text-primary border-primary mb-5 inline-block border-r-4 pr-4 text-sm font-semibold">
               <ContentSdkText field={props?.fields?.Eyebrow} />
             </p>
             <h1 className="text-3xl lg:text-5xl">
@@ -254,7 +262,7 @@ export const Centered = (props: PageHeaderSTProps) => {
       <div className="relative lg:container w-full lg:flex mx-auto z-20" ref={containerRef}>
         <div className="bg-background/95 lg:relative lg:left-1/6 flex flex-col justify-center mt-10 lg:mt-0 lg:w-2/3 lg:min-h-[42rem] px-6 py-10 lg:p-12">
           <div className="lg:max-w-3xl lg:mx-auto text-center">
-            <p className="takeda-heading-bar-center font-(family-name:--font-accent) text-primary mb-5 text-sm font-semibold uppercase tracking-[0.1em]">
+            <p className="esl-heading-bar-center font-(family-name:--font-accent) text-primary mb-5 text-sm font-semibold">
               <ContentSdkText field={props?.fields?.Eyebrow} />
             </p>
             <h1 className="text-3xl lg:text-5xl">
@@ -298,7 +306,7 @@ export const SplitScreen = (props: PageHeaderSTProps) => {
     >
       <div className="flex flex-col lg:flex-row lg:min-h-[36rem]">
         <div className="p-8 lg:basis-full lg:self-center lg:p-14">
-          <p className="font-(family-name:--font-accent) border-primary mb-5 border-l-4 pl-4 text-sm font-semibold uppercase tracking-[0.1em]">
+          <p className="font-(family-name:--font-accent) border-primary mb-5 border-l-4 pl-4 text-sm font-semibold">
             <ContentSdkText field={props?.fields?.Eyebrow} />
           </p>
           <h1 className="text-3xl lg:text-4xl">
@@ -350,7 +358,7 @@ export const Stacked = (props: PageHeaderSTProps) => {
     >
       <div className="container px-4 mx-auto">
         <div className="bg-dark text-dark-foreground relative lg:w-1/2 px-8 py-12 z-20">
-          <p className="font-(family-name:--font-accent) border-primary mb-5 border-l-4 pl-4 text-sm font-semibold uppercase tracking-[0.1em]">
+          <p className="font-(family-name:--font-accent) border-primary mb-5 border-l-4 pl-4 text-sm font-semibold">
             <ContentSdkText field={props?.fields?.Eyebrow} />
           </p>
           <h1 className="text-3xl lg:text-4xl">
@@ -401,7 +409,7 @@ export const Stacked = (props: PageHeaderSTProps) => {
 };
 
 /* -------------------------------------------------------------------------- */
-/* JobSearch — hardcoded demo job board (jobs.takeda.com-inspired)             */
+/* JobSearch — hardcoded demo job board (credit-union careers demo)            */
 /* -------------------------------------------------------------------------- */
 
 type HardcodedJob = {
@@ -499,10 +507,10 @@ const HARDCODED_JOBS: HardcodedJob[] = [
 ];
 
 const jobBoardFieldClass =
-  'border-border bg-background text-foreground placeholder:text-muted-foreground w-full rounded-sm border px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/40';
+  'w-full rounded-full border border-border bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/40'
 
 const jobBoardLabelClass =
-  'font-(family-name:--font-accent) mb-2 block text-xs font-semibold uppercase tracking-[0.1em] text-foreground';
+  'mb-2 block font-(family-name:--font-accent) text-xs font-semibold text-foreground'
 
 export const JobSearch = (props: PageHeaderSTProps) => {
   const [keyword, setKeyword] = useState('');
@@ -543,9 +551,9 @@ export const JobSearch = (props: PageHeaderSTProps) => {
       data-class-change
       data-variant="JobSearch"
     >
-      <div className="takeda-band border-border border-b px-4 py-12 lg:py-16">
+      <div className="esl-band border-border border-b px-4 py-12 lg:py-16">
         <div className="container mx-auto max-w-5xl">
-          <h1 className="takeda-heading-bar font-(family-name:--font-heading) text-3xl font-bold tracking-tight lg:text-4xl">
+          <h1 className="esl-heading-bar font-(family-name:--font-heading) text-3xl font-bold tracking-tight lg:text-4xl">
             Search jobs
           </h1>
           <p className="text-muted-foreground mt-4 max-w-2xl text-base leading-relaxed">
@@ -644,7 +652,7 @@ export const JobSearch = (props: PageHeaderSTProps) => {
       <div className="px-4 py-10 lg:py-14">
         <div className="container mx-auto max-w-5xl">
           <p
-            className="font-(family-name:--font-accent) text-muted-foreground mb-6 text-sm font-semibold uppercase tracking-[0.08em]"
+            className="font-(family-name:--font-accent) text-muted-foreground mb-6 text-sm font-semibold"
             aria-live="polite"
           >
             Showing {filteredJobs.length} {filteredJobs.length === 1 ? 'job' : 'jobs'}

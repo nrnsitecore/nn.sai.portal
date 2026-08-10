@@ -96,6 +96,16 @@ describe('HeroST', () => {
       expect(screen.getByText('Shop Now')).toBeInTheDocument();
       expect(screen.getByText('Learn More')).toBeInTheDocument();
     });
+
+    it('renders Personal, Business, and Wealth service cards below the hero', () => {
+      render(<HeroSTDefault {...mockProps} />);
+      expect(screen.getByRole('heading', { name: 'Personal' })).toBeInTheDocument();
+      expect(screen.getByRole('heading', { name: 'Business' })).toBeInTheDocument();
+      expect(screen.getByRole('heading', { name: 'Wealth' })).toBeInTheDocument();
+      expect(
+        screen.getByText(/Checking, savings, loans, mortgages/i)
+      ).toBeInTheDocument();
+    });
   });
 
   describe('Centered variant', () => {

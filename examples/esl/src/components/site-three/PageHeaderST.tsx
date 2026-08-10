@@ -22,8 +22,10 @@ type PageHeaderSTProps = {
 const pageHeaderTitleClass = 'text-3xl lg:text-5xl';
 const pageHeaderBodyClass = 'text-base lg:text-lg';
 
-/** Red bar that anchors a page-header title, matching the brand heading motif. */
-const PageHeaderAccentBar = () => <span aria-hidden className="bg-primary mb-5 block h-1 w-12" />;
+/** Primary bar that anchors a page-header title. */
+const PageHeaderAccentBar = () => (
+  <span aria-hidden className="mb-5 block h-1 w-12 rounded-full bg-primary" />
+)
 
 export const Default = (props: PageHeaderSTProps) => {
   if (!props.fields) {
@@ -107,7 +109,7 @@ export const SplitScreen = (props: PageHeaderSTProps) => {
 
   return (
     <section
-      className={`takeda-band relative min-h-[18rem] lg:min-h-[30rem] flex flex-col lg:flex-row items-center pb-14 lg:py-20 ${props.params.styles}`}
+      className={`esl-band relative min-h-[18rem] lg:min-h-[30rem] flex flex-col lg:flex-row items-center pb-14 lg:py-20 ${props.params.styles}`}
       data-class-change
     >
       <div className="w-full mb-14 lg:absolute lg:inset-0 lg:mb-0 lg:z-10">
@@ -172,7 +174,7 @@ export const TwoColumn = (props: PageHeaderSTProps) => {
 
   return (
     <section
-      className={`takeda-band relative pt-16 lg:pt-20 ${props.params.styles}`}
+      className={`esl-band relative pt-16 lg:pt-20 ${props.params.styles}`}
       data-class-change
     >
       <div className="container px-4 mx-auto">

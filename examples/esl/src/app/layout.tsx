@@ -1,9 +1,9 @@
 import './globals.css';
 
-import { Barlow, Inter } from 'next/font/google';
+import { DM_Sans, Source_Sans_3 } from 'next/font/google';
 
-// Takeda brand system: slightly condensed grotesque display + neutral UI sans
-const heading = Barlow({
+// ESL brand system: geometric display + open sans body (Semplicita Pro substitute)
+const heading = DM_Sans({
   weight: ['500', '600', '700'],
   variable: '--font-heading',
   subsets: ['latin', 'latin-ext'],
@@ -11,7 +11,7 @@ const heading = Barlow({
   preload: true,
 });
 
-const body = Inter({
+const body = Source_Sans_3({
   weight: ['400', '500', '600', '700'],
   variable: '--font-body',
   subsets: ['latin', 'latin-ext'],
@@ -19,7 +19,7 @@ const body = Inter({
   preload: true,
 });
 
-const accent = Inter({
+const accent = DM_Sans({
   weight: ['500', '600', '700'],
   variable: '--font-accent',
   subsets: ['latin', 'latin-ext'],

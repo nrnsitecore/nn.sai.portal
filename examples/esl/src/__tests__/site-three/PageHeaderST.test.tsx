@@ -179,7 +179,7 @@ describe('PageHeaderST', () => {
     it('applies background styling to two column variant', () => {
       const { container } = render(<PageHeaderSTTwoColumn {...mockProps} />);
       const section = container.querySelector('section');
-      expect(section).toHaveClass('takeda-band');
+      expect(section).toHaveClass('esl-band');
     });
   });
 });

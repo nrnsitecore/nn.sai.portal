@@ -47,7 +47,7 @@ export const Default = (props: MegaMenuItemProps) => {
   if (props.params?.isSimpleLink) {
     return (
       <li
-        className={`font-(family-name:--font-accent) text-sm font-semibold uppercase tracking-[0.08em] ${props.params?.styles}`}
+        className={`font-(family-name:--font-accent) text-sm font-semibold ${props.params?.styles}`}
         data-class-change
       >
         {isPageEditing ? (
@@ -72,7 +72,7 @@ export const Default = (props: MegaMenuItemProps) => {
   return (
     <MegaMenuToggle
       menuId={menuId}
-      className={`font-(family-name:--font-accent) text-sm font-semibold uppercase tracking-[0.08em] ${props.params?.styles}`}
+      className={`font-(family-name:--font-accent) text-sm font-semibold ${props.params?.styles}`}
       trigger={<ContentSdkText field={props.fields?.Title} />}
     >
       <MegaMenuContent menuId={menuId}>

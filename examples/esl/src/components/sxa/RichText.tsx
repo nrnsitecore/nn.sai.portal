@@ -36,7 +36,7 @@ export const Default = ({ params, fields }: RichTextProps): JSX.Element => {
           <ContentSdkRichText
             field={fields.Text}
             className={cn(
-              'takeda-rich-text text-foreground max-w-[65ch] text-base leading-relaxed antialiased',
+              'esl-rich-text text-foreground max-w-[65ch] text-base leading-relaxed antialiased',
               'group-[.position-left]:mr-auto group-[.position-left]:ml-0 group-[.position-left]:text-left',
               'group-[.position-center]:mx-auto group-[.position-center]:text-center',
               'group-[.position-right]:ml-auto group-[.position-right]:mr-0 group-[.position-right]:text-right'
