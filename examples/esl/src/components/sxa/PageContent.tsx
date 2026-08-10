@@ -1,0 +1,96 @@
+import React, { type JSX } from 'react';
+import {
+  RichText as ContentSdkRichText,
+  Text as ContentSdkText,
+  RichTextField,
+  LinkField,
+  TextField,
+} from '@sitecore-content-sdk/nextjs';
+import Link from 'next/link';
+import { ComponentProps } from 'lib/component-props';
+
+interface Fields {
+  Title: TextField;
+  Content: RichTextField;
+  MainLink: LinkField;
+}
+
+type PageContentProps = ComponentProps & {
+  params: { [key: string]: string };
+  fields: Fields;
+};
+
+type ComponentContentProps = {
+  id: string;
+  styles: string;
+  children: JSX.Element;
+};
+
+const ComponentContent = (props: ComponentContentProps) => {
+  const id = props.id;
+  return (
+    <div className={`component content ${props.styles}`} id={id ? id : undefined}>
+      <div className="component-content">
+        <div className="field-content">{props.children}</div>
+      </div>
+    </div>
+  );
+};
+
+export const Default = (props: PageContentProps): JSX.Element => {
+  const { page } = props;
+  const { route } = page.layout.sitecore;
+  const id = props.params.RenderingIdentifier;
+
+  if (!(props.fields && props.fields.Content) && !route?.fields?.Content) {
+    return (
+      <div className={`component content ${props.params.styles}`} id={id ? id : undefined}>
+        <div className="component-content">
+          <div className="field-content">[Content]</div>
+        </div>
+      </div>
+    );
+  }
+
+  const field = (
+    props.fields && props.fields.Content ? props.fields.Content : route?.fields?.Content
+  ) as RichTextField;
+
+  return (
+    <ComponentContent styles={props.params.styles || ''} id={id || ''}>
+      <ContentSdkRichText field={field} />
+    </ComponentContent>
+  );
+};
+
+export const TitleAndBody = (props: PageContentProps): JSX.Element => {
+  const { page } = props;
+  const { route } = page.layout.sitecore;
+
+  const fields = {
+    title:
+      props.fields && props.fields.Title ? props.fields.Title : (route?.fields?.Title as TextField),
+    body:
+      props.fields && props.fields.Content
+        ? props.fields.Content
+        : (route?.fields?.Content as RichTextField),
+  };
+  return (
+    <section className="bg-secondary py-16">
+      <div className="container mx-auto text-center">
+        <h2 className="text-4xl font-bold text-foreground mb-4">
+          <ContentSdkText field={fields.title} />
+        </h2>
+        <div className="text-xl text-foreground mb-8">
+          <ContentSdkRichText field={fields.body} />
+        </div>
+        <Link
+          href="#components"
+          className="bg-primary text-primary-foreground px-6 py-3 rounded-sm hover:bg-primary-hover transition-colors"
+        >
+          Explore Components
+        </Link>
+      </div>
+    </section>
+  );
+};
