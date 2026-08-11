@@ -1,5 +1,7 @@
-import React from 'react';
-import { Button } from '@/components/ui/button';
+'use client';
+
+import React, { FormEvent, useState } from 'react';
+import { Button, type ButtonProps } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 
 import {
@@ -11,6 +13,7 @@ import {
   Text as ContentSdkText,
 } from '@sitecore-content-sdk/nextjs';
 import { useTranslations } from 'next-intl';
+import { useSignupIdentity } from './useSignupIdentity';
 
 interface Fields {
   Heading: Field<string>;
@@ -37,9 +40,50 @@ const signupPanelClass = 'rounded-2xl bg-dark/80';
 
 const signupHeadingClass = 'text-2xl lg:text-4xl font-bold tracking-tight mb-4';
 
+type SignupFormProps = {
+  buttonVariant?: ButtonProps['variant'];
+};
+
+const SignupForm = ({ buttonVariant }: SignupFormProps) => {
+  const t = useTranslations();
+  const identify = useSignupIdentity();
+  const [email, setEmail] = useState('');
+
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const trimmed = email.trim();
+    if (!trimmed || !event.currentTarget.checkValidity()) {
+      return;
+    }
+
+    identify(trimmed);
+    setEmail('');
+  };
+
+  return (
+    <form className="flex flex-col sm:flex-row gap-3" onSubmit={handleSubmit} noValidate={false}>
+      <div className="flex-1">
+        <Input
+          type="email"
+          name="email"
+          required
+          autoComplete="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder={t(DICTIONARY_KEYS.SIGNUPBANNER_InputPlaceholder)}
+          className={signupInputClass}
+        />
+      </div>
+
+      <Button type="submit" variant={buttonVariant}>
+        {t(DICTIONARY_KEYS.SIGNUPBANNER_ButtonLabel)}
+      </Button>
+    </form>
+  );
+};
+
 export const Default = (props: SignupBannerProps) => {
   const { fields } = props;
-  const t = useTranslations();
 
   if (!fields) {
     return null;
@@ -64,17 +108,7 @@ export const Default = (props: SignupBannerProps) => {
               {fields?.Subheading && <ContentSdkRichText field={fields.Subheading} />}
             </div>
 
-            <div className="flex flex-col sm:flex-row gap-3">
-              <div className="flex-1">
-                <Input
-                  type="email"
-                  placeholder={t(DICTIONARY_KEYS.SIGNUPBANNER_InputPlaceholder)}
-                  className={signupInputClass}
-                />
-              </div>
-
-              <Button>{t(DICTIONARY_KEYS.SIGNUPBANNER_ButtonLabel)}</Button>
-            </div>
+            <SignupForm />
           </div>
         </div>
       </div>
@@ -84,7 +118,6 @@ export const Default = (props: SignupBannerProps) => {
 
 export const ContentLeft = (props: SignupBannerProps) => {
   const { fields } = props;
-  const t = useTranslations();
 
   if (!fields) {
     return null;
@@ -109,17 +142,7 @@ export const ContentLeft = (props: SignupBannerProps) => {
                 {fields?.Subheading && <ContentSdkRichText field={fields.Subheading} />}
               </div>
 
-              <div className="flex flex-col sm:flex-row gap-3">
-                <div className="flex-1">
-                  <Input
-                    type="email"
-                    placeholder={t(DICTIONARY_KEYS.SIGNUPBANNER_InputPlaceholder)}
-                    className={signupInputClass}
-                  />
-                </div>
-
-                <Button>{t(DICTIONARY_KEYS.SIGNUPBANNER_ButtonLabel)}</Button>
-              </div>
+              <SignupForm />
             </div>
           </div>
         </div>
@@ -130,7 +153,6 @@ export const ContentLeft = (props: SignupBannerProps) => {
 
 export const BackgroundPrimary = (props: SignupBannerProps) => {
   const { fields } = props;
-  const t = useTranslations();
 
   if (!fields) {
     return null;
@@ -151,17 +173,7 @@ export const BackgroundPrimary = (props: SignupBannerProps) => {
             {fields?.Subheading && <ContentSdkRichText field={fields.Subheading} />}
           </div>
 
-          <div className="flex flex-col sm:flex-row gap-3">
-            <div className="flex-1">
-              <Input
-                type="email"
-                placeholder={t(DICTIONARY_KEYS.SIGNUPBANNER_InputPlaceholder)}
-                className={signupInputClass}
-              />
-            </div>
-
-            <Button variant="rounded-white">{t(DICTIONARY_KEYS.SIGNUPBANNER_ButtonLabel)}</Button>
-          </div>
+          <SignupForm buttonVariant="rounded-white" />
         </div>
       </div>
     </section>
@@ -170,7 +182,6 @@ export const BackgroundPrimary = (props: SignupBannerProps) => {
 
 export const BackgroundDark = (props: SignupBannerProps) => {
   const { fields } = props;
-  const t = useTranslations();
 
   if (!fields) {
     return null;
@@ -194,17 +205,7 @@ export const BackgroundDark = (props: SignupBannerProps) => {
             {fields?.Subheading && <ContentSdkRichText field={fields.Subheading} />}
           </div>
 
-          <div className="flex flex-col sm:flex-row gap-3">
-            <div className="flex-1">
-              <Input
-                type="email"
-                placeholder={t(DICTIONARY_KEYS.SIGNUPBANNER_InputPlaceholder)}
-                className={signupInputClass}
-              />
-            </div>
-
-            <Button>{t(DICTIONARY_KEYS.SIGNUPBANNER_ButtonLabel)}</Button>
-          </div>
+          <SignupForm />
         </div>
       </div>
     </section>

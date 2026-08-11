@@ -8,6 +8,12 @@ import {
   BackgroundDark as SignupBannerBackgroundDark,
 } from '@/components/site-three/SignupBanner';
 
+const mockIdentity = jest.fn().mockResolvedValue(null);
+
+jest.mock('@sitecore-content-sdk/events', () => ({
+  identity: (...args: unknown[]) => mockIdentity(...args),
+}));
+
 // Mock next-intl
 jest.mock('next-intl', () => ({
   useTranslations: () => (key: string) => {
@@ -47,6 +53,16 @@ jest.mock('@sitecore-content-sdk/nextjs', () => ({
     <img src={field?.value?.src || ''} alt={field?.value?.alt || ''} className={className} />
   ),
   Field: ({ field }: any) => <span>{field?.value || ''}</span>,
+  useSitecore: () => ({
+    page: {
+      mode: { isEditing: false, isPreview: false, isNormal: true },
+      layout: {
+        sitecore: {
+          route: { name: 'home', itemLanguage: 'en' },
+        },
+      },
+    },
+  }),
 }));
 
 describe('SignupBanner', () => {
@@ -76,6 +92,10 @@ describe('SignupBanner', () => {
     },
   };
 
+  beforeEach(() => {
+    mockIdentity.mockClear();
+  });
+
   describe('Default variant', () => {
     it('renders signup banner with heading', () => {
       render(<SignupBannerDefault {...mockProps} />);
@@ -104,7 +124,7 @@ describe('SignupBanner', () => {
       expect(bgImage).toBeInTheDocument();
     });
 
-    it('handles form submission', () => {
+    it('sends IDENTITY event on form submission', () => {
       render(<SignupBannerDefault {...mockProps} />);
       const emailInput = screen.getByPlaceholderText('Enter your email') as HTMLInputElement;
       const submitButton = screen.getByText('Subscribe');
@@ -113,6 +133,25 @@ describe('SignupBanner', () => {
       expect(emailInput.value).toBe('test@example.com');
 
       fireEvent.click(submitButton);
+
+      expect(mockIdentity).toHaveBeenCalledTimes(1);
+      expect(mockIdentity).toHaveBeenCalledWith(
+        expect.objectContaining({
+          channel: 'WEB',
+          email: 'test@example.com',
+          page: 'home',
+          language: 'en',
+          identifiers: [{ id: 'test@example.com', provider: 'email' }],
+          extensionData: { source: 'SignupBanner' },
+        })
+      );
+      expect(emailInput.value).toBe('');
+    });
+
+    it('does not send IDENTITY event for empty email', () => {
+      render(<SignupBannerDefault {...mockProps} />);
+      fireEvent.click(screen.getByText('Subscribe'));
+      expect(mockIdentity).not.toHaveBeenCalled();
     });
 
     it('applies custom styles from params', () => {
@@ -238,7 +277,7 @@ describe('SignupBanner', () => {
       expect(container.firstChild).toBeNull();
     });
 
-    it('handles form interaction in dark variant', () => {
+    it('sends IDENTITY event on form interaction in dark variant', () => {
       render(<SignupBannerBackgroundDark {...mockProps} />);
       const emailInput = screen.getByPlaceholderText('Enter your email') as HTMLInputElement;
       const submitButton = screen.getByText('Subscribe');
@@ -247,6 +286,13 @@ describe('SignupBanner', () => {
       expect(emailInput.value).toBe('dark@example.com');
 
       fireEvent.click(submitButton);
+
+      expect(mockIdentity).toHaveBeenCalledWith(
+        expect.objectContaining({
+          email: 'dark@example.com',
+          identifiers: [{ id: 'dark@example.com', provider: 'email' }],
+        })
+      );
     });
   });
 });
