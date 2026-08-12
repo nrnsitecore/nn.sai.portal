@@ -9,6 +9,7 @@ import {
   SplitScreen as HeroSTSplitScreen,
   Stacked as HeroSTStacked,
   JobSearch as HeroSTJobSearch,
+  Profile as HeroSTProfile,
 } from '@/components/site-three/HeroST';
 
 // Mock useContainerOffsets hook
@@ -332,6 +333,33 @@ describe('HeroST', () => {
       const section = container.querySelector('section');
       expect(section).toHaveClass('test-styles');
       expect(section).toHaveAttribute('data-variant', 'JobSearch');
+    });
+  });
+
+  describe('Profile variant', () => {
+    it('renders the checking dashboard variant marker', () => {
+      const { container } = render(<HeroSTProfile {...mockProps} />);
+      expect(container.querySelector('[data-variant="Profile"]')).toBeInTheDocument();
+    });
+
+    it('renders greeting, masked account, and balances without Sitecore fields', () => {
+      render(<HeroSTProfile params={{}} fields={undefined as any} />);
+      expect(screen.getByRole('heading', { name: /Good afternoon, Jordan/i })).toBeInTheDocument();
+      expect(screen.getByText('Jordan Chen', { exact: false })).toBeInTheDocument();
+      expect(screen.getByText('Everyday Checking')).toBeInTheDocument();
+      expect(screen.getByText('•••• 4821')).toBeInTheDocument();
+      expect(screen.getByText('$4,286.19')).toBeInTheDocument();
+      expect(screen.getByText('$4,151.44')).toBeInTheDocument();
+    });
+
+    it('renders recent transactions and a banking-system source notation', () => {
+      render(<HeroSTProfile {...mockProps} />);
+      expect(screen.getByText('Direct deposit — ESL payroll')).toBeInTheDocument();
+      expect(screen.getByText('Wegmans #119')).toBeInTheDocument();
+      expect(
+        screen.getByText(/Demo · Member name and last login from core banking member profile/i)
+      ).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: 'Transfer' })).toBeInTheDocument();
     });
   });
 

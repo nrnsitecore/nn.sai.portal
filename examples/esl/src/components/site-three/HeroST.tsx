@@ -1,13 +1,17 @@
 'use client';
 
-import { useState, type FormEvent } from 'react';
+import { useState, type FormEvent, type ReactNode } from 'react';
 import { useContainerOffsets } from '@/hooks/useContainerOffsets';
 import {
+  ArrowLeftRight,
   ArrowRight,
   Briefcase,
+  FileText,
   Landmark,
   MapPin,
+  Receipt,
   Search,
+  Smartphone,
   UserRound,
   type LucideIcon,
 } from 'lucide-react';
@@ -732,3 +736,220 @@ export const JobSearch = (props: PageHeaderSTProps) => {
     </section>
   );
 };
+
+/* -------------------------------------------------------------------------- */
+/* Profile — demo-only individual checking dashboard                           */
+/* -------------------------------------------------------------------------- */
+
+type CheckingTransaction = {
+  id: string;
+  date: string;
+  description: string;
+  category: string;
+  amount: number;
+};
+
+const CHECKING_MEMBER = {
+  firstName: 'Jordan',
+  lastName: 'Chen',
+  lastLogin: 'Today at 8:14 AM',
+} as const;
+
+const CHECKING_ACCOUNT = {
+  name: 'Everyday Checking',
+  maskedNumber: '•••• 4821',
+  currentBalance: 4286.19,
+  availableBalance: 4151.44,
+  pending: 134.75,
+} as const;
+
+const CHECKING_TRANSACTIONS: readonly CheckingTransaction[] = [
+  {
+    id: 'txn-001',
+    date: 'Aug 12',
+    description: 'Direct deposit — ESL payroll',
+    category: 'Income',
+    amount: 1842.66,
+  },
+  {
+    id: 'txn-002',
+    date: 'Aug 11',
+    description: 'Wegmans #119',
+    category: 'Debit card',
+    amount: -86.42,
+  },
+  {
+    id: 'txn-003',
+    date: 'Aug 10',
+    description: 'RG&E — auto pay',
+    category: 'Bill pay',
+    amount: -112.08,
+  },
+  {
+    id: 'txn-004',
+    date: 'Aug 9',
+    description: 'ATM withdrawal — East Ave',
+    category: 'ATM',
+    amount: -60.0,
+  },
+  {
+    id: 'txn-005',
+    date: 'Aug 8',
+    description: 'Starbucks #54821',
+    category: 'Debit card',
+    amount: -6.45,
+  },
+  {
+    id: 'txn-006',
+    date: 'Aug 7',
+    description: 'Transfer to Savings •••• 9104',
+    category: 'Transfer',
+    amount: -250.0,
+  },
+];
+
+const CHECKING_QUICK_ACTIONS: readonly { label: string; icon: LucideIcon }[] = [
+  { label: 'Transfer', icon: ArrowLeftRight },
+  { label: 'Pay a bill', icon: Receipt },
+  { label: 'Mobile deposit', icon: Smartphone },
+  { label: 'Statements', icon: FileText },
+];
+
+const formatUsd = (amount: number) =>
+  new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount);
+
+const DemoSourceNote = ({ children }: { children: ReactNode }) => (
+  <p className="text-muted-foreground mt-2 text-xs leading-snug">{children}</p>
+);
+
+/** Demo-only checking dashboard. Export name `Profile` maps to the Pages variant. */
+export const Profile = (props: PageHeaderSTProps) => {
+  const memberName = `${CHECKING_MEMBER.firstName} ${CHECKING_MEMBER.lastName}`;
+
+  return (
+    <section
+      className={`bg-background ${props?.params?.styles || ''}`}
+      data-class-change
+      data-variant="Profile"
+    >
+      <div className="esl-band border-border border-b px-4 py-10 lg:py-14">
+        <div className="container mx-auto max-w-5xl">
+          <p className="font-(family-name:--font-accent) text-primary text-xs font-semibold tracking-wide uppercase">
+            Online banking
+          </p>
+          <h1 className="esl-heading-bar font-(family-name:--font-heading) mt-3 text-3xl font-bold tracking-tight lg:text-4xl">
+            Good afternoon, {CHECKING_MEMBER.firstName}
+          </h1>
+          <p className="text-muted-foreground mt-3 text-sm leading-relaxed">
+            Welcome back, {memberName}. Last login: {CHECKING_MEMBER.lastLogin}.
+          </p>
+          <DemoSourceNote>
+            Demo · Member name and last login from core banking member profile
+          </DemoSourceNote>
+        </div>
+      </div>
+
+      <div className="px-4 py-10 lg:py-14">
+        <div className="container mx-auto max-w-5xl">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+            <article className="border-border bg-card rounded-2xl border p-6 shadow-sm sm:col-span-3 lg:col-span-1">
+              <p className="font-(family-name:--font-accent) text-muted-foreground text-xs font-semibold tracking-wide uppercase">
+                {CHECKING_ACCOUNT.name}
+              </p>
+              <p className="font-(family-name:--font-heading) mt-2 text-lg font-semibold tracking-tight">
+                {CHECKING_ACCOUNT.maskedNumber}
+              </p>
+              <p className="text-muted-foreground mt-1 text-sm">Primary checking</p>
+            </article>
+            <article className="border-border bg-card rounded-2xl border p-6 shadow-sm">
+              <p className="font-(family-name:--font-accent) text-muted-foreground text-xs font-semibold tracking-wide uppercase">
+                Current balance
+              </p>
+              <p className="font-(family-name:--font-heading) mt-2 text-3xl font-bold tracking-tight">
+                {formatUsd(CHECKING_ACCOUNT.currentBalance)}
+              </p>
+            </article>
+            <article className="border-border bg-card rounded-2xl border p-6 shadow-sm">
+              <p className="font-(family-name:--font-accent) text-muted-foreground text-xs font-semibold tracking-wide uppercase">
+                Available
+              </p>
+              <p className="font-(family-name:--font-heading) mt-2 text-3xl font-bold tracking-tight">
+                {formatUsd(CHECKING_ACCOUNT.availableBalance)}
+              </p>
+              <p className="text-muted-foreground mt-2 text-sm">
+                {formatUsd(CHECKING_ACCOUNT.pending)} pending
+              </p>
+            </article>
+          </div>
+          <DemoSourceNote>
+            Demo · Balances and masked account number from core banking deposit account
+          </DemoSourceNote>
+
+          <div className="mt-10">
+            <h2 className="font-(family-name:--font-heading) text-xl font-semibold tracking-tight">
+              Quick actions
+            </h2>
+            <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
+              {CHECKING_QUICK_ACTIONS.map((action) => {
+                const Icon = action.icon;
+                return (
+                  <button
+                    key={action.label}
+                    type="button"
+                    className="border-border bg-card hover:border-primary flex items-center gap-3 rounded-2xl border px-4 py-4 text-left text-sm font-semibold shadow-sm transition-colors"
+                  >
+                    <span className="bg-muted text-primary inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full">
+                      <Icon className="h-5 w-5" aria-hidden />
+                    </span>
+                    {action.label}
+                  </button>
+                );
+              })}
+            </div>
+            <DemoSourceNote>
+              Demo · Would invoke online banking APIs for transfers, bill pay, remote deposit, and
+              e-statements
+            </DemoSourceNote>
+          </div>
+
+          <div className="mt-10">
+            <h2 className="font-(family-name:--font-heading) text-xl font-semibold tracking-tight">
+              Recent transactions
+            </h2>
+            <ul className="border-border bg-card mt-4 divide-y divide-border overflow-hidden rounded-2xl border shadow-sm">
+              {CHECKING_TRANSACTIONS.map((txn) => (
+                <li
+                  key={txn.id}
+                  className="flex flex-col gap-1 px-5 py-4 sm:flex-row sm:items-center sm:justify-between"
+                >
+                  <div>
+                    <p className="font-semibold">{txn.description}</p>
+                    <p className="text-muted-foreground mt-1 text-sm">
+                      {txn.date}
+                      <span aria-hidden> · </span>
+                      {txn.category}
+                    </p>
+                  </div>
+                  <p
+                    className={`font-(family-name:--font-heading) text-base font-semibold tabular-nums ${
+                      txn.amount > 0 ? 'text-primary' : 'text-foreground'
+                    }`}
+                  >
+                    {txn.amount > 0 ? '+' : ''}
+                    {formatUsd(txn.amount)}
+                  </p>
+                </li>
+              ))}
+            </ul>
+            <DemoSourceNote>
+              Demo · Transaction history from core banking and card processor
+            </DemoSourceNote>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+/** Alias so existing Pages selections of JobSeekerProfile still render. */
+export const JobSeekerProfile = Profile;
