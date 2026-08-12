@@ -6,6 +6,7 @@ import {
   Vertical as FeatureBannerVertical,
   Accent as FeatureBannerAccent,
   CareerAreas as FeatureBannerCareerAreas,
+  Offers as FeatureBannerOffers,
 } from '@/components/site-three/FeatureBanner';
 
 // Mock Sitecore SDK
@@ -340,6 +341,148 @@ describe('FeatureBanner', () => {
       };
       render(<FeatureBannerCareerAreas {...noLinkProps} />);
       expect(screen.getByText('Career areas')).toBeInTheDocument();
+      expect(screen.queryByRole('link')).not.toBeInTheDocument();
+    });
+  });
+
+  describe('Offers variant', () => {
+    const offersProps = {
+      ...mockProps,
+      fields: {
+        data: {
+          datasource: {
+            ...mockProps.fields.data.datasource,
+            title: {
+              jsonValue: {
+                value: 'Member offers',
+              },
+            },
+            link: {
+              jsonValue: {
+                value: {
+                  href: '/offers',
+                  text: 'See all offers',
+                },
+              },
+            },
+            children: {
+              results: [
+                {
+                  id: 'offer-1',
+                  image: {
+                    jsonValue: {
+                      value: {
+                        src: '/offers/referral.jpg',
+                        alt: 'Refer a friend',
+                      },
+                    },
+                  },
+                  heading: {
+                    jsonValue: {
+                      value: 'Refer a friend, earn $50',
+                    },
+                  },
+                },
+                {
+                  id: 'offer-2',
+                  image: {
+                    jsonValue: {
+                      value: {
+                        src: '/offers/savings.jpg',
+                        alt: 'Savings bonus',
+                      },
+                    },
+                  },
+                  heading: {
+                    jsonValue: {
+                      value: '$200 bonus when you open a High-Yield Savings',
+                    },
+                  },
+                },
+                {
+                  id: 'offer-3',
+                  image: {
+                    jsonValue: {
+                      value: {
+                        src: '/offers/ira.jpg',
+                        alt: 'Retirement',
+                      },
+                    },
+                  },
+                  heading: {
+                    jsonValue: {
+                      value: 'IRA contribution match through April 15',
+                    },
+                  },
+                },
+              ],
+            },
+          },
+        },
+      },
+    };
+
+    it('renders title, CTA, and compact offer headings', () => {
+      render(<FeatureBannerOffers {...offersProps} />);
+      expect(screen.getByText('Member offers')).toBeInTheDocument();
+      expect(screen.getByRole('link', { name: /see all offers/i })).toHaveAttribute(
+        'href',
+        '/offers'
+      );
+      expect(screen.getByText('Refer a friend, earn $50')).toBeInTheDocument();
+      expect(screen.getByText('$200 bonus when you open a High-Yield Savings')).toBeInTheDocument();
+      expect(screen.getByText('IRA contribution match through April 15')).toBeInTheDocument();
+    });
+
+    it('renders Offers variant marker, offer list, and images', () => {
+      render(<FeatureBannerOffers {...offersProps} />);
+      const section = document.querySelector('[data-variant="Offers"]');
+      expect(section).toBeInTheDocument();
+      expect(section?.className).toContain('esl-band');
+      expect(screen.getByRole('list', { name: 'Offers' })).toBeInTheDocument();
+      const images = screen.getAllByRole('img');
+      expect(images).toHaveLength(3);
+      expect(images[0]).toHaveAttribute('src', '/offers/referral.jpg');
+    });
+
+    it('handles null datasource without crashing', () => {
+      const missingDatasourceProps: any = {
+        params: { styles: 'extra-styles' },
+        fields: {
+          data: {
+            datasource: null,
+          },
+        },
+      };
+      render(<FeatureBannerOffers {...missingDatasourceProps} />);
+      const section = document.querySelector('[data-variant="Offers"]');
+      expect(section).toBeInTheDocument();
+      expect(section?.className).toContain('extra-styles');
+      expect(screen.queryByRole('link')).not.toBeInTheDocument();
+      expect(screen.queryByRole('list')).not.toBeInTheDocument();
+    });
+
+    it('omits CTA when link href is missing', () => {
+      const noLinkProps: any = {
+        ...offersProps,
+        fields: {
+          data: {
+            datasource: {
+              ...offersProps.fields.data.datasource,
+              link: {
+                jsonValue: {
+                  value: {
+                    href: '',
+                    text: 'See all offers',
+                  },
+                },
+              },
+            },
+          },
+        },
+      };
+      render(<FeatureBannerOffers {...noLinkProps} />);
+      expect(screen.getByText('Member offers')).toBeInTheDocument();
       expect(screen.queryByRole('link')).not.toBeInTheDocument();
     });
   });

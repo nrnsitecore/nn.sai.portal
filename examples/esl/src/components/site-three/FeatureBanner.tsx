@@ -197,3 +197,76 @@ export const CareerAreas = (props: FeatureBannerProps) => {
     </section>
   );
 };
+
+/* -------------------------------------------------------------------------- */
+/* Offers — compact credit-union offer tiles (referral, savings bonus, IRA)   */
+/* Fields: title, optional link, FeatureItem image + heading                  */
+/* -------------------------------------------------------------------------- */
+
+const OfferCard = (props: FeatureItemFields) => {
+  return (
+    <article className="flex min-h-[6.75rem] overflow-hidden rounded-2xl border border-border/60 bg-card shadow-md">
+      <div className="relative w-24 shrink-0 bg-muted sm:w-28">
+        <ContentSdkImage
+          field={props?.image?.jsonValue}
+          className="absolute inset-0 h-full w-full object-cover"
+        />
+      </div>
+      <div className="flex min-w-0 flex-1 flex-col justify-center border-l-4 border-primary px-4 py-4 sm:px-5">
+        <p className="font-(family-name:--font-heading) text-base font-semibold leading-snug text-foreground sm:text-lg">
+          <ContentSdkText field={props?.heading?.jsonValue} />
+        </p>
+      </div>
+    </article>
+  );
+};
+
+export const Offers = (props: FeatureBannerProps) => {
+  const datasource = useMemo(
+    () => props?.fields?.data?.datasource,
+    [props?.fields?.data?.datasource]
+  );
+  const features = datasource?.children?.results || [];
+  const hasLink = !!datasource?.link?.jsonValue?.value?.href;
+  const linkText = datasource?.link?.jsonValue?.value?.text || 'See all offers';
+
+  return (
+    <section
+      className={`esl-band py-10 lg:py-14 ${props?.params?.styles || ''}`}
+      data-class-change
+      data-variant="Offers"
+    >
+      <div className="container mx-auto px-4">
+        <div className="mb-8 flex flex-col gap-4 sm:mb-10 sm:flex-row sm:items-end sm:justify-between">
+          <h2 className="esl-heading-bar font-(family-name:--font-heading) text-2xl font-bold tracking-tight lg:text-3xl">
+            <ContentSdkText field={datasource?.title?.jsonValue} />
+          </h2>
+          {hasLink && (
+            <ContentSdkLink
+              field={datasource?.link?.jsonValue}
+              prefetch={false}
+              className="btn btn-primary inline-flex shrink-0 items-center gap-2"
+            >
+              {linkText}
+              <ArrowRight className="h-4 w-4" aria-hidden />
+            </ContentSdkLink>
+          )}
+        </div>
+
+        {features.length > 0 && (
+          <div
+            className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3"
+            role="list"
+            aria-label="Offers"
+          >
+            {features.map((item) => (
+              <div key={item.id} role="listitem">
+                <OfferCard {...item} />
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </section>
+  );
+};
