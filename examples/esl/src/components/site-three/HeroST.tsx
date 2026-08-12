@@ -96,81 +96,103 @@ const HeroServiceCard = ({ service }: { service: HeroService }) => {
   );
 };
 
-export const Default = (props: PageHeaderSTProps) => {
+type HeroDefaultBannerProps = {
+  props: PageHeaderSTProps;
+  /** Extra bottom padding when service cards straddle the hero edge. */
+  withCardClearance?: boolean;
+  variant?: 'Default' | 'NoCards';
+};
+
+/** Shared image hero banner used by Default and NoCards. */
+const HeroDefaultBanner = ({
+  props,
+  withCardClearance = false,
+  variant = 'Default',
+}: HeroDefaultBannerProps) => {
   const hasEyebrow = !!props?.fields?.Eyebrow?.value;
   const hasImage = !!props?.fields?.Image1?.value?.src;
   const hasLink2 = !!props?.fields?.Link2?.value?.href;
   const link1Text = props?.fields?.Link1?.value?.text || 'Become a Member';
+  const bottomPadding = withCardClearance
+    ? 'pb-28 sm:pb-32 lg:pb-48'
+    : 'pb-20 sm:pb-24 lg:pb-32';
 
   return (
-    <>
-      <section
-        className={`relative isolate bg-dark ${props?.params?.styles || ''}`}
-        data-class-change
+    <section
+      className={`relative isolate bg-dark ${props?.params?.styles || ''}`}
+      data-class-change
+      data-variant={variant}
+    >
+      {hasImage && (
+        <ContentSdkImage
+          field={props.fields.Image1}
+          priority
+          fetchPriority="high"
+          className="absolute inset-0 z-0 h-full w-full object-cover"
+        />
+      )}
+      {/* ESL navy scrim — soft left/top fade so white copy stays readable on bright photos */}
+      <div
+        data-testid="hero-st-legibility-scrim"
+        className="pointer-events-none absolute inset-0 z-[1] bg-[linear-gradient(105deg,rgb(7_56_80/0.78)_0%,rgb(7_56_80/0.48)_38%,rgb(7_56_80/0.18)_62%,transparent_82%)]"
+        aria-hidden
+      />
+      <div
+        className="pointer-events-none absolute inset-0 z-[1] bg-gradient-to-b from-dark/30 via-transparent to-transparent"
+        aria-hidden
+      />
+
+      {/* Decorative dot-grid motif */}
+      <div
+        className="pointer-events-none absolute top-28 right-8 z-[1] hidden grid-cols-6 gap-2 lg:grid xl:right-16"
+        aria-hidden
       >
-        {hasImage && (
-          <ContentSdkImage
-            field={props.fields.Image1}
-            priority
-            fetchPriority="high"
-            className="absolute inset-0 z-0 h-full w-full object-cover"
-          />
-        )}
-        {/* ESL navy scrim — soft left/top fade so white copy stays readable on bright photos */}
-        <div
-          data-testid="hero-st-legibility-scrim"
-          className="pointer-events-none absolute inset-0 z-[1] bg-[linear-gradient(105deg,rgb(7_56_80/0.78)_0%,rgb(7_56_80/0.48)_38%,rgb(7_56_80/0.18)_62%,transparent_82%)]"
-          aria-hidden
-        />
-        <div
-          className="pointer-events-none absolute inset-0 z-[1] bg-gradient-to-b from-dark/30 via-transparent to-transparent"
-          aria-hidden
-        />
+        {Array.from({ length: 36 }).map((_, i) => (
+          <span key={i} className="h-3 w-3 rounded-full bg-white/25" />
+        ))}
+      </div>
 
-        {/* Decorative dot-grid motif */}
-        <div
-          className="pointer-events-none absolute top-28 right-8 z-[1] hidden grid-cols-6 gap-2 lg:grid xl:right-16"
-          aria-hidden
-        >
-          {Array.from({ length: 36 }).map((_, i) => (
-            <span key={i} className="h-3 w-3 rounded-full bg-white/25" />
-          ))}
-        </div>
-
-        <div className="container relative z-10 mx-auto px-4 pt-28 pb-28 sm:pb-32 lg:pt-40 lg:pb-48">
-          <div className="max-w-3xl">
-            {hasEyebrow && (
-              <p className="mb-4 font-(family-name:--font-accent) text-sm tracking-wide text-white drop-shadow-sm lg:text-base">
-                <ContentSdkText field={props?.fields?.Eyebrow} />
-              </p>
-            )}
-            <h1 className="font-(family-name:--font-heading) text-4xl leading-[1.05] font-bold text-white drop-shadow-sm lg:text-7xl">
-              <ContentSdkText field={props?.fields?.Title} />
-            </h1>
-            <div className="mt-8 flex flex-wrap items-center gap-3">
+      <div className={`container relative z-10 mx-auto px-4 pt-28 lg:pt-40 ${bottomPadding}`}>
+        <div className="max-w-3xl">
+          {hasEyebrow && (
+            <p className="mb-4 font-(family-name:--font-accent) text-sm tracking-wide text-white drop-shadow-sm lg:text-base">
+              <ContentSdkText field={props?.fields?.Eyebrow} />
+            </p>
+          )}
+          <h1 className="font-(family-name:--font-heading) text-4xl leading-[1.05] font-bold text-white drop-shadow-sm lg:text-7xl">
+            <ContentSdkText field={props?.fields?.Title} />
+          </h1>
+          <div className="mt-8 flex flex-wrap items-center gap-3">
+            <ContentSdkLink
+              field={props?.fields?.Link1}
+              prefetch={false}
+              className="group inline-flex items-stretch overflow-hidden rounded-full shadow-sm"
+            >
+              <span className="inline-flex items-center bg-light px-6 py-3 font-(family-name:--font-accent) text-sm font-semibold tracking-wide text-primary">
+                {link1Text}
+              </span>
+              <span className="inline-flex items-center justify-center bg-primary px-3.5 text-primary-foreground transition-colors group-hover:bg-primary-hover">
+                <ArrowRight className="h-5 w-5" aria-hidden />
+              </span>
+            </ContentSdkLink>
+            {hasLink2 && (
               <ContentSdkLink
-                field={props?.fields?.Link1}
+                field={props?.fields?.Link2}
                 prefetch={false}
-                className="group inline-flex items-stretch overflow-hidden rounded-full shadow-sm"
-              >
-                <span className="inline-flex items-center bg-light px-6 py-3 font-(family-name:--font-accent) text-sm font-semibold tracking-wide text-primary">
-                  {link1Text}
-                </span>
-                <span className="inline-flex items-center justify-center bg-primary px-3.5 text-primary-foreground transition-colors group-hover:bg-primary-hover">
-                  <ArrowRight className="h-5 w-5" aria-hidden />
-                </span>
-              </ContentSdkLink>
-              {hasLink2 && (
-                <ContentSdkLink
-                  field={props?.fields?.Link2}
-                  prefetch={false}
-                  className="btn btn-outline text-white"
-                />
-              )}
-            </div>
+                className="btn btn-outline text-white"
+              />
+            )}
           </div>
         </div>
-      </section>
+      </div>
+    </section>
+  );
+};
+
+export const Default = (props: PageHeaderSTProps) => {
+  return (
+    <>
+      <HeroDefaultBanner props={props} withCardClearance variant="Default" />
 
       {/* Service cards straddle the hero bottom edge (Oregonians / Covista pattern). */}
       <div className="relative z-20 -mt-16 pb-12 sm:-mt-20 lg:-mt-24 lg:pb-16">
@@ -184,6 +206,11 @@ export const Default = (props: PageHeaderSTProps) => {
       </div>
     </>
   );
+};
+
+/** Same as Default, without the Personal / Business / Wealth service cards. */
+export const NoCards = (props: PageHeaderSTProps) => {
+  return <HeroDefaultBanner props={props} variant="NoCards" />;
 };
 
 export const Right = (props: PageHeaderSTProps) => {

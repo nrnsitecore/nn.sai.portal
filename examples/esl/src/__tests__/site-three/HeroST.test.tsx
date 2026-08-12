@@ -3,6 +3,7 @@ import React from 'react';
 import { fireEvent, render, screen } from '@testing-library/react';
 import {
   Default as HeroSTDefault,
+  NoCards as HeroSTNoCards,
   Right as HeroSTRight,
   Centered as HeroSTCentered,
   SplitScreen as HeroSTSplitScreen,
@@ -110,6 +111,28 @@ describe('HeroST', () => {
     it('renders an ESL navy legibility gradient over the background image', () => {
       render(<HeroSTDefault {...mockProps} />);
       expect(screen.getByTestId('hero-st-legibility-scrim')).toBeInTheDocument();
+    });
+  });
+
+  describe('NoCards variant', () => {
+    it('renders the same hero content as Default', () => {
+      render(<HeroSTNoCards {...mockProps} />);
+      expect(screen.getByText('New Collection')).toBeInTheDocument();
+      expect(screen.getByText('Premium Audio Experience')).toBeInTheDocument();
+      expect(screen.getByText('Shop Now')).toBeInTheDocument();
+      expect(screen.getByTestId('hero-st-legibility-scrim')).toBeInTheDocument();
+    });
+
+    it('does not render Personal, Business, or Wealth service cards', () => {
+      render(<HeroSTNoCards {...mockProps} />);
+      expect(screen.queryByRole('heading', { name: 'Personal' })).not.toBeInTheDocument();
+      expect(screen.queryByRole('heading', { name: 'Business' })).not.toBeInTheDocument();
+      expect(screen.queryByRole('heading', { name: 'Wealth' })).not.toBeInTheDocument();
+    });
+
+    it('marks the section with the NoCards variant attribute', () => {
+      const { container } = render(<HeroSTNoCards {...mockProps} />);
+      expect(container.querySelector('[data-variant="NoCards"]')).toBeInTheDocument();
     });
   });
 
