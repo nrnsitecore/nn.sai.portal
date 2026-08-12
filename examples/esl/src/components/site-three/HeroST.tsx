@@ -10,7 +10,7 @@ import {
   Landmark,
   MapPin,
   Receipt,
-  Search,
+  Search as SearchIcon,
   Smartphone,
   UserRound,
   type LucideIcon,
@@ -445,156 +445,148 @@ export const Stacked = (props: PageHeaderSTProps) => {
 };
 
 /* -------------------------------------------------------------------------- */
-/* JobSearch — hardcoded demo job board (credit-union careers demo)            */
+/* Search — hardcoded credit-union site search (accounts, loans, rates, help) */
 /* -------------------------------------------------------------------------- */
 
-type HardcodedJob = {
+type SearchCategory = 'Accounts' | 'Loans' | 'Rates' | 'Locations' | 'Help';
+
+type HardcodedSearchResult = {
   id: string;
   title: string;
-  location: string;
-  careerArea: string;
-  postedDate: string;
+  snippet: string;
+  category: SearchCategory;
+  location?: string;
 };
 
-const JOB_BOARD_CAREER_AREAS = [
-  'All career areas',
-  'Research & Development',
-  'Manufacturing & Supply',
-  'Commercial',
-  'Corporate Functions',
-  'Data, Digital & Technology',
-  'BioLife',
-] as const;
+const SEARCH_CATEGORIES = ['All', 'Accounts', 'Loans', 'Rates', 'Locations', 'Help'] as const;
 
-const JOB_BOARD_RADIUS_OPTIONS = ['5 miles', '15 miles', '25 miles', '35 miles', '50 miles'] as const;
-
-/** Demo-only job listings — not wired to Sitecore or a real ATS. */
-const HARDCODED_JOBS: HardcodedJob[] = [
+/** Demo-only catalog — not wired to Sitecore search or a live index. */
+const HARDCODED_SEARCH_RESULTS: HardcodedSearchResult[] = [
   {
-    id: 'job-001',
-    title: 'Senior Scientist, Immunology',
-    location: 'Cambridge, MA',
-    careerArea: 'Research & Development',
-    postedDate: 'Mar 12, 2026',
+    id: 'sr-001',
+    title: 'Everyday Checking',
+    snippet: 'Fee-free checking with debit card, mobile deposit, and nationwide ATM access.',
+    category: 'Accounts',
   },
   {
-    id: 'job-002',
-    title: 'Manufacturing Associate, Plasma Operations',
-    location: 'Social Circle, GA',
-    careerArea: 'Manufacturing & Supply',
-    postedDate: 'Mar 10, 2026',
+    id: 'sr-002',
+    title: 'High-Yield Savings',
+    snippet: 'Earn a competitive dividend and a $200 bonus when you open a new savings account.',
+    category: 'Accounts',
   },
   {
-    id: 'job-003',
-    title: 'Brand Manager, US Commercial',
-    location: 'Lexington, MA',
-    careerArea: 'Commercial',
-    postedDate: 'Mar 8, 2026',
+    id: 'sr-003',
+    title: 'IRA and retirement accounts',
+    snippet: 'Traditional, Roth, and SEP IRAs to help you save for retirement with local guidance.',
+    category: 'Accounts',
   },
   {
-    id: 'job-004',
-    title: 'HR Business Partner',
-    location: 'Zurich, Switzerland',
-    careerArea: 'Corporate Functions',
-    postedDate: 'Mar 5, 2026',
+    id: 'sr-004',
+    title: 'Auto loan',
+    snippet: 'New and used vehicle financing with member-first rates and flexible terms.',
+    category: 'Loans',
   },
   {
-    id: 'job-005',
-    title: 'Software Engineer, Digital Health Platforms',
-    location: 'Boston, MA',
-    careerArea: 'Data, Digital & Technology',
-    postedDate: 'Mar 3, 2026',
+    id: 'sr-005',
+    title: 'Home mortgage',
+    snippet: 'Purchase, refinance, and first-time buyer programs with local mortgage specialists.',
+    category: 'Loans',
   },
   {
-    id: 'job-006',
-    title: 'Plasma Center Manager',
-    location: 'Austin, TX',
-    careerArea: 'BioLife',
-    postedDate: 'Feb 28, 2026',
+    id: 'sr-006',
+    title: 'Personal loan',
+    snippet: 'Unsecured loans for debt consolidation, home projects, or unexpected expenses.',
+    category: 'Loans',
   },
   {
-    id: 'job-007',
-    title: 'Clinical Research Associate',
-    location: 'Tokyo, Japan',
-    careerArea: 'Research & Development',
-    postedDate: 'Feb 25, 2026',
+    id: 'sr-007',
+    title: 'Current rates',
+    snippet: 'Today’s dividends and loan rates for savings, CDs, auto, mortgage, and more.',
+    category: 'Rates',
   },
   {
-    id: 'job-008',
-    title: 'Quality Assurance Specialist',
-    location: 'Lessines, Belgium',
-    careerArea: 'Manufacturing & Supply',
-    postedDate: 'Feb 22, 2026',
+    id: 'sr-008',
+    title: 'Park Avenue branch',
+    snippet: 'Full-service branch with tellers, notary, and appointment-based lending.',
+    category: 'Locations',
+    location: 'Rochester, NY',
   },
   {
-    id: 'job-009',
-    title: 'Medical Science Liaison',
-    location: 'Chicago, IL',
-    careerArea: 'Commercial',
-    postedDate: 'Feb 18, 2026',
+    id: 'sr-009',
+    title: 'Henrietta branch',
+    snippet: 'Drive-up, Saturday hours, and a 24-hour ATM on Jefferson Road.',
+    category: 'Locations',
+    location: 'Henrietta, NY',
   },
   {
-    id: 'job-010',
-    title: 'Data Analyst, Global Supply Chain',
-    location: 'Singapore',
-    careerArea: 'Data, Digital & Technology',
-    postedDate: 'Feb 14, 2026',
+    id: 'sr-010',
+    title: 'Refer a friend, earn $50',
+    snippet: 'Members who refer a new customer can earn a $50 bonus when the account is opened.',
+    category: 'Help',
+  },
+  {
+    id: 'sr-011',
+    title: 'Mobile deposit help',
+    snippet: 'How to deposit a check in the ESL mobile app, including photo tips and limits.',
+    category: 'Help',
+  },
+  {
+    id: 'sr-012',
+    title: 'Credit card',
+    snippet: 'Rewards and low-rate Visa cards with no annual fee for eligible members.',
+    category: 'Accounts',
   },
 ];
 
-const jobBoardFieldClass =
-  'w-full rounded-full border border-border bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/40'
+const searchFieldClass =
+  'w-full rounded-full border border-border bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/40';
 
-const jobBoardLabelClass =
-  'mb-2 block font-(family-name:--font-accent) text-xs font-semibold text-foreground'
+const searchLabelClass =
+  'mb-2 block font-(family-name:--font-accent) text-xs font-semibold text-foreground';
 
-export const JobSearch = (props: PageHeaderSTProps) => {
-  const [keyword, setKeyword] = useState('');
-  const [location, setLocation] = useState('');
-  const [radius, setRadius] = useState<string>(JOB_BOARD_RADIUS_OPTIONS[2]);
-  const [careerArea, setCareerArea] = useState<string>(JOB_BOARD_CAREER_AREAS[0]);
+const readSearchQueryParam = (): string => {
+  if (typeof window === 'undefined') return '';
+  return new URLSearchParams(window.location.search).get('q')?.trim() ?? '';
+};
+
+export const Search = (props: PageHeaderSTProps) => {
+  const initialKeyword = readSearchQueryParam();
+  const [keyword, setKeyword] = useState(initialKeyword);
+  const [category, setCategory] = useState<string>(SEARCH_CATEGORIES[0]);
   const [appliedFilters, setAppliedFilters] = useState({
-    keyword: '',
-    location: '',
-    careerArea: JOB_BOARD_CAREER_AREAS[0] as string,
+    keyword: initialKeyword.toLowerCase(),
+    category: SEARCH_CATEGORIES[0] as string,
   });
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setAppliedFilters({
       keyword: keyword.trim().toLowerCase(),
-      location: location.trim().toLowerCase(),
-      careerArea,
+      category,
     });
   };
 
-  const filteredJobs = HARDCODED_JOBS.filter((job) => {
-    const matchesKeyword =
-      !appliedFilters.keyword ||
-      job.title.toLowerCase().includes(appliedFilters.keyword) ||
-      job.careerArea.toLowerCase().includes(appliedFilters.keyword);
-    const matchesLocation =
-      !appliedFilters.location || job.location.toLowerCase().includes(appliedFilters.location);
-    const matchesCareerArea =
-      appliedFilters.careerArea === 'All career areas' ||
-      job.careerArea === appliedFilters.careerArea;
-    return matchesKeyword && matchesLocation && matchesCareerArea;
+  const filteredResults = HARDCODED_SEARCH_RESULTS.filter((result) => {
+    const haystack = `${result.title} ${result.snippet} ${result.category} ${result.location ?? ''}`.toLowerCase();
+    const matchesKeyword = !appliedFilters.keyword || haystack.includes(appliedFilters.keyword);
+    const matchesCategory =
+      appliedFilters.category === 'All' || result.category === appliedFilters.category;
+    return matchesKeyword && matchesCategory;
   });
 
   return (
     <section
       className={`bg-background ${props?.params?.styles || ''}`}
       data-class-change
-      data-variant="JobSearch"
+      data-variant="Search"
     >
       <div className="esl-band border-border border-b px-4 py-12 lg:py-16">
         <div className="container mx-auto max-w-5xl">
           <h1 className="esl-heading-bar font-(family-name:--font-heading) text-3xl font-bold tracking-tight lg:text-4xl">
-            Search jobs
+            Search
           </h1>
           <p className="text-muted-foreground mt-4 max-w-2xl text-base leading-relaxed">
-            Find roles across R&D, Manufacturing, Commercial, and every team in between—and take the
-            next step toward a career that improves healthcare around the globe.
+            Find accounts, loans, rates, branch information, and help — all in one place.
           </p>
         </div>
       </div>
@@ -603,69 +595,33 @@ export const JobSearch = (props: PageHeaderSTProps) => {
         <div className="container mx-auto max-w-5xl">
           <form
             onSubmit={handleSubmit}
-            className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-5 lg:items-end"
-            aria-label="Job search filters"
+            className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4 lg:items-end"
+            aria-label="Search filters"
           >
-            <div className="lg:col-span-1">
-              <label className={jobBoardLabelClass} htmlFor="job-board-keyword">
+            <div className="lg:col-span-2">
+              <label className={searchLabelClass} htmlFor="cu-search-keyword">
                 Keyword
               </label>
               <input
-                id="job-board-keyword"
+                id="cu-search-keyword"
                 type="search"
                 value={keyword}
                 onChange={(event) => setKeyword(event.target.value)}
-                placeholder="Job title or skill"
-                className={jobBoardFieldClass}
+                placeholder="Savings, mortgage, branch…"
+                className={searchFieldClass}
               />
             </div>
             <div>
-              <label className={jobBoardLabelClass} htmlFor="job-board-location">
-                Location
-              </label>
-              <div className="relative">
-                <MapPin
-                  className="text-muted-foreground pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2"
-                  aria-hidden
-                />
-                <input
-                  id="job-board-location"
-                  type="text"
-                  value={location}
-                  onChange={(event) => setLocation(event.target.value)}
-                  placeholder="City or country"
-                  className={`${jobBoardFieldClass} pl-9`}
-                />
-              </div>
-            </div>
-            <div>
-              <label className={jobBoardLabelClass} htmlFor="job-board-radius">
-                Radius
+              <label className={searchLabelClass} htmlFor="cu-search-category">
+                Category
               </label>
               <select
-                id="job-board-radius"
-                value={radius}
-                onChange={(event) => setRadius(event.target.value)}
-                className={jobBoardFieldClass}
+                id="cu-search-category"
+                value={category}
+                onChange={(event) => setCategory(event.target.value)}
+                className={searchFieldClass}
               >
-                {JOB_BOARD_RADIUS_OPTIONS.map((option) => (
-                  <option key={option} value={option}>
-                    {option}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div>
-              <label className={jobBoardLabelClass} htmlFor="job-board-career-area">
-                Career area
-              </label>
-              <select
-                id="job-board-career-area"
-                value={careerArea}
-                onChange={(event) => setCareerArea(event.target.value)}
-                className={jobBoardFieldClass}
-              >
-                {JOB_BOARD_CAREER_AREAS.map((option) => (
+                {SEARCH_CATEGORIES.map((option) => (
                   <option key={option} value={option}>
                     {option}
                   </option>
@@ -677,8 +633,8 @@ export const JobSearch = (props: PageHeaderSTProps) => {
                 type="submit"
                 className="btn btn-primary inline-flex w-full items-center justify-center gap-2"
               >
-                <Search className="h-4 w-4" aria-hidden />
-                Search jobs
+                <SearchIcon className="h-4 w-4" aria-hidden />
+                Search
               </button>
             </div>
           </form>
@@ -691,40 +647,42 @@ export const JobSearch = (props: PageHeaderSTProps) => {
             className="font-(family-name:--font-accent) text-muted-foreground mb-6 text-sm font-semibold"
             aria-live="polite"
           >
-            Showing {filteredJobs.length} {filteredJobs.length === 1 ? 'job' : 'jobs'}
+            Showing {filteredResults.length} {filteredResults.length === 1 ? 'result' : 'results'}
           </p>
 
-          {filteredJobs.length === 0 ? (
-            <div className="border-border bg-secondary text-secondary-foreground rounded-sm border px-6 py-12 text-center">
+          {filteredResults.length === 0 ? (
+            <div className="rounded-2xl border border-border bg-secondary px-6 py-12 text-center text-secondary-foreground">
               <p className="font-(family-name:--font-heading) text-xl font-semibold tracking-tight">
-                No jobs match your search
+                No results match your search
               </p>
               <p className="text-muted-foreground mt-2 text-sm">
-                Try a different keyword, location, or career area.
+                Try a different keyword or category.
               </p>
             </div>
           ) : (
             <ul className="flex flex-col gap-4">
-              {filteredJobs.map((job) => (
-                <li key={job.id}>
-                  <article className="border-border hover:border-primary flex flex-col gap-4 border bg-background p-6 shadow-sm transition-colors sm:flex-row sm:items-center sm:justify-between">
+              {filteredResults.map((result) => (
+                <li key={result.id}>
+                  <article className="flex flex-col gap-4 rounded-2xl border border-border bg-card p-6 shadow-sm transition-colors hover:border-primary sm:flex-row sm:items-center sm:justify-between">
                     <div>
+                      <span className="font-(family-name:--font-accent) mb-2 inline-block rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
+                        {result.category}
+                      </span>
                       <h2 className="font-(family-name:--font-heading) text-xl font-semibold tracking-tight">
-                        {job.title}
+                        {result.title}
                       </h2>
-                      <p className="text-muted-foreground mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm">
-                        <span className="inline-flex items-center gap-1.5">
-                          <MapPin className="h-3.5 w-3.5" aria-hidden />
-                          {job.location}
-                        </span>
-                        <span aria-hidden>·</span>
-                        <span>{job.careerArea}</span>
-                        <span aria-hidden>·</span>
-                        <span>Posted {job.postedDate}</span>
+                      <p className="text-muted-foreground mt-2 text-sm leading-relaxed">
+                        {result.snippet}
                       </p>
+                      {result.location && (
+                        <p className="text-muted-foreground mt-2 inline-flex items-center gap-1.5 text-sm">
+                          <MapPin className="h-3.5 w-3.5" aria-hidden />
+                          {result.location}
+                        </p>
+                      )}
                     </div>
                     <a href="/" className="btn btn-primary shrink-0 self-start sm:self-center">
-                      View job
+                      View
                     </a>
                   </article>
                 </li>
@@ -736,6 +694,9 @@ export const JobSearch = (props: PageHeaderSTProps) => {
     </section>
   );
 };
+
+/** Alias so existing Pages selections of JobSearch still render. */
+export const JobSearch = Search;
 
 /* -------------------------------------------------------------------------- */
 /* Profile — demo-only individual checking dashboard                           */

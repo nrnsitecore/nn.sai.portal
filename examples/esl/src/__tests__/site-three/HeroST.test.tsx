@@ -8,7 +8,7 @@ import {
   Centered as HeroSTCentered,
   SplitScreen as HeroSTSplitScreen,
   Stacked as HeroSTStacked,
-  JobSearch as HeroSTJobSearch,
+  Search as HeroSTSearch,
   Profile as HeroSTProfile,
 } from '@/components/site-three/HeroST';
 
@@ -293,46 +293,70 @@ describe('HeroST', () => {
     });
   });
 
-  describe('JobSearch variant', () => {
-    it('renders the job board heading and filter controls', () => {
-      render(<HeroSTJobSearch {...mockProps} />);
-      expect(screen.getByRole('heading', { level: 1, name: 'Search jobs' })).toBeInTheDocument();
+  describe('Search variant', () => {
+    const originalSearch = window.location.search;
+
+    afterEach(() => {
+      window.history.replaceState({}, '', originalSearch ? `/${originalSearch}` : '/');
+    });
+
+    it('renders the search heading and filter controls', () => {
+      render(<HeroSTSearch {...mockProps} />);
+      expect(screen.getByRole('heading', { level: 1, name: 'Search' })).toBeInTheDocument();
       expect(screen.getByLabelText('Keyword')).toBeInTheDocument();
-      expect(screen.getByLabelText('Location')).toBeInTheDocument();
-      expect(screen.getByLabelText('Radius')).toBeInTheDocument();
-      expect(screen.getByLabelText('Career area')).toBeInTheDocument();
-      expect(screen.getByRole('button', { name: /search jobs/i })).toBeInTheDocument();
+      expect(screen.getByLabelText('Category')).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: /^search$/i })).toBeInTheDocument();
     });
 
-    it('renders hardcoded job listings', () => {
-      render(<HeroSTJobSearch {...mockProps} />);
-      expect(screen.getByText('Senior Scientist, Immunology')).toBeInTheDocument();
-      expect(screen.getByText(/Showing 10 jobs/i)).toBeInTheDocument();
+    it('renders hardcoded credit-union results', () => {
+      render(<HeroSTSearch {...mockProps} />);
+      expect(screen.getByText('Everyday Checking')).toBeInTheDocument();
+      expect(screen.getByText('High-Yield Savings')).toBeInTheDocument();
+      expect(screen.getByText('Home mortgage')).toBeInTheDocument();
+      expect(screen.getByText(/Showing 12 results/i)).toBeInTheDocument();
     });
 
-    it('filters jobs by keyword on submit', () => {
-      render(<HeroSTJobSearch {...mockProps} />);
-      fireEvent.change(screen.getByLabelText('Keyword'), { target: { value: 'Plasma' } });
-      fireEvent.click(screen.getByRole('button', { name: /search jobs/i }));
-      expect(screen.getByText('Manufacturing Associate, Plasma Operations')).toBeInTheDocument();
-      expect(screen.getByText('Plasma Center Manager')).toBeInTheDocument();
-      expect(screen.queryByText('Senior Scientist, Immunology')).not.toBeInTheDocument();
-      expect(screen.getByText(/Showing 2 jobs/i)).toBeInTheDocument();
+    it('filters results by keyword on submit', () => {
+      render(<HeroSTSearch {...mockProps} />);
+      fireEvent.change(screen.getByLabelText('Keyword'), { target: { value: 'first-time' } });
+      fireEvent.click(screen.getByRole('button', { name: /^search$/i }));
+      expect(screen.getByText('Home mortgage')).toBeInTheDocument();
+      expect(screen.queryByText('Everyday Checking')).not.toBeInTheDocument();
+      expect(screen.getByText(/Showing 1 result/i)).toBeInTheDocument();
     });
 
-    it('shows empty state when no jobs match', () => {
-      render(<HeroSTJobSearch {...mockProps} />);
+    it('filters results by category on submit', () => {
+      render(<HeroSTSearch {...mockProps} />);
+      fireEvent.change(screen.getByLabelText('Category'), { target: { value: 'Locations' } });
+      fireEvent.click(screen.getByRole('button', { name: /^search$/i }));
+      expect(screen.getByText('Park Avenue branch')).toBeInTheDocument();
+      expect(screen.getByText('Henrietta branch')).toBeInTheDocument();
+      expect(screen.queryByText('Everyday Checking')).not.toBeInTheDocument();
+      expect(screen.getByText(/Showing 2 results/i)).toBeInTheDocument();
+    });
+
+    it('shows empty state when no results match', () => {
+      render(<HeroSTSearch {...mockProps} />);
       fireEvent.change(screen.getByLabelText('Keyword'), { target: { value: 'astronaut' } });
-      fireEvent.click(screen.getByRole('button', { name: /search jobs/i }));
-      expect(screen.getByText('No jobs match your search')).toBeInTheDocument();
-      expect(screen.getByText(/Showing 0 jobs/i)).toBeInTheDocument();
+      fireEvent.click(screen.getByRole('button', { name: /^search$/i }));
+      expect(screen.getByText('No results match your search')).toBeInTheDocument();
+      expect(screen.getByText(/Showing 0 results/i)).toBeInTheDocument();
+    });
+
+    it('applies the URL q parameter as the initial keyword filter', () => {
+      window.history.replaceState({}, '', '/Search?q=henrietta');
+      render(<HeroSTSearch {...mockProps} />);
+      expect(screen.getByLabelText('Keyword')).toHaveValue('henrietta');
+      expect(screen.getByText('Henrietta branch')).toBeInTheDocument();
+      expect(screen.queryByText('Everyday Checking')).not.toBeInTheDocument();
+      expect(screen.getByText(/Showing 1 result/i)).toBeInTheDocument();
     });
 
     it('applies params styles on the section', () => {
-      const { container } = render(<HeroSTJobSearch {...mockProps} />);
+      const { container } = render(<HeroSTSearch {...mockProps} />);
       const section = container.querySelector('section');
       expect(section).toHaveClass('test-styles');
-      expect(section).toHaveAttribute('data-variant', 'JobSearch');
+      expect(section).toHaveAttribute('data-variant', 'Search');
     });
   });
 

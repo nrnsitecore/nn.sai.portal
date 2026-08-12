@@ -18,7 +18,7 @@ Languages:
     - ID: "34b1e883-e1fa-4bb0-b605-0bf9dd521dc9"
       Hint: SearchLink
       Value: |
-        <link linktype="external" url="/" target="" class="" text="Search" title=""/>
+        <link linktype="internal" id="{CCB9C5A9-0B3C-4F68-85E8-F7ECDDC1CEAE}" text="Search" title="" class="" target="" querystring="" anchor=""/>
     - ID: "52807595-0f8f-4b20-8d2a-cb71d28c6103"
       Hint: __Owner
       Value: |
