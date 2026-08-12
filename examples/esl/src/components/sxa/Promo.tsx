@@ -26,6 +26,10 @@ type PromoProps = {
   fields: Fields;
 };
 
+/** Shared ESL navy scrim from HeroST Default — keeps white copy readable on bright photography. */
+const ESL_LEGIBILITY_SCRIM_CLASS =
+  'pointer-events-none absolute inset-0 z-[1] bg-[linear-gradient(105deg,rgb(7_56_80/0.78)_0%,rgb(7_56_80/0.48)_38%,rgb(7_56_80/0.18)_62%,transparent_82%)]';
+
 const PromoDefaultComponent = (props: PromoProps): JSX.Element => (
   <div className={`component promo ${props.params.styles}`}>
     <div className="component-content">
@@ -34,46 +38,160 @@ const PromoDefaultComponent = (props: PromoProps): JSX.Element => (
   </div>
 );
 
-export const Default = (props: PromoProps): JSX.Element => {
+type PromoLayout = 'imageLeft' | 'imageRight';
+
+const PromoSplitLayout = ({
+  props,
+  layout,
+}: {
+  props: PromoProps;
+  layout: PromoLayout;
+}): JSX.Element => {
   const { page } = useSitecore();
   const isEditing = page?.mode?.isEditing ?? false;
   const id = props.params.RenderingIdentifier;
+  const { PromoIcon, PromoText, PromoText2, PromoText3, PromoLink } = props.fields || {};
+  const linkText = PromoLink?.value?.text || 'Learn more';
+  const hasLink = !!PromoLink?.value?.href;
+  const hasEyebrow = !!PromoText3?.value;
+  // Keep the CTA mounted in Pages so authors can set PromoLink even when empty
+  const showLink = hasLink || isEditing;
+  const isImageRight = layout === 'imageRight';
+
+  const imageColumn = (
+    <div
+      className={`overflow-hidden rounded-2xl border border-border/60 shadow-md ${
+        isImageRight ? '@md:order-2' : ''
+      }`}
+    >
+      <div className="relative aspect-4/3 w-full overflow-hidden">
+        <ContentSdkImage field={PromoIcon} className="h-full w-full object-cover" />
+      </div>
+      {(hasEyebrow || isEditing) && (
+        <ContentSdkRichText tag="div" className="esl-caption-bar" field={PromoText3} />
+      )}
+    </div>
+  );
+
+  const copyColumn = (
+    <div className={`flex flex-col justify-center ${isImageRight ? '@md:order-1' : ''}`}>
+      <ContentSdkRichText
+        tag="h2"
+        className="esl-heading-bar font-heading text-pretty text-3xl font-bold leading-tight tracking-tight @lg:text-4xl"
+        field={PromoText}
+      />
+      <ContentSdkRichText
+        tag="div"
+        className="text-muted-foreground mt-6 max-w-[56ch] space-y-4 text-base leading-relaxed"
+        field={PromoText2}
+      />
+      {showLink && (
+        <div className="mt-8">
+          <ContentSdkLink
+            field={PromoLink}
+            prefetch={false}
+            className="btn btn-primary inline-flex items-center gap-2"
+          >
+            {linkText}
+            <ArrowRight className="h-4 w-4" aria-hidden />
+          </ContentSdkLink>
+        </div>
+      )}
+    </div>
+  );
+
+  return (
+    <section
+      data-class-change
+      data-component="Promo"
+      data-variant={isImageRight ? 'ImageRight' : 'Default'}
+      className={`component promo @container bg-background relative w-full ${props.params.styles}`}
+      id={id ? id : undefined}
+    >
+      <div className="mx-auto grid max-w-7xl grid-cols-1 items-center gap-10 px-4 py-16 @md:grid-cols-2 @md:gap-14 @md:px-8 @md:py-20">
+        {isImageRight ? (
+          <>
+            {copyColumn}
+            {imageColumn}
+          </>
+        ) : (
+          <>
+            {imageColumn}
+            {copyColumn}
+          </>
+        )}
+      </div>
+    </section>
+  );
+};
+
+export const Default = (props: PromoProps): JSX.Element => {
+  if (props.fields) {
+    return <PromoSplitLayout props={props} layout="imageLeft" />;
+  }
+
+  return <PromoDefaultComponent {...props} />;
+};
+
+export const ImageRight = (props: PromoProps): JSX.Element => {
+  if (props.fields) {
+    return <PromoSplitLayout props={props} layout="imageRight" />;
+  }
+
+  return <PromoDefaultComponent {...props} />;
+};
+
+export const FullCard = (props: PromoProps): JSX.Element => {
+  const { page } = useSitecore();
+  const isEditing = page?.mode?.isEditing ?? false;
+  const id = props.params.RenderingIdentifier;
+
   if (props.fields) {
     const { PromoIcon, PromoText, PromoText2, PromoText3, PromoLink } = props.fields || {};
     const linkText = PromoLink?.value?.text || 'Learn more';
     const hasLink = !!PromoLink?.value?.href;
     const hasEyebrow = !!PromoText3?.value;
-    // Keep the CTA mounted in Pages so authors can set PromoLink even when empty
     const showLink = hasLink || isEditing;
+    const hasImage = !!PromoIcon?.value?.src;
 
     return (
       <section
         data-class-change
         data-component="Promo"
-        className={`component promo @container bg-background relative w-full ${props.params.styles}`}
+        data-variant="FullCard"
+        className={`component promo relative isolate w-full overflow-hidden bg-dark ${props.params.styles}`}
         id={id ? id : undefined}
       >
-        <div className="mx-auto grid max-w-7xl grid-cols-1 items-center gap-10 px-4 py-16 @md:grid-cols-2 @md:gap-14 @md:px-8 @md:py-20">
-          {/* Image with ESL caption bar */}
-          <div className="overflow-hidden rounded-2xl border border-border/60 shadow-md">
-            <div className="relative aspect-4/3 w-full overflow-hidden">
-              <ContentSdkImage field={PromoIcon} className="h-full w-full object-cover" />
-            </div>
-            {(hasEyebrow || isEditing) && (
-              <ContentSdkRichText tag="div" className="esl-caption-bar" field={PromoText3} />
-            )}
-          </div>
+        {hasImage && (
+          <ContentSdkImage
+            field={PromoIcon}
+            className="absolute inset-0 z-0 h-full w-full object-cover"
+          />
+        )}
+        {/* Same ESL navy scrim as HeroST Default */}
+        <div data-testid="promo-fullcard-legibility-scrim" className={ESL_LEGIBILITY_SCRIM_CLASS} aria-hidden />
+        <div
+          className="pointer-events-none absolute inset-0 z-[1] bg-gradient-to-b from-dark/30 via-transparent to-transparent"
+          aria-hidden
+        />
 
-          {/* Copy column */}
-          <div className="flex flex-col justify-center">
+        <div className="relative z-10 mx-auto flex min-h-[28rem] max-w-7xl items-center px-4 py-16 @md:min-h-[32rem] @md:px-8 @md:py-24">
+          <div className="max-w-2xl">
+            {(hasEyebrow || isEditing) && (
+              <ContentSdkRichText
+                tag="div"
+                className="mb-4 font-(family-name:--font-accent) text-sm tracking-wide text-white drop-shadow-sm @md:text-base"
+                field={PromoText3}
+              />
+            )}
             <ContentSdkRichText
               tag="h2"
-              className="esl-heading-bar font-heading text-pretty text-3xl font-bold leading-tight tracking-tight @lg:text-4xl"
+              className="font-heading text-pretty text-3xl font-bold leading-tight tracking-tight text-white drop-shadow-sm @lg:text-5xl"
               field={PromoText}
             />
             <ContentSdkRichText
               tag="div"
-              className="text-muted-foreground mt-6 max-w-[56ch] space-y-4 text-base leading-relaxed"
+              className="mt-6 max-w-[56ch] space-y-4 text-base leading-relaxed text-white/90"
               field={PromoText2}
             />
             {showLink && (

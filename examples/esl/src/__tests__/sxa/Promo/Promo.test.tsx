@@ -1,11 +1,16 @@
 /**
  * Unit tests for Promo component
- * Tests Default and CenteredCard variants with various field combinations
+ * Tests Default, ImageRight, FullCard, and CenteredCard variants
  */
 
 import React from 'react';
-import { render } from '@testing-library/react';
-import { Default as PromoDefault, CenteredCard } from 'components/sxa/Promo';
+import { render, screen } from '@testing-library/react';
+import {
+  Default as PromoDefault,
+  ImageRight,
+  FullCard,
+  CenteredCard,
+} from 'components/sxa/Promo';
 import {
   defaultPromoProps,
   centeredCardPromoProps,
@@ -170,6 +175,66 @@ describe('Promo Component - Default Variant', () => {
       const promo = container.querySelector('#promo-1');
       expect(promo).toBeInTheDocument();
     });
+  });
+});
+
+describe('Promo Component - ImageRight Variant', () => {
+  it('should render with ImageRight variant marker and reversed column order', () => {
+    const { container } = render(<ImageRight {...defaultPromoProps} />);
+
+    const promo = container.querySelector('[data-variant="ImageRight"]');
+    expect(promo).toBeInTheDocument();
+    expect(promo).toHaveClass('component', 'promo');
+
+    const grid = promo?.querySelector('.grid');
+    const columns = grid?.children;
+    expect(columns?.length).toBe(2);
+    // Copy column first, image column second (image on the right at md+)
+    expect(columns?.[0]).toHaveClass('@md:order-1');
+    expect(columns?.[1]).toHaveClass('@md:order-2');
+    expect(columns?.[1].querySelector('img')).toBeInTheDocument();
+  });
+
+  it('should render heading, description, and CTA', () => {
+    const { container } = render(<ImageRight {...defaultPromoProps} />);
+
+    expect(container.querySelector('h2')?.innerHTML).toContain('Featured Product');
+    expect(container.querySelector('a[href="/products/featured"]')).toBeInTheDocument();
+  });
+
+  it('should render default component when fields are null', () => {
+    const { container } = render(<ImageRight {...emptyPromoProps} />);
+
+    expect(container.querySelector('.is-empty-hint')).toBeInTheDocument();
+  });
+});
+
+describe('Promo Component - FullCard Variant', () => {
+  it('should render full-bleed background image with ESL navy scrim', () => {
+    const { container } = render(<FullCard {...defaultPromoProps} />);
+
+    const promo = container.querySelector('[data-variant="FullCard"]');
+    expect(promo).toBeInTheDocument();
+    expect(promo).toHaveClass('bg-dark', 'isolate');
+
+    const image = container.querySelector('img');
+    expect(image).toHaveClass('absolute', 'inset-0', 'object-cover');
+    expect(screen.getByTestId('promo-fullcard-legibility-scrim')).toBeInTheDocument();
+  });
+
+  it('should render white text content over the background', () => {
+    const { container } = render(<FullCard {...defaultPromoProps} />);
+
+    const heading = container.querySelector('h2');
+    expect(heading).toHaveClass('text-white');
+    expect(heading?.innerHTML).toContain('Featured Product');
+    expect(container.querySelector('a[href="/products/featured"]')).toBeInTheDocument();
+  });
+
+  it('should render default component when fields are null', () => {
+    const { container } = render(<FullCard {...emptyPromoProps} />);
+
+    expect(container.querySelector('.is-empty-hint')).toBeInTheDocument();
   });
 });
 
