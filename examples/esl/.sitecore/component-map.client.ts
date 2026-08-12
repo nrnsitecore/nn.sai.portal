@@ -21,9 +21,7 @@ import * as ContentBlock from 'src/components/sxa/ContentBlock';
 import * as ButtonNavigationclient from 'src/components/sxa/ButtonNavigation.client';
 import * as SubscriptionBanner from 'src/components/subscription-banner/SubscriptionBanner';
 import * as SlideCarouseldev from 'src/components/slide-carousel/SlideCarousel.dev';
-import * as useSignupIdentity from 'src/components/site-three/useSignupIdentity';
 import * as TextSlider from 'src/components/site-three/TextSlider';
-import * as SignupBanner from 'src/components/site-three/SignupBanner';
 import * as ProductPageHeader from 'src/components/site-three/ProductPageHeader';
 import * as ProductComparison from 'src/components/site-three/ProductComparison';
 import * as MultiPromo from 'src/components/site-three/MultiPromo';
@@ -146,9 +144,7 @@ export const componentMap = new Map<string, NextjsContentSdkComponent>([
   ['ButtonNavigation', { ...ButtonNavigationclient }],
   ['SubscriptionBanner', { ...SubscriptionBanner }],
   ['SlideCarousel', { ...SlideCarouseldev }],
-  ['useSignupIdentity', { ...useSignupIdentity }],
   ['TextSlider', { ...TextSlider }],
-  ['SignupBanner', { ...SignupBanner }],
   ['ProductPageHeader', { ...ProductPageHeader }],
   ['ProductComparison', { ...ProductComparison }],
   ['MultiPromo', { ...MultiPromo }],
