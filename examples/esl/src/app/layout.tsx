@@ -1,5 +1,6 @@
 import './globals.css';
 
+import type { Metadata } from 'next';
 import { DM_Sans, Source_Sans_3 } from 'next/font/google';
 
 // ESL brand system: geometric display + open sans body (Semplicita Pro substitute)
@@ -26,6 +27,13 @@ const accent = DM_Sans({
   display: 'swap',
   preload: true,
 });
+
+export const metadata: Metadata = {
+  title: 'ESL Federal Credit Union',
+  description:
+    'ESL Federal Credit Union — member-owned banking that helps our community thrive.',
+  applicationName: 'ESL Federal Credit Union',
+};
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (

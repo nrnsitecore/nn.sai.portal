@@ -53,7 +53,7 @@ export const Default: React.FC<ArticleHeaderProps> = ({ fields, externalFields }
           }
         : undefined,
       publisher: {
-        name: 'SYNC',
+        name: 'ESL Federal Credit Union',
       },
     });
   }, [pageHeaderTitle, imageRequired, pageDisplayDate, pageAuthor]);

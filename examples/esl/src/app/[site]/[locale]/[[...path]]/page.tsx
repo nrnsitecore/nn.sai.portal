@@ -96,20 +96,36 @@ export const generateMetadata = async ({ params }: PageProps) => {
   // Cast route fields once to the expected RouteFields shape to avoid accessing unknown {}
   const routeFields = (page?.layout.sitecore.route?.fields ?? {}) as RouteFields;
 
-  // Extract metadata values with fallback chain
-  const metadataTitle =
+  // Extract metadata values with fallback chain.
+  // Site/display name in Sitecore does not set the Chrome tab — this Next.js
+  // metadata does. Replace leftover SYNC starter titles with ESL branding.
+  const SITE_BROWSER_TITLE = 'ESL Federal Credit Union';
+  const SITE_DESCRIPTION =
+    'ESL Federal Credit Union — member-owned banking that helps our community thrive.';
+
+  const rawTitle =
     routeFields?.metadataTitle?.value?.toString() ||
     routeFields?.pageTitle?.value?.toString() ||
-    'Page';
+    '';
+  const metadataTitle =
+    !rawTitle || /^sync\b/i.test(rawTitle) ? SITE_BROWSER_TITLE : rawTitle;
 
-  const metadataDescription =
+  const rawDescription =
     routeFields?.metadataDescription?.value?.toString() ||
     routeFields?.pageSummary?.value?.toString() ||
-    'SYNC - Premium audio gear for professionals';
+    '';
+  const metadataDescription =
+    !rawDescription || /sync/i.test(rawDescription) ? SITE_DESCRIPTION : rawDescription;
 
-  const ogTitle = routeFields?.ogTitle?.value?.toString() || metadataTitle;
+  const rawOgTitle = routeFields?.ogTitle?.value?.toString() || '';
+  const ogTitle =
+    !rawOgTitle || /^sync\b/i.test(rawOgTitle) ? metadataTitle : rawOgTitle;
 
-  const ogDescription = routeFields?.ogDescription?.value?.toString() || metadataDescription;
+  const rawOgDescription = routeFields?.ogDescription?.value?.toString() || '';
+  const ogDescription =
+    !rawOgDescription || /sync/i.test(rawOgDescription)
+      ? metadataDescription
+      : rawOgDescription;
 
   // Ensure image URL is absolute (HTTPS preferred)
   const imageSource = routeFields?.ogImage?.value?.src || routeFields?.thumbnailImage?.value?.src;
@@ -126,7 +142,8 @@ export const generateMetadata = async ({ params }: PageProps) => {
   const keywordsString = routeFields?.metadataKeywords?.value?.toString() || '';
   const keywords = keywordsString ? keywordsString.split(',').map((k: string) => k.trim()) : [];
 
-  const metadataAuthor = routeFields?.metadataAuthor?.value?.toString() || 'Sitecore';
+  const metadataAuthor =
+    routeFields?.metadataAuthor?.value?.toString() || 'ESL Federal Credit Union';
 
   return {
     title: metadataTitle,
@@ -143,7 +160,7 @@ export const generateMetadata = async ({ params }: PageProps) => {
       description: ogDescription,
       url: pageUrl,
       type: 'website',
-      siteName: site || 'SYNC',
+      siteName: 'ESL Federal Credit Union',
       locale: locale || 'en',
       images: ogImageUrl
         ? [
