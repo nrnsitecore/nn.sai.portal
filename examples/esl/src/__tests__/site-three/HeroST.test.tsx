@@ -106,6 +106,11 @@ describe('HeroST', () => {
         screen.getByText(/Checking, savings, loans, mortgages/i)
       ).toBeInTheDocument();
     });
+
+    it('renders an ESL navy legibility gradient over the background image', () => {
+      render(<HeroSTDefault {...mockProps} />);
+      expect(screen.getByTestId('hero-st-legibility-scrim')).toBeInTheDocument();
+    });
   });
 
   describe('Centered variant', () => {

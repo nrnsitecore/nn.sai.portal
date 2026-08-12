@@ -116,15 +116,20 @@ export const Default = (props: PageHeaderSTProps) => {
             className="absolute inset-0 z-0 h-full w-full object-cover"
           />
         )}
-        {/* Legibility overlay */}
+        {/* ESL navy scrim — soft left/top fade so white copy stays readable on bright photos */}
         <div
-          className="absolute inset-0 z-[1] bg-gradient-to-r from-dark/80 via-dark/45 to-transparent"
+          data-testid="hero-st-legibility-scrim"
+          className="pointer-events-none absolute inset-0 z-[1] bg-[linear-gradient(105deg,rgb(7_56_80/0.78)_0%,rgb(7_56_80/0.48)_38%,rgb(7_56_80/0.18)_62%,transparent_82%)]"
+          aria-hidden
+        />
+        <div
+          className="pointer-events-none absolute inset-0 z-[1] bg-gradient-to-b from-dark/30 via-transparent to-transparent"
           aria-hidden
         />
 
         {/* Decorative dot-grid motif */}
         <div
-          className="pointer-events-none absolute top-28 right-8 hidden grid-cols-6 gap-2 lg:grid xl:right-16"
+          className="pointer-events-none absolute top-28 right-8 z-[1] hidden grid-cols-6 gap-2 lg:grid xl:right-16"
           aria-hidden
         >
           {Array.from({ length: 36 }).map((_, i) => (
@@ -132,14 +137,14 @@ export const Default = (props: PageHeaderSTProps) => {
           ))}
         </div>
 
-        <div className="container relative mx-auto px-4 pt-28 pb-28 sm:pb-32 lg:pt-40 lg:pb-48">
+        <div className="container relative z-10 mx-auto px-4 pt-28 pb-28 sm:pb-32 lg:pt-40 lg:pb-48">
           <div className="max-w-3xl">
             {hasEyebrow && (
-              <p className="mb-4 font-(family-name:--font-accent) text-sm tracking-wide text-white/85 lg:text-base">
+              <p className="mb-4 font-(family-name:--font-accent) text-sm tracking-wide text-white drop-shadow-sm lg:text-base">
                 <ContentSdkText field={props?.fields?.Eyebrow} />
               </p>
             )}
-            <h1 className="font-(family-name:--font-heading) text-4xl leading-[1.05] font-bold text-white lg:text-7xl">
+            <h1 className="font-(family-name:--font-heading) text-4xl leading-[1.05] font-bold text-white drop-shadow-sm lg:text-7xl">
               <ContentSdkText field={props?.fields?.Title} />
             </h1>
             <div className="mt-8 flex flex-wrap items-center gap-3">
