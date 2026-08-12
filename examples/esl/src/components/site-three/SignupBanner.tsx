@@ -30,6 +30,7 @@ type SignupBannerProps = {
 const DICTIONARY_KEYS = {
   SIGNUPBANNER_ButtonLabel: 'Signup_Form_Button_Label',
   SIGNUPBANNER_InputPlaceholder: 'Signup_Form_Input_Placeholder',
+  SIGNUPBANNER_NamePlaceholder: 'Signup_Form_Name_Placeholder',
 };
 
 const signupInputClass =
@@ -44,40 +45,77 @@ type SignupFormProps = {
   buttonVariant?: ButtonProps['variant'];
 };
 
+const DEFAULT_NAME_PLACEHOLDER = 'Enter your first and last name';
+const DEFAULT_EMAIL_PLACEHOLDER = 'Enter your email address';
+const DEFAULT_BUTTON_LABEL = 'Submit';
+
+const resolveDictionaryPhrase = (value: string, fallback: string) =>
+  !value || value.startsWith('Signup_Form_') ? fallback : value;
+
 const SignupForm = ({ buttonVariant }: SignupFormProps) => {
   const t = useTranslations();
   const identify = useSignupIdentity();
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
+
+  const namePlaceholder = resolveDictionaryPhrase(
+    t(DICTIONARY_KEYS.SIGNUPBANNER_NamePlaceholder),
+    DEFAULT_NAME_PLACEHOLDER
+  );
+  const emailPlaceholder = resolveDictionaryPhrase(
+    t(DICTIONARY_KEYS.SIGNUPBANNER_InputPlaceholder),
+    DEFAULT_EMAIL_PLACEHOLDER
+  );
+  const buttonLabel = resolveDictionaryPhrase(
+    t(DICTIONARY_KEYS.SIGNUPBANNER_ButtonLabel),
+    DEFAULT_BUTTON_LABEL
+  );
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const trimmed = email.trim();
-    if (!trimmed || !event.currentTarget.checkValidity()) {
+    const trimmedName = name.trim();
+    const trimmedEmail = email.trim();
+    if (!trimmedName || !trimmedEmail || !event.currentTarget.checkValidity()) {
       return;
     }
 
-    identify(trimmed);
+    identify({ email: trimmedEmail, name: trimmedName });
+    setName('');
     setEmail('');
   };
 
   return (
-    <form className="flex flex-col sm:flex-row gap-3" onSubmit={handleSubmit} noValidate={false}>
+    <form className="flex flex-col gap-3" onSubmit={handleSubmit} noValidate={false}>
       <div className="flex-1">
         <Input
-          type="email"
-          name="email"
+          type="text"
+          name="name"
           required
-          autoComplete="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder={t(DICTIONARY_KEYS.SIGNUPBANNER_InputPlaceholder)}
+          autoComplete="name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          placeholder={namePlaceholder}
           className={signupInputClass}
+          aria-label="Name"
         />
       </div>
-
-      <Button type="submit" variant={buttonVariant}>
-        {t(DICTIONARY_KEYS.SIGNUPBANNER_ButtonLabel)}
-      </Button>
+      <div className="flex flex-col gap-3 sm:flex-row">
+        <div className="flex-1">
+          <Input
+            type="email"
+            name="email"
+            required
+            autoComplete="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder={emailPlaceholder}
+            className={signupInputClass}
+          />
+        </div>
+        <Button type="submit" variant={buttonVariant}>
+          {buttonLabel}
+        </Button>
+      </div>
     </form>
   );
 };

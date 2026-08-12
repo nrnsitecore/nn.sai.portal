@@ -18,6 +18,7 @@ jest.mock('@sitecore-content-sdk/events', () => ({
 jest.mock('next-intl', () => ({
   useTranslations: () => (key: string) => {
     const translations: Record<string, string> = {
+      Signup_Form_Name_Placeholder: 'Enter your first and last name',
       Signup_Form_Input_Placeholder: 'Enter your email',
       Signup_Form_Button_Label: 'Subscribe',
     };
@@ -107,8 +108,9 @@ describe('SignupBanner', () => {
       expect(screen.getByText('Get the latest updates')).toBeInTheDocument();
     });
 
-    it('renders email input with placeholder', () => {
+    it('renders name and email inputs with placeholders', () => {
       render(<SignupBannerDefault {...mockProps} />);
+      expect(screen.getByPlaceholderText('Enter your first and last name')).toBeInTheDocument();
       expect(screen.getByPlaceholderText('Enter your email')).toBeInTheDocument();
     });
 
@@ -124,12 +126,17 @@ describe('SignupBanner', () => {
       expect(bgImage).toBeInTheDocument();
     });
 
-    it('sends IDENTITY event on form submission', () => {
+    it('sends IDENTITY event with Contact name and email on form submission', () => {
       render(<SignupBannerDefault {...mockProps} />);
+      const nameInput = screen.getByPlaceholderText(
+        'Enter your first and last name'
+      ) as HTMLInputElement;
       const emailInput = screen.getByPlaceholderText('Enter your email') as HTMLInputElement;
       const submitButton = screen.getByText('Subscribe');
 
+      fireEvent.change(nameInput, { target: { value: 'Jane Doe' } });
       fireEvent.change(emailInput, { target: { value: 'test@example.com' } });
+      expect(nameInput.value).toBe('Jane Doe');
       expect(emailInput.value).toBe('test@example.com');
 
       fireEvent.click(submitButton);
@@ -139,17 +146,45 @@ describe('SignupBanner', () => {
         expect.objectContaining({
           channel: 'WEB',
           email: 'test@example.com',
+          firstName: 'Jane',
+          lastName: 'Doe',
           page: 'home',
           language: 'en',
           identifiers: [{ id: 'test@example.com', provider: 'email' }],
           extensionData: { source: 'SignupBanner' },
         })
       );
+      expect(nameInput.value).toBe('');
       expect(emailInput.value).toBe('');
     });
 
-    it('does not send IDENTITY event for empty email', () => {
+    it('maps a single-token name to Contact firstName only', () => {
       render(<SignupBannerDefault {...mockProps} />);
+      fireEvent.change(screen.getByPlaceholderText('Enter your first and last name'), {
+        target: { value: 'Madonna' },
+      });
+      fireEvent.change(screen.getByPlaceholderText('Enter your email'), {
+        target: { value: 'one@example.com' },
+      });
+      fireEvent.click(screen.getByText('Subscribe'));
+
+      expect(mockIdentity).toHaveBeenCalledWith(
+        expect.objectContaining({
+          email: 'one@example.com',
+          firstName: 'Madonna',
+        })
+      );
+      expect(mockIdentity.mock.calls[0][0]).not.toHaveProperty('lastName');
+    });
+
+    it('does not send IDENTITY event for empty name or email', () => {
+      render(<SignupBannerDefault {...mockProps} />);
+      fireEvent.click(screen.getByText('Subscribe'));
+      expect(mockIdentity).not.toHaveBeenCalled();
+
+      fireEvent.change(screen.getByPlaceholderText('Enter your email'), {
+        target: { value: 'test@example.com' },
+      });
       fireEvent.click(screen.getByText('Subscribe'));
       expect(mockIdentity).not.toHaveBeenCalled();
     });
@@ -277,11 +312,15 @@ describe('SignupBanner', () => {
       expect(container.firstChild).toBeNull();
     });
 
-    it('sends IDENTITY event on form interaction in dark variant', () => {
+    it('sends IDENTITY event with Contact name on form interaction in dark variant', () => {
       render(<SignupBannerBackgroundDark {...mockProps} />);
+      const nameInput = screen.getByPlaceholderText(
+        'Enter your first and last name'
+      ) as HTMLInputElement;
       const emailInput = screen.getByPlaceholderText('Enter your email') as HTMLInputElement;
       const submitButton = screen.getByText('Subscribe');
 
+      fireEvent.change(nameInput, { target: { value: 'Alex Rivera' } });
       fireEvent.change(emailInput, { target: { value: 'dark@example.com' } });
       expect(emailInput.value).toBe('dark@example.com');
 
@@ -290,6 +329,8 @@ describe('SignupBanner', () => {
       expect(mockIdentity).toHaveBeenCalledWith(
         expect.objectContaining({
           email: 'dark@example.com',
+          firstName: 'Alex',
+          lastName: 'Rivera',
           identifiers: [{ id: 'dark@example.com', provider: 'email' }],
         })
       );
