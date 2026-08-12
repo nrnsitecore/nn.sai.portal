@@ -1,20 +1,21 @@
 import './globals.css';
 
-import { DM_Sans, Source_Sans_3 } from 'next/font/google';
+import { DM_Sans, Open_Sans } from 'next/font/google';
 
 // ESL brand system: geometric display + open sans body (Semplicita Pro substitute)
+// Open_Sans instead of Source_Sans_3 — Next 16 Turbopack hits 404s for Source Sans 3 gstatic URLs
 const heading = DM_Sans({
   weight: ['500', '600', '700'],
   variable: '--font-heading',
-  subsets: ['latin', 'latin-ext'],
+  subsets: ['latin'],
   display: 'swap',
   preload: true,
 });
 
-const body = Source_Sans_3({
+const body = Open_Sans({
   weight: ['400', '500', '600', '700'],
   variable: '--font-body',
-  subsets: ['latin', 'latin-ext'],
+  subsets: ['latin'],
   display: 'swap',
   preload: true,
 });
@@ -22,7 +23,7 @@ const body = Source_Sans_3({
 const accent = DM_Sans({
   weight: ['500', '600', '700'],
   variable: '--font-accent',
-  subsets: ['latin', 'latin-ext'],
+  subsets: ['latin'],
   display: 'swap',
   preload: true,
 });

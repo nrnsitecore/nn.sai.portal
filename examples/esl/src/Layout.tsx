@@ -6,25 +6,26 @@ import { Field, ImageField, Page, AppPlaceholder } from '@sitecore-content-sdk/n
 import Scripts from 'src/Scripts';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import Providers from 'src/Providers';
-import { DM_Sans, Source_Sans_3 } from 'next/font/google';
+import { DM_Sans, Open_Sans } from 'next/font/google';
 import { DesignLibraryApp } from '@sitecore-content-sdk/nextjs';
 import componentMap from '.sitecore/component-map';
 import { generateOrganizationSchema, generateWebSiteSchema } from 'src/lib/structured-data/schema';
 import { StructuredData } from 'src/components/structured-data/StructuredData';
 
 // ESL brand system: geometric display + open sans body (Semplicita Pro substitute)
+// Open_Sans instead of Source_Sans_3 — Next 16 Turbopack hits 404s for Source Sans 3 gstatic URLs
 const heading = DM_Sans({
   weight: ['500', '600', '700'],
   variable: '--font-heading',
-  subsets: ['latin', 'latin-ext'],
+  subsets: ['latin'],
   display: 'swap',
   preload: true,
 });
 
-const body = Source_Sans_3({
+const body = Open_Sans({
   weight: ['400', '500', '600', '700'],
   variable: '--font-body',
-  subsets: ['latin', 'latin-ext'],
+  subsets: ['latin'],
   display: 'swap',
   preload: true,
 });
@@ -32,7 +33,7 @@ const body = Source_Sans_3({
 const accent = DM_Sans({
   weight: ['500', '600', '700'],
   variable: '--font-accent',
-  subsets: ['latin', 'latin-ext'],
+  subsets: ['latin'],
   display: 'swap',
   preload: true,
 });
