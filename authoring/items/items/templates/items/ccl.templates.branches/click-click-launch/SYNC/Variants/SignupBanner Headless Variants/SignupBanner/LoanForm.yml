@@ -1,0 +1,23 @@
+---
+ID: "c8e4a1f2-7b93-4d6e-9c12-5a8f0b3d47e1"
+Parent: "a5f7d48f-8935-4adc-89f9-c3be12e36322"
+Template: "4d50cdae-c2d9-4de8-b080-8f992bfb1b55"
+Path: "/sitecore/templates/Branches/Project/click-click-launch/SYNC/Variants/SignupBanner Headless Variants/SignupBanner/LoanForm"
+Languages:
+- Language: en
+  Fields:
+  - ID: "b5e02ad9-d56f-4c41-a065-a133db87bdeb"
+    Hint: __Display name
+    Value: Loan Form
+  Versions:
+  - Version: 1
+    Fields:
+    - ID: "25bed78c-4957-4165-998a-ca1b52f67497"
+      Hint: __Created
+      Value: 20260813T182200Z
+    - ID: "8cdc337e-a112-42fb-bbb4-4143751e123f"
+      Hint: __Revision
+      Value: "c8e4a1f2-7b93-4d6e-9c12-5a8f0b3d47e1"
+    - ID: "d9cf14b1-fa16-4ba6-9288-e8a174d4d522"
+      Hint: __Updated
+      Value: 20260813T182200Z

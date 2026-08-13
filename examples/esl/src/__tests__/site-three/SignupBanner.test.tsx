@@ -6,12 +6,15 @@ import {
   ContentLeft as SignupBannerContentLeft,
   BackgroundPrimary as SignupBannerBackgroundPrimary,
   BackgroundDark as SignupBannerBackgroundDark,
+  LoanForm as SignupBannerLoanForm,
 } from '@/components/site-three/SignupBanner';
 
 const mockIdentity = jest.fn().mockResolvedValue(null);
+const mockEvent = jest.fn().mockResolvedValue(null);
 
 jest.mock('@sitecore-content-sdk/events', () => ({
   identity: (...args: unknown[]) => mockIdentity(...args),
+  event: (...args: unknown[]) => mockEvent(...args),
 }));
 
 // Mock next-intl
@@ -95,6 +98,7 @@ describe('SignupBanner', () => {
 
   beforeEach(() => {
     mockIdentity.mockClear();
+    mockEvent.mockClear();
   });
 
   describe('Default variant', () => {
@@ -334,6 +338,97 @@ describe('SignupBanner', () => {
           identifiers: [{ id: 'dark@example.com', provider: 'email' }],
         })
       );
+    });
+  });
+
+  describe('LoanForm variant', () => {
+    it('renders a loan application form', () => {
+      render(<SignupBannerLoanForm {...mockProps} />);
+
+      expect(screen.getByText('Loan application')).toBeInTheDocument();
+      expect(screen.getByText('Subscribe to Newsletter')).toBeInTheDocument();
+      expect(screen.getByPlaceholderText('Full name')).toBeInTheDocument();
+      expect(screen.getByPlaceholderText('Email address')).toBeInTheDocument();
+      expect(screen.getByPlaceholderText('Requested amount')).toBeInTheDocument();
+      expect(screen.getByLabelText('Loan type')).toBeInTheDocument();
+      expect(screen.getByText('Submit application')).toBeInTheDocument();
+    });
+
+    it('sends FORM_STARTED once when the applicant begins the form', () => {
+      render(<SignupBannerLoanForm {...mockProps} />);
+
+      fireEvent.focus(screen.getByPlaceholderText('Full name'));
+      fireEvent.change(screen.getByPlaceholderText('Full name'), {
+        target: { value: 'Jordan Lee' },
+      });
+      fireEvent.change(screen.getByPlaceholderText('Email address'), {
+        target: { value: 'jordan@example.com' },
+      });
+
+      expect(mockEvent).toHaveBeenCalledTimes(1);
+      expect(mockEvent).toHaveBeenCalledWith(
+        expect.objectContaining({
+          type: 'FORM_STARTED',
+          channel: 'WEB',
+          name: 'home',
+          language: 'en',
+          extensionData: expect.objectContaining({
+            source: 'SignupBanner',
+            variant: 'LoanForm',
+            formName: 'Loan application',
+          }),
+        })
+      );
+    });
+
+    it('sends FORM_SUBMITTED and IDENTITY events after submit', () => {
+      render(<SignupBannerLoanForm {...mockProps} />);
+
+      fireEvent.change(screen.getByPlaceholderText('Full name'), {
+        target: { value: 'Jordan Lee' },
+      });
+      fireEvent.change(screen.getByPlaceholderText('Email address'), {
+        target: { value: 'jordan@example.com' },
+      });
+      fireEvent.change(screen.getByPlaceholderText('Requested amount'), {
+        target: { value: '15000' },
+      });
+      fireEvent.change(screen.getByLabelText('Loan type'), {
+        target: { value: 'personal' },
+      });
+      fireEvent.click(screen.getByText('Submit application'));
+
+      expect(screen.getByRole('status')).toHaveTextContent(
+        'Submitted to Loan Origination System'
+      );
+      expect(mockEvent).toHaveBeenCalledWith(
+        expect.objectContaining({
+          type: 'FORM_SUBMITTED',
+          extensionData: expect.objectContaining({
+            source: 'SignupBanner',
+            variant: 'LoanForm',
+            loanType: 'personal',
+            amount: '15000',
+          }),
+        })
+      );
+      expect(mockIdentity).toHaveBeenCalledWith(
+        expect.objectContaining({
+          email: 'jordan@example.com',
+          firstName: 'Jordan',
+          lastName: 'Lee',
+          identifiers: [{ id: 'jordan@example.com', provider: 'email' }],
+          extensionData: expect.objectContaining({
+            source: 'SignupBanner',
+            variant: 'LoanForm',
+          }),
+        })
+      );
+    });
+
+    it('returns null when fields are missing', () => {
+      const { container } = render(<SignupBannerLoanForm params={{}} fields={undefined as any} />);
+      expect(container.firstChild).toBeNull();
     });
   });
 });
