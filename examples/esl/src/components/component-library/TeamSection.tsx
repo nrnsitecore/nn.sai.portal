@@ -1,10 +1,10 @@
 import {
-  NextImage as ContentSdkImage,
   Link as ContentSdkLink,
   LinkField,
   RichText as ContentSdkRichText,
   Text as ContentSdkText,
 } from '@sitecore-content-sdk/nextjs';
+import { DamAwareNextImage as ContentSdkImage } from '@/components/image/DamAwareNextImage';
 import { IGQLImageField, IGQLLinkField, IGQLRichTextField, IGQLTextField } from 'src/types/igql';
 import { Button } from 'shadcd/components/ui/button';
 import { ReactNode, useMemo, type JSX } from 'react';

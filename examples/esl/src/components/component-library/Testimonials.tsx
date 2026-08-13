@@ -7,11 +7,11 @@ import {
 } from 'shadcn/components/ui/carousel';
 import { ArrowRight } from 'lucide-react';
 import {
-  NextImage as ContentSdkImage,
   Link as ContentSdkLink,
   RichText as ContentSdkRichText,
   Text as ContentSdkText,
 } from '@sitecore-content-sdk/nextjs';
+import { DamAwareNextImage as ContentSdkImage } from '@/components/image/DamAwareNextImage';
 import { IGQLImageField, IGQLLinkField, IGQLRichTextField, IGQLTextField } from 'src/types/igql';
 import { useMemo, type JSX } from 'react';
 import { Button } from 'shadcd/components/ui/button';

@@ -1,11 +1,11 @@
 import { Button } from 'shadcn/components/ui/button';
 import {
-  NextImage as ContentSdkImage,
   RichText as ContentSdkRichText,
   Text as ContentSdkText,
   ImageField,
   Field,
 } from '@sitecore-content-sdk/nextjs';
+import { DamAwareNextImage as ContentSdkImage } from '@/components/image/DamAwareNextImage';
 import { Input } from 'shadcd/components/ui/input';
 
 interface Fields {

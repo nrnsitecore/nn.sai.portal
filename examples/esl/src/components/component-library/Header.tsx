@@ -2,7 +2,6 @@
 
 import { Button } from 'shadcn/components/ui/button';
 import {
-  NextImage as ContentSdkImage,
   Link as ContentSdkLink,
   RichText as ContentSdkRichText,
   Text as ContentSdkText,
@@ -10,6 +9,7 @@ import {
   Field,
   LinkField,
 } from '@sitecore-content-sdk/nextjs';
+import { DamAwareNextImage as ContentSdkImage } from '@/components/image/DamAwareNextImage';
 import { Input } from 'shadcd/components/ui/input';
 import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';

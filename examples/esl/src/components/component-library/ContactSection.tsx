@@ -1,12 +1,12 @@
 'use client';
 
 import {
-  NextImage as ContentSdkImage,
   Link as ContentSdkLink,
   RichText as ContentSdkRichText,
   Text as ContentSdkText,
   Page,
 } from '@sitecore-content-sdk/nextjs';
+import { DamAwareNextImage as ContentSdkImage } from '@/components/image/DamAwareNextImage';
 import { IGQLImageField, IGQLLinkField, IGQLRichTextField, IGQLTextField } from 'src/types/igql';
 import { Button } from 'shadcd/components/ui/button';
 import { useMemo, useState, type JSX } from 'react';

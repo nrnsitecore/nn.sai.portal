@@ -3,9 +3,9 @@
 import { useMemo } from 'react';
 import {
   Text as ContentSdkText,
-  NextImage as ContentSdkImage,
   Link as ContentSdkLink,
 } from '@sitecore-content-sdk/nextjs';
+import { DamAwareNextImage as ContentSdkImage } from '@/components/image/DamAwareNextImage';
 import { ArrowRight } from 'lucide-react';
 import { IGQLImageField, IGQLLinkField, IGQLTextField } from 'types/igql';
 import { NoDataFallback } from '@/utils/NoDataFallback';

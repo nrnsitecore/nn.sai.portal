@@ -1,11 +1,11 @@
 import {
   Field,
   ImageField,
-  NextImage as ContentSdkImage,
   Link as ContentSdkLink,
   LinkField,
   Text,
 } from '@sitecore-content-sdk/nextjs';
+import { DamAwareNextImage as ContentSdkImage } from '@/components/image/DamAwareNextImage';
 import { ComponentProps } from 'lib/component-props';
 import React, { CSSProperties, type JSX } from 'react';
 

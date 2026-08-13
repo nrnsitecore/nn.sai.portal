@@ -2,7 +2,6 @@
 
 import React, { type JSX } from 'react';
 import {
-  NextImage as ContentSdkImage,
   Link as ContentSdkLink,
   RichText as ContentSdkRichText,
   useSitecore,
@@ -10,6 +9,7 @@ import {
   Field,
   LinkField,
 } from '@sitecore-content-sdk/nextjs';
+import { DamAwareNextImage as ContentSdkImage } from '@/components/image/DamAwareNextImage';
 import { ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 

@@ -2,10 +2,10 @@
 
 import {
   Text as ContentSdkText,
-  NextImage as ContentSdkImage,
   Field,
   ImageField,
 } from '@sitecore-content-sdk/nextjs';
+import { DamAwareNextImage as ContentSdkImage } from '@/components/image/DamAwareNextImage';
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 import React from 'react';

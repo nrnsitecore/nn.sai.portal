@@ -5,6 +5,7 @@ import { useInView } from 'framer-motion';
 import NextImage, { ImageProps } from 'next/image';
 import { ImageField, Image as ContentSdkImage, useSitecore } from '@sitecore-content-sdk/nextjs';
 import { ImageOptimizationContext } from '@/components/image/image-optimization.context';
+import { shouldSkipNextImageOptimization } from '@/lib/should-skip-next-image-optimization';
 import placeholderImageLoader from '@/utils/placeholderImageLoader';
 
 type Props = {
@@ -37,6 +38,7 @@ export default function ClientImage({ image, className, sizes, priority, ...rest
   const isUnoptimized =
     unoptimized ||
     isSvg ||
+    shouldSkipNextImageOptimization(src) ||
     (src.startsWith('https://') &&
       typeof window !== 'undefined' &&
       !src.includes(window.location.hostname));

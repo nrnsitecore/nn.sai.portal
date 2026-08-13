@@ -3,10 +3,10 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { ChevronLeft, ChevronRight, Pause, Play } from 'lucide-react';
 import {
-  NextImage as ContentSdkImage,
   Link as ContentSdkLink,
   Text as ContentSdkText,
 } from '@sitecore-content-sdk/nextjs';
+import { DamAwareNextImage as ContentSdkImage } from '@/components/image/DamAwareNextImage';
 import { IGQLImageField, IGQLLinkField, IGQLTextField } from 'src/types/igql';
 import { useEffect, useMemo, useRef, useState, type JSX } from 'react';
 import { Button } from '@/components/ui/button';
