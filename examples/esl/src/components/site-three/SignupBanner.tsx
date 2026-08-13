@@ -296,7 +296,7 @@ const LoanApplicationForm = ({ buttonVariant }: SignupFormProps) => {
           </select>
         </div>
         <Button type="submit" variant={buttonVariant}>
-          Submit application
+          Start Application
         </Button>
       </div>
     </form>

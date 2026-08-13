@@ -351,7 +351,7 @@ describe('SignupBanner', () => {
       expect(screen.getByPlaceholderText('Email address')).toBeInTheDocument();
       expect(screen.getByPlaceholderText('Requested amount')).toBeInTheDocument();
       expect(screen.getByLabelText('Loan type')).toBeInTheDocument();
-      expect(screen.getByText('Submit application')).toBeInTheDocument();
+      expect(screen.getByText('Start Application')).toBeInTheDocument();
     });
 
     it('sends FORM_STARTED once when the applicant begins the form', () => {
@@ -396,7 +396,7 @@ describe('SignupBanner', () => {
       fireEvent.change(screen.getByLabelText('Loan type'), {
         target: { value: 'personal' },
       });
-      fireEvent.click(screen.getByText('Submit application'));
+      fireEvent.click(screen.getByText('Start Application'));
 
       expect(screen.getByRole('status')).toHaveTextContent(
         'Submitted to Loan Origination System'
